@@ -14,11 +14,13 @@ body {
   padding: 20px;
   background: #f4f6f8;
 }
+
 video {
   width: 100%;
   max-width: 350px;
   border-radius: 12px;
 }
+
 button {
   padding: 14px 20px;
   margin: 10px;
@@ -28,6 +30,23 @@ button {
   background: #0078D4;
   color: white;
   cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+li {
+  background: white;
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  word-break: break-all;
 }
 </style>
 </head>
@@ -40,6 +59,10 @@ button {
 <br>
 <button onclick="startScanner()">Démarrer Scan</button>
 <button onclick="stopScanner()">Stop</button>
+<button onclick="clearHistory()">Effacer historique</button>
+
+<h3>Historique</h3>
+<ul id="history"></ul>
 
 <script>
 let codeReader;
@@ -54,8 +77,11 @@ async function startScanner() {
       videoElement,
       (result, err) => {
         if (result) {
-          alert("QR détecté : " + result.text);
+          const value = result.text;
+          saveToHistory(value);
+          alert("QR détecté : " + value);
           stopScanner();
+          loadHistory();
         }
       }
     );
@@ -69,6 +95,34 @@ function stopScanner() {
     codeReader.reset();
   }
 }
+
+function saveToHistory(data) {
+  let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
+  history.push({
+    value: data,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("qrHistory", JSON.stringify(history));
+}
+
+function loadHistory() {
+  let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
+  const historyList = document.getElementById("history");
+  historyList.innerHTML = "";
+
+  history.slice().reverse().forEach(item => {
+    let li = document.createElement("li");
+    li.textContent = item.date + " - " + item.value;
+    historyList.appendChild(li);
+  });
+}
+
+function clearHistory() {
+  localStorage.removeItem("qrHistory");
+  loadHistory();
+}
+
+loadHistory();
 </script>
 
 </body>
