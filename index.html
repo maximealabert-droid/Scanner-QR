@@ -1,116 +1,140 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mini QR Scanner</title>
-
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<title>QR Scanner iPhone</title>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
-    background: #f4f6f8;
-  }
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  background: #f4f6f8;
+}
 
-  #reader {
-    width: 300px;
-    margin: 20px auto;
-  }
+video {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 10px;
+}
 
-  button {
-    padding: 10px 15px;
-    margin: 5px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
+button {
+  padding: 12px 18px;
+  margin: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  background: #0078D4;
+  color: white;
+  cursor: pointer;
+}
 
-  .start { background: #0078D4; color: white; }
-  .clear { background: #d83b01; color: white; }
+ul {
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 20px auto;
+  text-align: left;
+}
 
-  ul {
-    text-align: left;
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 0;
-    list-style: none;
-  }
-
-  li {
-    background: white;
-    padding: 8px;
-    margin-bottom: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    word-break: break-all;
-  }
+li {
+  background: white;
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  word-break: break-all;
+}
 </style>
 </head>
 
 <body>
 
-<h2>📷 Mini QR Scanner</h2>
+<h2>📷 QR Scanner</h2>
 
-<div id="reader"></div>
+<video id="video" autoplay playsinline></video>
+<br>
+<button onclick="startScanner()">Démarrer Scan</button>
+<button onclick="stopScanner()">Stop</button>
 
-<button class="start" onclick="startScanner()">Démarrer Scan</button>
-<button class="clear" onclick="clearStorage()">Effacer stockage</button>
-
-<h3>📜 Historique des scans</h3>
+<h3>Historique</h3>
 <ul id="history"></ul>
 
 <script>
-let html5QrCode;
+let video = document.getElementById("video");
+let stream;
+let detector;
+let scanning = false;
 
-function startScanner() {
-  html5QrCode = new Html5Qrcode("reader");
+async function startScanner() {
+  if (!("BarcodeDetector" in window)) {
+    alert("BarcodeDetector non supporté sur cet iPhone.");
+    return;
+  }
 
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    (decodedText) => {
-      saveToLocalStorage(decodedText);
-      alert("QR détecté : " + decodedText);
-      html5QrCode.stop();
+  detector = new BarcodeDetector({ formats: ["qr_code"] });
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" }
+    });
+
+    video.srcObject = stream;
+    scanning = true;
+    scanLoop();
+  } catch (err) {
+    alert("Erreur accès caméra : " + err);
+  }
+}
+
+async function scanLoop() {
+  if (!scanning) return;
+
+  try {
+    const barcodes = await detector.detect(video);
+
+    if (barcodes.length > 0) {
+      const value = barcodes[0].rawValue;
+      saveToLocalStorage(value);
+      alert("QR détecté : " + value);
+      stopScanner();
       loadHistory();
-    },
-    () => {}
-  ).catch(err => {
-    alert("Erreur caméra : " + err);
-  });
+      return;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  requestAnimationFrame(scanLoop);
+}
+
+function stopScanner() {
+  scanning = false;
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
 }
 
 function saveToLocalStorage(data) {
   let stored = JSON.parse(localStorage.getItem("qrHistory")) || [];
-
   stored.push({
     value: data,
     date: new Date().toLocaleString()
   });
-
   localStorage.setItem("qrHistory", JSON.stringify(stored));
 }
 
 function loadHistory() {
   let stored = JSON.parse(localStorage.getItem("qrHistory")) || [];
-  const historyList = document.getElementById("history");
-  historyList.innerHTML = "";
+  const history = document.getElementById("history");
+  history.innerHTML = "";
 
   stored.slice().reverse().forEach(item => {
     let li = document.createElement("li");
     li.textContent = item.date + " - " + item.value;
-    historyList.appendChild(li);
+    history.appendChild(li);
   });
-}
-
-function clearStorage() {
-  localStorage.removeItem("qrHistory");
-  loadHistory();
 }
 
 loadHistory();
