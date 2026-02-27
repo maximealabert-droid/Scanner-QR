@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>QR Scanner iPhone</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanner QR2</title>
 
 <style>
 body {
@@ -16,14 +16,14 @@ body {
 video {
   width: 100%;
   max-width: 350px;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 button {
-  padding: 12px 18px;
+  padding: 14px 20px;
   margin: 10px;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   background: #0078D4;
   color: white;
@@ -51,9 +51,9 @@ li {
 
 <body>
 
-<h2>📷 QR Scanner</h2>
+<h2>📷 Scanner QR2</h2>
 
-<video id="video" autoplay playsinline></video>
+<video id="video" muted playsinline></video>
 <br>
 <button onclick="startScanner()">Démarrer Scan</button>
 <button onclick="stopScanner()">Stop</button>
@@ -61,58 +61,35 @@ li {
 <h3>Historique</h3>
 <ul id="history"></ul>
 
-<script>
-let video = document.getElementById("video");
-let stream;
-let detector;
-let scanning = false;
+<script type="module">
+import { BrowserQRCodeReader } from "https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.4/+esm";
+
+let codeReader;
+let selectedDeviceId;
+const videoElement = document.getElementById('video');
 
 async function startScanner() {
-  if (!("BarcodeDetector" in window)) {
-    alert("BarcodeDetector non supporté sur cet iPhone.");
-    return;
-  }
+  codeReader = new BrowserQRCodeReader();
 
-  detector = new BarcodeDetector({ formats: ["qr_code"] });
+  const devices = await BrowserQRCodeReader.listVideoInputDevices();
+  selectedDeviceId =
+    devices.find(d => d.label.toLowerCase().includes("back"))?.deviceId
+    || devices[0].deviceId;
 
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" }
-    });
-
-    video.srcObject = stream;
-    scanning = true;
-    scanLoop();
-  } catch (err) {
-    alert("Erreur accès caméra : " + err);
-  }
-}
-
-async function scanLoop() {
-  if (!scanning) return;
-
-  try {
-    const barcodes = await detector.detect(video);
-
-    if (barcodes.length > 0) {
-      const value = barcodes[0].rawValue;
+  codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
+    if (result) {
+      const value = result.getText();
       saveToLocalStorage(value);
       alert("QR détecté : " + value);
       stopScanner();
       loadHistory();
-      return;
     }
-  } catch (err) {
-    console.error(err);
-  }
-
-  requestAnimationFrame(scanLoop);
+  });
 }
 
 function stopScanner() {
-  scanning = false;
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
+  if (codeReader) {
+    codeReader.reset();
   }
 }
 
@@ -138,6 +115,9 @@ function loadHistory() {
 }
 
 loadHistory();
+
+window.startScanner = startScanner;
+window.stopScanner = stopScanner;
 </script>
 
 </body>
