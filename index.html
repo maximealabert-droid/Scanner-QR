@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mini QR Scanner</title>
+
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background: #f4f6f8;
+  }
+
+  #reader {
+    width: 300px;
+    margin: 20px auto;
+  }
+
+  button {
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .start { background: #0078D4; color: white; }
+  .clear { background: #d83b01; color: white; }
+
+  ul {
+    text-align: left;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    background: white;
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    word-break: break-all;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>📷 Mini QR Scanner</h2>
+
+<div id="reader"></div>
+
+<button class="start" onclick="startScanner()">Démarrer Scan</button>
+<button class="clear" onclick="clearStorage()">Effacer stockage</button>
+
+<h3>📜 Historique des scans</h3>
+<ul id="history"></ul>
+
+<script>
+let html5QrCode;
+
+function startScanner() {
+  html5QrCode = new Html5Qrcode("reader");
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    (decodedText) => {
+      saveToLocalStorage(decodedText);
+      alert("QR détecté : " + decodedText);
+      html5QrCode.stop();
+      loadHistory();
+    },
+    () => {}
+  ).catch(err => {
+    alert("Erreur caméra : " + err);
+  });
+}
+
+function saveToLocalStorage(data) {
+  let stored = JSON.parse(localStorage.getItem("qrHistory")) || [];
+
+  stored.push({
+    value: data,
+    date: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("qrHistory", JSON.stringify(stored));
+}
+
+function loadHistory() {
+  let stored = JSON.parse(localStorage.getItem("qrHistory")) || [];
+  const historyList = document.getElementById("history");
+  historyList.innerHTML = "";
+
+  stored.slice().reverse().forEach(item => {
+    let li = document.createElement("li");
+    li.textContent = item.date + " - " + item.value;
+    historyList.appendChild(li);
+  });
+}
+
+function clearStorage() {
+  localStorage.removeItem("qrHistory");
+  loadHistory();
+}
+
+loadHistory();
+</script>
+
+</body>
+</html>
