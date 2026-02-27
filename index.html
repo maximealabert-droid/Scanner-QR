@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scanner QR3</title>
+<title>Scanner QR4</title>
 
 <script src="https://unpkg.com/@zxing/library@latest"></script>
 
@@ -14,13 +14,11 @@ body {
   padding: 20px;
   background: #f4f6f8;
 }
-
 video {
   width: 100%;
   max-width: 350px;
   border-radius: 12px;
 }
-
 button {
   padding: 14px 20px;
   margin: 10px;
@@ -36,7 +34,7 @@ button {
 
 <body>
 
-<h2>📷 Scanner QR3</h2>
+<h2>📷 Scanner QR4</h2>
 
 <video id="video" muted playsinline></video>
 <br>
@@ -51,17 +49,16 @@ async function startScanner() {
   codeReader = new ZXing.BrowserQRCodeReader();
 
   try {
-    const devices = await ZXing.BrowserQRCodeReader.listVideoInputDevices();
-    const deviceId =
-      devices.find(d => d.label.toLowerCase().includes("back"))?.deviceId
-      || devices[0].deviceId;
-
-    codeReader.decodeFromVideoDevice(deviceId, videoElement, (result, err) => {
-      if (result) {
-        alert("QR détecté : " + result.text);
-        stopScanner();
+    codeReader.decodeFromVideoDevice(
+      null,
+      videoElement,
+      (result, err) => {
+        if (result) {
+          alert("QR détecté : " + result.text);
+          stopScanner();
+        }
       }
-    });
+    );
   } catch (err) {
     alert("Erreur caméra : " + err);
   }
