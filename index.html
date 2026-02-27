@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scanner QR2</title>
+<title>Scanner QR3</title>
+
+<script src="https://unpkg.com/@zxing/library@latest"></script>
 
 <style>
 body {
@@ -29,62 +31,40 @@ button {
   color: white;
   cursor: pointer;
 }
-
-ul {
-  list-style: none;
-  padding: 0;
-  max-width: 400px;
-  margin: 20px auto;
-  text-align: left;
-}
-
-li {
-  background: white;
-  padding: 8px;
-  margin-bottom: 6px;
-  border-radius: 4px;
-  font-size: 14px;
-  word-break: break-all;
-}
 </style>
 </head>
 
 <body>
 
-<h2>📷 Scanner QR2</h2>
+<h2>📷 Scanner QR3</h2>
 
 <video id="video" muted playsinline></video>
 <br>
 <button onclick="startScanner()">Démarrer Scan</button>
 <button onclick="stopScanner()">Stop</button>
 
-<h3>Historique</h3>
-<ul id="history"></ul>
-
-<script type="module">
-import { BrowserQRCodeReader } from "https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.4/+esm";
-
+<script>
 let codeReader;
-let selectedDeviceId;
-const videoElement = document.getElementById('video');
+let videoElement = document.getElementById('video');
 
 async function startScanner() {
-  codeReader = new BrowserQRCodeReader();
+  codeReader = new ZXing.BrowserQRCodeReader();
 
-  const devices = await BrowserQRCodeReader.listVideoInputDevices();
-  selectedDeviceId =
-    devices.find(d => d.label.toLowerCase().includes("back"))?.deviceId
-    || devices[0].deviceId;
+  try {
+    const devices = await ZXing.BrowserQRCodeReader.listVideoInputDevices();
+    const deviceId =
+      devices.find(d => d.label.toLowerCase().includes("back"))?.deviceId
+      || devices[0].deviceId;
 
-  codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
-    if (result) {
-      const value = result.getText();
-      saveToLocalStorage(value);
-      alert("QR détecté : " + value);
-      stopScanner();
-      loadHistory();
-    }
-  });
+    codeReader.decodeFromVideoDevice(deviceId, videoElement, (result, err) => {
+      if (result) {
+        alert("QR détecté : " + result.text);
+        stopScanner();
+      }
+    });
+  } catch (err) {
+    alert("Erreur caméra : " + err);
+  }
 }
 
 function stopScanner() {
@@ -92,32 +72,6 @@ function stopScanner() {
     codeReader.reset();
   }
 }
-
-function saveToLocalStorage(data) {
-  let stored = JSON.parse(localStorage.getItem("qrHistory")) || [];
-  stored.push({
-    value: data,
-    date: new Date().toLocaleString()
-  });
-  localStorage.setItem("qrHistory", JSON.stringify(stored));
-}
-
-function loadHistory() {
-  let stored = JSON.parse(localStorage.getItem("qrHistory")) || [];
-  const history = document.getElementById("history");
-  history.innerHTML = "";
-
-  stored.slice().reverse().forEach(item => {
-    let li = document.createElement("li");
-    li.textContent = item.date + " - " + item.value;
-    history.appendChild(li);
-  });
-}
-
-loadHistory();
-
-window.startScanner = startScanner;
-window.stopScanner = stopScanner;
 </script>
 
 </body>
