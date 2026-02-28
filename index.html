@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_vendor_image_upload_v5_publish_fixed.html</title>
+  <title>index_vendor_thumb_in_buyer_offers.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -286,7 +286,7 @@
 // GEO V3 CLEAN PATCH
 // ==========================
 
-const GEO_KEY = "geo.byUser.v1";
+const GEO_KEY_MAIN = "geo.byUser.v1";
 const GEO_RESERVED = 10;
 const GEO_ZONE = 250;
 
@@ -542,9 +542,9 @@ label[for="emplacement"] {
 
 <style>
 .vendorImageBlock{
+  margin-bottom:18px;
   display:flex;
   justify-content:center;
-  margin-bottom:18px;
 }
 .vendorImageWrapper{
   position:relative;
@@ -555,49 +555,41 @@ label[for="emplacement"] {
   width:100%;
   height:100%;
   object-fit:cover;
-  border-radius:16px;
+  border-radius:14px;
   border:1px solid #e2e8f0;
-  box-shadow:0 6px 18px rgba(15,23,42,.08);
 }
 .vendorImageWrapper button{
   position:absolute;
-  bottom:8px;
-  right:8px;
+  bottom:6px;
+  right:6px;
+  width:30px;
+  height:30px;
   border:none;
-  background:#2563eb;
-  color:white;
-  width:32px;
-  height:32px;
   border-radius:50%;
+  background:#2563eb;
+  color:#fff;
   cursor:pointer;
-  font-size:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 4px 12px rgba(0,0,0,.25);
 }
 .vendorImageUpload{
   width:140px;
   height:140px;
-  border-radius:16px;
   border:2px dashed #cbd5e1;
+  border-radius:14px;
   display:flex;
   align-items:center;
   justify-content:center;
-  text-align:center;
-  cursor:pointer;
-  color:#64748b;
   font-size:13px;
+  color:#64748b;
+  cursor:pointer;
+  text-align:center;
 }
-.vendorImageUpload input{
-  display:none;
-}
+.vendorImageUpload input{ display:none; }
 </style>
 
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_vendor_image_upload_v5_publish_fixed.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_vendor_thumb_in_buyer_offers.html</div>
 
 
 <header>
@@ -1048,36 +1040,32 @@ function renderHome(u){
 
     const p = state[u.id].profile;
     const isVendeur = (u.context === "vendeur");
-    const vendorImg = isVendeur ? getVendorImage(u.id) : null;
 
-
-    content.innerHTML = `
+    
+content.innerHTML = `
       <div class="card">
-        
-
-        
-        ${isVendeur ? `
+        ${u.context === "vendeur" ? `
           <div class="vendorImageBlock">
-            ${
-              vendorImg
+            ${getVendorImage(u.id)
               ? `
                 <div class="vendorImageWrapper">
-                  <img src="${vendorImg}" alt="Commerce">
+                  <img src="${getVendorImage(u.id)}">
                   <button onclick="document.getElementById('vendorImgInput').click()">✏️</button>
                   <input id="vendorImgInput" type="file" accept="image/*"
-                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
+                    onchange="handleVendorImageUpload(this.files[0], '${u.id}')">
                 </div>
               `
               : `
                 <label class="vendorImageUpload">
-                  📷 Ajouter une image<br>du commerce
+                  📷 Ajouter image<br>du commerce
                   <input type="file" accept="image/*"
-                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
+                    onchange="handleVendorImageUpload(this.files[0], '${u.id}')">
                 </label>
-              `
-            }
+              `}
           </div>
         ` : ``}
+
+        
 
         <div class="fields">
           <div>
@@ -1258,31 +1246,7 @@ ${u.context === "acheteur" ? `
           
           
 
-          
-        ${isVendeur ? `
-          <div class="vendorImageBlock">
-            ${
-              vendorImg
-              ? `
-                <div class="vendorImageWrapper">
-                  <img src="${vendorImg}" alt="Commerce">
-                  <button onclick="document.getElementById('vendorImgInput').click()">✏️</button>
-                  <input id="vendorImgInput" type="file" accept="image/*"
-                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
-                </div>
-              `
-              : `
-                <label class="vendorImageUpload">
-                  📷 Ajouter une image<br>du commerce
-                  <input type="file" accept="image/*"
-                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
-                </label>
-              `
-            }
-          </div>
-        ` : ``}
-
-        <div class="fields">
+          <div class="fields">
             <div>
               <label>Type offre</label>
               <select id="type">
@@ -1778,118 +1742,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
     </div>
   </div>
 
-<script>
-const GEO_KEY="geo.byUser.v1";
 
-function loadGeo(){ return JSON.parse(localStorage.getItem(GEO_KEY)||"{}"); }
-function saveGeo(g){ localStorage.setItem(GEO_KEY,JSON.stringify(g)); }
-function setGeo(id,lat,lng){
-  const g=loadGeo();
-  g[id]={lat:Number(lat),lng:Number(lng)};
-  saveGeo(g);
-}
-
-document.addEventListener("click", async (e)=>{
-
-  if(e.target.id==="geoVendorBtn"){
-    const uId=userSelect.value;
-    const adr=document.getElementById("adr").value;
-    if(!adr) return alert("Adresse vide");
-    const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(adr));
-    const j=await r.json();
-    if(j[0]){
-      setGeo(uId,j[0].lat,j[0].lon);
-      document.getElementById("geoVendorCoords").textContent=
-        "Lat: "+Number(j[0].lat).toFixed(6)+" | Lng: "+Number(j[0].lon).toFixed(6);
-    } else alert("Adresse introuvable");
-  }
-
-  if(e.target.id==="geoBuyerBtn"){
-    const uId=userSelect.value;
-    if(!navigator.geolocation) return alert("Non supporté");
-    navigator.geolocation.getCurrentPosition(pos=>{
-      setGeo(uId,pos.coords.latitude,pos.coords.longitude);
-      document.getElementById("geoBuyerCoords").textContent=
-        "Lat: "+pos.coords.latitude.toFixed(6)+" | Lng: "+pos.coords.longitude.toFixed(6);
-    });
-  }
-
-});
-</script>
 
 
 <script>
-// ===== BUYER GEO SAFE (NON-DESTRUCTIVE) =====
 
-const GEO_KEY = "geo.buyer.v1";
-
-function saveBuyerGeo(lat, lng){
-  localStorage.setItem(GEO_KEY, JSON.stringify({
-    lat: Number(lat),
-    lng: Number(lng),
-    ts: Date.now()
-  }));
-}
-
-function loadBuyerGeo(){
-  try {
-    return JSON.parse(localStorage.getItem(GEO_KEY));
-  } catch {
-    return null;
-  }
-}
-
-function getBuyerPosition(){
-  if(!navigator.geolocation){
-    alert("Géolocalisation non supportée");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(pos=>{
-    saveBuyerGeo(pos.coords.latitude, pos.coords.longitude);
-    render(getUser(userSelect.value));
-  });
-}
-
-function enhanceBuyerHome(){
-  const u = getUser(userSelect.value);
-  if(!u || u.context !== "acheteur") return;
-
-  const adrInput = document.getElementById("adr");
-  if(!adrInput) return;
-
-  if(document.getElementById("buyerGeoBlock")) return;
-
-  const wrapper = document.createElement("div");
-  wrapper.id = "buyerGeoBlock";
-  wrapper.style.marginTop = "10px";
-
-  const btn = document.createElement("button");
-  btn.textContent = "📍 Utiliser ma position";
-  btn.onclick = getBuyerPosition;
-
-  const display = document.createElement("div");
-  display.style.fontSize = "12px";
-  display.style.marginTop = "6px";
-
-  const geo = loadBuyerGeo();
-  display.textContent = geo
-    ? "Lat: " + geo.lat.toFixed(6) + " | Lng: " + geo.lng.toFixed(6)
-    : "Lat: - | Lng: -";
-
-  wrapper.appendChild(btn);
-  wrapper.appendChild(display);
-
-  adrInput.parentNode.insertBefore(wrapper, adrInput.nextSibling);
-}
-
-// Hook after render (safe wrap)
-const _render_original = render;
-render = function(){
-  _render_original.apply(this, arguments);
-  setTimeout(enhanceBuyerHome, 0);
-};
-</script>
 
 
 <script>
@@ -1968,10 +1825,10 @@ function stopScanner(){
 
 
 <script>
-const VENDOR_IMG_KEY = "vendor.image.byUser.v1";
+const VENDOR_IMG_KEY = "vendor.image.v1";
 
 function loadVendorImages(){
-  try { return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY)||"{}"); }
+  try { return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY) || "{}"); }
   catch { return {}; }
 }
 
@@ -1990,14 +1847,48 @@ function getVendorImage(userId){
 }
 
 function handleVendorImageUpload(file, userId){
+  if(!file) return;
+
   const reader = new FileReader();
+
   reader.onload = function(e){
-    setVendorImage(userId, e.target.result);
-    render(getUser(userSelect.value));
+    const img = new Image();
+    img.onload = function(){
+
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width - size) / 2;
+      const sy = (img.height - size) / 2;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 400;
+      canvas.height = 400;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 400, 400);
+
+      const cropped = canvas.toDataURL("image/jpeg", 0.85);
+      setVendorImage(userId, cropped);
+      render(getUser(userSelect.value));
+    };
+    img.src = e.target.result;
   };
+
   reader.readAsDataURL(file);
 }
 </script>
 
+<script>
+function renderVendorThumbInOffer(vendorId, vendorName){
+  const img = getVendorImage(vendorId);
+  if(!img){
+    return `<div style="font-weight:600;font-size:18px;">Vendeur : ${vendorName}</div>`;
+  }
+  return `
+    <div style="width:80px;height:80px;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;">
+      <img src="${img}" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+  `;
+}
+</script>
 </body>
 </html>
