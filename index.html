@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_vendor_thumb_in_buyer_offers.html</title>
+  <title>index_stable_with_vendor_thumb_full_clean.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -286,7 +286,7 @@
 // GEO V3 CLEAN PATCH
 // ==========================
 
-const GEO_KEY_MAIN = "geo.byUser.v1";
+const GEO_KEY = "geo.byUser.v1";
 const GEO_RESERVED = 10;
 const GEO_ZONE = 250;
 
@@ -539,57 +539,10 @@ label[for="emplacement"] {
 </style>
 
 <script src="https://unpkg.com/@zxing/library@latest"></script>
-
-<style>
-.vendorImageBlock{
-  margin-bottom:18px;
-  display:flex;
-  justify-content:center;
-}
-.vendorImageWrapper{
-  position:relative;
-  width:140px;
-  height:140px;
-}
-.vendorImageWrapper img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:14px;
-  border:1px solid #e2e8f0;
-}
-.vendorImageWrapper button{
-  position:absolute;
-  bottom:6px;
-  right:6px;
-  width:30px;
-  height:30px;
-  border:none;
-  border-radius:50%;
-  background:#2563eb;
-  color:#fff;
-  cursor:pointer;
-}
-.vendorImageUpload{
-  width:140px;
-  height:140px;
-  border:2px dashed #cbd5e1;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:13px;
-  color:#64748b;
-  cursor:pointer;
-  text-align:center;
-}
-.vendorImageUpload input{ display:none; }
-</style>
-
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_vendor_thumb_in_buyer_offers.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_stable_with_vendor_thumb_full_clean.html</div>
 
 
 <header>
@@ -905,7 +858,14 @@ label[for="emplacement"] {
           <div class="offer" data-id="${escapeHtml(o.id)}" data-created="${escapeHtml(o.createdAt || "")}">
             <div class="top">
               ${u.context === "acheteur"
-                ? `<div style="margin-bottom:6px">Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b></div>`
+                ? `<div style="margin-bottom:6px">${
+  getVendorImage(o.sellerId)
+    ? `<div style="width:80px;height:80px;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;">
+         <img src="${getVendorImage(o.sellerId)}"
+              style="width:100%;height:100%;object-fit:cover;">
+       </div>`
+    : `Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b>`
+}</div>`
                 : ``}
 
               <div>
@@ -964,7 +924,14 @@ label[for="emplacement"] {
               <div>
                 ${u.context === "vendeur"
                   ? `⭐ Favori : <b>${countFavsForOffer(o.id)}</b> · 🟡 Réservé : <b>${countReservedBuyersForOffer(o)}</b> · ✅ Validé : <b>${countValidForOffer(o.id)}</b>`
-                  : `Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b> ${o.description ? `<div><button class="descBtn" data-id="${escapeHtml(o.id)}">Description</button></div>` : ``}`
+                  : `${
+  getVendorImage(o.sellerId)
+    ? `<div style="width:80px;height:80px;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;">
+         <img src="${getVendorImage(o.sellerId)}"
+              style="width:100%;height:100%;object-fit:cover;">
+       </div>`
+    : `Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b>`
+} ${o.description ? `<div><button class="descBtn" data-id="${escapeHtml(o.id)}">Description</button></div>` : ``}`
                 }
               </div>
 
@@ -1041,33 +1008,37 @@ function renderHome(u){
     const p = state[u.id].profile;
     const isVendeur = (u.context === "vendeur");
 
-    
-content.innerHTML = `
-      <div class="card">
-        ${u.context === "vendeur" ? `
-          <div class="vendorImageBlock">
-            ${getVendorImage(u.id)
-              ? `
-                <div class="vendorImageWrapper">
-                  <img src="${getVendorImage(u.id)}">
-                  <button onclick="document.getElementById('vendorImgInput').click()">✏️</button>
-                  <input id="vendorImgInput" type="file" accept="image/*"
-                    onchange="handleVendorImageUpload(this.files[0], '${u.id}')">
-                </div>
-              `
-              : `
-                <label class="vendorImageUpload">
-                  📷 Ajouter image<br>du commerce
-                  <input type="file" accept="image/*"
-                    onchange="handleVendorImageUpload(this.files[0], '${u.id}')">
-                </label>
-              `}
-          </div>
-        ` : ``}
-
+    content.innerHTML = `
+      
+<div class="card">
         
 
-        <div class="fields">
+        
+${u.context === "vendeur" ? `
+<div style="margin-bottom:16px; display:flex; justify-content:center;">
+  ${getVendorImage(u.id)
+    ? `
+      <div style="position:relative;width:140px;height:140px;">
+        <img src="${getVendorImage(u.id)}"
+             style="width:100%;height:100%;object-fit:cover;border-radius:14px;border:1px solid #e2e8f0;">
+        <button onclick="document.getElementById('vendorImgInput').click()"
+          style="position:absolute;bottom:6px;right:6px;border:none;border-radius:50%;width:30px;height:30px;background:#2563eb;color:white;">✏️</button>
+        <input id="vendorImgInput" type="file" accept="image/*"
+          style="display:none"
+          onchange="handleVendorImageUpload(this.files[0],'${u.id}')">
+      </div>
+    `
+    : `
+      <label style="width:140px;height:140px;border:2px dashed #cbd5e1;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-align:center;font-size:13px;color:#64748b;">
+        📷 Ajouter image<br>du commerce
+        <input type="file" accept="image/*"
+          style="display:none"
+          onchange="handleVendorImageUpload(this.files[0],'${u.id}')">
+      </label>
+    `}
+</div>
+` : ``}
+<div class="fields">
           <div>
             <label>Nom</label>
             <input id="nom" value="${escapeHtml(p.nom || "")}">
@@ -1746,7 +1717,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 <script>
-
+</script>
 
 
 <script>
@@ -1831,64 +1802,41 @@ function loadVendorImages(){
   try { return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY) || "{}"); }
   catch { return {}; }
 }
-
 function saveVendorImages(obj){
   localStorage.setItem(VENDOR_IMG_KEY, JSON.stringify(obj));
 }
-
-function setVendorImage(userId, dataUrl){
-  const imgs = loadVendorImages();
-  imgs[userId] = dataUrl;
-  saveVendorImages(imgs);
+function getVendorImage(id){
+  return loadVendorImages()[id] || null;
 }
-
-function getVendorImage(userId){
-  return loadVendorImages()[userId] || null;
+function setVendorImage(id, dataUrl){
+  const imgs = loadVendorImages();
+  imgs[id] = dataUrl;
+  saveVendorImages(imgs);
 }
 
 function handleVendorImageUpload(file, userId){
   if(!file) return;
-
   const reader = new FileReader();
-
   reader.onload = function(e){
     const img = new Image();
     img.onload = function(){
-
       const size = Math.min(img.width, img.height);
       const sx = (img.width - size) / 2;
       const sy = (img.height - size) / 2;
-
       const canvas = document.createElement("canvas");
-      canvas.width = 400;
-      canvas.height = 400;
-
+      canvas.width = 300;
+      canvas.height = 300;
       const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, sx, sy, size, size, 0, 0, 400, 400);
-
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 300, 300);
       const cropped = canvas.toDataURL("image/jpeg", 0.85);
       setVendorImage(userId, cropped);
       render(getUser(userSelect.value));
     };
     img.src = e.target.result;
   };
-
   reader.readAsDataURL(file);
 }
 </script>
 
-<script>
-function renderVendorThumbInOffer(vendorId, vendorName){
-  const img = getVendorImage(vendorId);
-  if(!img){
-    return `<div style="font-weight:600;font-size:18px;">Vendeur : ${vendorName}</div>`;
-  }
-  return `
-    <div style="width:80px;height:80px;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;">
-      <img src="${img}" style="width:100%;height:100%;object-fit:cover;">
-    </div>
-  `;
-}
-</script>
 </body>
 </html>
