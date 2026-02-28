@@ -1,128 +1,2002 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scanner QR4</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>index_vendor_image_upload_v5_publish_fixed.html</title>
+  <style>
+    :root{
+      /* Premium Light theme */
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e2e8f0;
+      --primary:#2563eb;
+      --primary-ink:#ffffff;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+      --shadow-sm: 0 2px 10px rgba(15, 23, 42, .06);
+    }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--text); }
+    header{
+      position: sticky; top:0; z-index:10;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    label { color: var(--muted); font-size:14px; }
+    select, input, textarea{
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+    select:focus, input:focus, textarea:focus{
+      outline: none;
+      border-color: rgba(37, 99, 235, .55);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .14);
+    }
+    input[type="date"], input[type="datetime-local"]{ color-scheme: dark; }
+    nav.tabs { display:flex; gap:8px; flex-wrap:wrap; }
+    button.tab{ transition: none;
+      font-size: 16px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      cursor:pointer;
+      box-shadow: 0 1px 0 rgba(15,23,42,.02);
+      transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    button.tab:hover{ box-shadow: var(--shadow-sm); }
+    button.tab:active{ transform: translateY(1px); }
+    button.tab[aria-selected="true"]{
+      background: rgba(37,99,235,.08);
+      border-color: rgba(37,99,235,.35);
+      box-shadow: 0 6px 18px rgba(37,99,235,.12);
+    }
+    main { padding:16px; max-width:980px; margin:0 auto; }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .muted{ color: var(--muted); }
+    .fields{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin: 12px 0; }
+    @media (max-width: 800px){ .fields{ grid-template-columns: 1fr; } }
+
+    /* FORCE offers to always stack vertically */
+    .offers{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .offer{
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+      cursor: default;
+      user-select: none;
+    }
+
+    .pill{
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 12px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .offer .top{ display:flex; justify-content:space-between; gap:10px; align-items:flex-start; margin-bottom:8px }
+    .ring{ width: 42px; height: 42px; }
+    .ring circle{
+      fill:none;
+      stroke-width:6;
+      stroke-linecap:round;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .ring .bg{ stroke: rgba(255,255,255,.15); }
+    .ring .fg{ stroke: #9fb0d0; transition: stroke-dashoffset .6s linear; }
+    .countdown{ color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+    .offer .date{ color:var(--muted); font-size: 13px; white-space:nowrap }
+    .offer .meta{ color:var(--muted); font-size: 13px; margin-top: 8px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap }
+
+    .toggleBox{
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      box-shadow: 0 1px 0 rgba(15,23,42,.02);
+    }
+    .toggleBox input{ width: 16px; height:16px; padding:0; margin:0; }
+    .toggleBox span{ font-size: 13px; color: var(--text); }
+
+    .actions{ display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; margin-top: 8px; }
+    button.primary{
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(37,99,235,.35);
+      background: var(--primary);
+      color: var(--primary-ink);
+      cursor:pointer;
+      box-shadow: 0 10px 22px rgba(37,99,235,.20);
+      transition: transform .05s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    button.primary:hover{ filter: brightness(1.02); box-shadow: 0 14px 28px rgba(37,99,235,.24); }
+    button.primary:active{ transform: translateY(1px); }
+
+    .toast{
+      position: fixed; bottom: 14px; left: 14px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      color: var(--text);
+      display:none;
+      z-index: 60;
+      box-shadow: var(--shadow-sm);
+    }
+    .toast.show{ display:block; }
+    select{ font-size: 20px; padding: 14px 18px; }
+  
+    /* FORCE very light corner radius for all pill-like objects */
+    .pill,
+    .statusBox .pill,
+    .offer .pill{
+      border-radius: 3px !important;
+    }
+
+  
+    /* Buyer offer description toggle */
+    .descBtn{
+      margin-top: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .offerDesc{
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(255,255,255,.15);
+      font-size: 13px;
+      color: var(--muted);
+      display: none;
+    }
+    .offerDesc.open{
+      display: block;
+    }
+
+  
+    /* Publish layout: fields stacked, labels above inputs */
+    #content .fields{
+      display: grid;
+      grid-template-columns: 1fr !important;
+      gap: 12px;
+    }
+    #content .fields > div{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    #content .fields label{
+      margin-bottom: 6px;
+      text-align: left;
+    }
+
+  
+    /* Publish: Minimum / Maximum d’achat always visible */
+    .valueBlock{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .valueRow{
+      display: flex;
+      gap: 12px;
+    }
+    .field{
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+  </style>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  // --- Seller modal (buyer offer -> click seller name) ---
+  function sellerDisplayName(sellerId){
+    const u = getUser(sellerId);
+    const p = state?.[sellerId]?.profile || u?.profile || {};
+    return p.nom || u?.label || sellerId || "-";
+  }
+  function sellerAddress(sellerId){
+    const u = getUser(sellerId);
+    const p = state?.[sellerId]?.profile || u?.profile || {};
+    return p.adresse || p.address || "-";
+  }
+  function openSellerModal(sellerId){
+    const overlay = document.getElementById("sellerModal");
+    const body = document.getElementById("sellerModalBody");
+    if (!overlay || !body) return;
+    body.innerHTML = `
+      <div style="margin-bottom:8px">Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
+      <div>Adresse : <b>${escapeHtml(sellerAddress(sellerId))}</b></div>
+    
+      <div style="margin-top:12px">
+        <iframe
+          width="100%"
+          height="220"
+          style="border:0; border-radius:12px"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=${encodeURIComponent(sellerAddress(sellerId))}&output=embed">
+        </iframe>
+      </div>
+`;
+    overlay.style.display = "flex";
+  }
+  function closeSellerModal(){
+    const overlay = document.getElementById("sellerModal");
+    if (overlay) overlay.style.display = "none";
+  }
+
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest(".sellerLink");
+    if (link) {
+      e.preventDefault();
+      e.stopPropagation();
+      const sellerId = link.dataset.sellerId;
+      if (sellerId) openSellerModal(sellerId);
+      return;
+    }
+    if (e.target && (e.target.id === "sellerModal")) closeSellerModal();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "sellerModalClose") closeSellerModal();
+  });
+
+
+
+// ==========================
+// GEO V3 CLEAN PATCH
+// ==========================
+
+const GEO_KEY = "geo.byUser.v1";
+const GEO_RESERVED = 10;
+const GEO_ZONE = 250;
+
+function loadGeo(){ return JSON.parse(localStorage.getItem(GEO_KEY) || "{}"); }
+function saveGeo(g){ localStorage.setItem(GEO_KEY, JSON.stringify(g)); }
+
+function setGeo(userId, lat, lng){
+  const g = loadGeo();
+  g[userId] = {lat:Number(lat), lng:Number(lng), ts:Date.now()};
+  saveGeo(g);
+}
+
+function getGeo(userId){
+  return loadGeo()[userId] || null;
+}
+
+function haversine(lat1, lon1, lat2, lon2){
+  const R = 6371000;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+            Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function computeDistanceForBuyer(offer, buyerId){
+  const buyerGeo = getGeo(buyerId);
+  const sellerGeo = getGeo(offer.sellerId);
+
+  if(!buyerGeo || !sellerGeo) return null;
+
+  return Math.round(
+    haversine(
+      buyerGeo.lat,
+      buyerGeo.lng,
+      sellerGeo.lat,
+      sellerGeo.lng
+    )
+  );
+}
+
+function geoStatusForBuyerOffer(offer, buyerId){
+  const b = getGeo(buyerId);
+  const s = getGeo(offer.sellerId);
+  if(!b || !s) return null;
+  const d = haversine(b.lat,b.lng,s.lat,s.lng);
+  if(d <= GEO_RESERVED) return "Réservé";
+  if(d <= GEO_ZONE) return "Zone";
+  return null;
+}
+
+// Override status logic
+displayBuyerOfferStatus = function(offer, buyerId){
+  const tx = getTxStatus(offer.id, buyerId);
+  if(tx === "Validé") return "Validé";
+  return geoStatusForBuyerOffer(offer,buyerId);
+};
+
+// Buyer GPS button auto inject
+document.addEventListener("click", e=>{
+  if(e.target.id==="geoBuyerBtn"){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      setGeo(userSelect.value,pos.coords.latitude,pos.coords.longitude);
+      alert("Position mise à jour");
+    });
+  }
+});
+
+// Vendor auto geocode
+async function geoVendor(){
+  const adr = document.getElementById("adr")?.value;
+  if(!adr) return;
+  const r = await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(adr));
+  const j = await r.json();
+  if(j[0]){
+    setGeo(userSelect.value,j[0].lat,j[0].lon);
+    alert("Adresse géocodée");
+  }
+}
+document.addEventListener("click", e=>{
+  if(e.target.id==="geoVendorBtn") geoVendor();
+});
+
+// Hide old Spot / Emplacement UI if still present
+document.addEventListener("DOMContentLoaded", ()=>{
+  document.querySelectorAll("label").forEach(l=>{
+    if(l.textContent.includes("Spot") || l.textContent.includes("Emplacement")){
+      l.closest("div")?.remove();
+    }
+  });
+});
+
+
+
+function publish() {
+
+  const uId = userSelect.value;
+
+  const type = document.getElementById("type")?.value || "";
+  const value = document.getElementById("value")?.value || "";
+  const qty   = document.getElementById("quantity")?.value || "";
+  const date  = document.getElementById("date")?.value || "";
+
+  if (!type || !value || !qty) {
+    alert("Veuillez remplir tous les champs.");
+    return;
+  }
+
+  const offers = JSON.parse(localStorage.getItem("offers") || "[]");
+
+  const newOffer = {
+    id: Date.now().toString(),
+    sellerId: uId,
+    type,
+    value,
+    quantity: qty,
+    date,
+    createdAt: Date.now()
+  };
+
+  offers.push(newOffer);
+
+  localStorage.setItem("offers", JSON.stringify(offers));
+
+  alert("Offre publiée ✅");
+
+  if (typeof render === "function") render();
+}
+
+</script>
+
+<style>
+  .statusBox{
+    position:absolute;
+    top:12px;
+    right:12px;
+    z-index:2;
+  }
+</style>
+
+
+<style>
+  </style>
+
+
+<style>
+  /* Couleurs fortes pour le statut unique (prioritaire sur les styles existants) */
+  .statusBox .pill{
+    border: none !important;
+  }
+  .statusBox .pill[data-status="Validé"]{
+    background-color: #1fa34a !important;
+    color: #ffffff !important;
+  }
+  .statusBox .pill[data-status="Réservé"]{
+    background-color: #4da3ff !important;
+    color: #ffffff !important;
+  }
+</style>
+
+
+<style>
+  .sellerLink{ cursor:pointer; text-decoration:underline; }
+  .modalOverlay{
+    position:fixed; inset:0; z-index:9999;
+    background:rgba(0,0,0,.6);
+    align-items:center; justify-content:center;
+    padding:16px;
+  }
+  .modalCard{ max-width:420px; width:100%; }
+  .ghostBtn{
+    border:none; background:transparent; cursor:pointer;
+    font-size:18px; line-height:1; padding:6px 10px;
+    border-radius:10px;
+  }
+</style>
+
+
+<style>
+  /* Statut Validé en vert (offres acheteur) */
+  .pill[data-status="Validé"]{
+    background-color:#1fa34a !important;
+    color:#ffffff !important;
+    border:none !important;
+  }
+</style>
+
+
+<style>
+  /* Statut Réservé en bleu clair (offres acheteur) */
+  .pill[data-status="Réservé"]{
+    background-color:#4da3ff !important;
+    color:#ffffff !important;
+    border:none !important;
+  }
+</style>
+
+
+<style>
+.bottomNav{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  gap: 8px;
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+  z-index: 999;
+}
+
+.bottomNav .tab{
+  flex:1;
+  font-size: 14px;
+  padding: 10px 6px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+}
+
+.bottomNav .tab[aria-selected="true"]{
+  background: rgba(37,99,235,.12);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+main{
+  padding-bottom: calc(92px + env(safe-area-inset-bottom));
+}
+</style>
+
+
+<style>
+/* SAFE MASK Spot & Emplacement */
+#home_vendeur_spot,
+#emplacement {
+  display: none !important;
+}
+
+/* Hide associated labels safely */
+label[for="home_vendeur_spot"],
+label[for="emplacement"] {
+  display: none !important;
+}
+</style>
 
 <script src="https://unpkg.com/@zxing/library@latest"></script>
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
-  background: #f4f6f8;
+.vendorImageBlock{
+  display:flex;
+  justify-content:center;
+  margin-bottom:18px;
 }
-
-video {
-  width: 100%;
-  max-width: 350px;
-  border-radius: 12px;
+.vendorImageWrapper{
+  position:relative;
+  width:140px;
+  height:140px;
 }
-
-button {
-  padding: 14px 20px;
-  margin: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: none;
-  background: #0078D4;
-  color: white;
-  cursor: pointer;
+.vendorImageWrapper img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:16px;
+  border:1px solid #e2e8f0;
+  box-shadow:0 6px 18px rgba(15,23,42,.08);
 }
-
-ul {
-  list-style: none;
-  padding: 0;
-  max-width: 400px;
-  margin: 20px auto;
-  text-align: left;
+.vendorImageWrapper button{
+  position:absolute;
+  bottom:8px;
+  right:8px;
+  border:none;
+  background:#2563eb;
+  color:white;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
 }
-
-li {
-  background: white;
-  padding: 8px;
-  margin-bottom: 6px;
-  border-radius: 4px;
-  font-size: 14px;
-  word-break: break-all;
+.vendorImageUpload{
+  width:140px;
+  height:140px;
+  border-radius:16px;
+  border:2px dashed #cbd5e1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  cursor:pointer;
+  color:#64748b;
+  font-size:13px;
+}
+.vendorImageUpload input{
+  display:none;
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<h2>📷 Scanner QR4</h2>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_vendor_image_upload_v5_publish_fixed.html</div>
 
-<video id="video" muted playsinline></video>
-<br>
-<button onclick="startScanner()">Démarrer Scan</button>
-<button onclick="stopScanner()">Stop</button>
-<button onclick="clearHistory()">Effacer historique</button>
 
-<h3>Historique</h3>
-<ul id="history"></ul>
+<header>
+  <div class="row">
+    <label for="userSelect">Utilisateur</label>
+    <select id="userSelect"></select>
+  </div>
+  
+</header>
+
+<main id="content"></main>
+
+<nav class="bottomNav" id="tabs"></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+  // =========================
+  // Données / contextes
+  // =========================
+  const CONTEXTS = {
+    vendeur: ["Home","Offres","Publish","Scan"],
+    acheteur: ["Home","Offres","Favoris"]
+  };
+
+  const USERS = [
+    {id:"vendeur1",label:"Vendeur1",context:"vendeur",profile:{nom:"Paul Martin", adresse:"12 rue des Lilas, 75010 Paris"}, location:{lat:48.8721,lng:2.3656}},
+    {id:"vendeur2",label:"Vendeur2",context:"vendeur",profile:{nom:"Claire Dubois", adresse:"48 avenue Victor Hugo, 69002 Lyon"}, location:{lat:45.7578,lng:4.8320}},
+    {id:"acheteur1",label:"Acheteur1",context:"acheteur",profile:{nom:"Lucas Bernard", adresse:"5 boulevard de la République, 31000 Toulouse"}},
+    {id:"acheteur2",label:"Acheteur2",context:"acheteur",profile:{nom:"Emma Lefèvre", adresse:"22 rue Nationale, 59000 Lille"}},
+  ];
+
+  // =========================
+  // LocalStorage keys
+  // =========================
+  const OFFERS_KEY      = "offers.reverse.v1";
+  const OFFERS_SEQ_KEY  = "offers.seq.rev";
+  const STATE_KEY       = "multiUserState.v1.base";
+  const FAVS_KEY        = "favorites.byBuyer.v1";
+  const VALID_KEY       = "validated.byBuyer.v1";
+  const RESERVE_KEY     = "reserved.byBuyer.v1";
+  const TX_STATUS_KEY = "txStatus.byOfferBuyer.v1"; // { offerId: { buyerId: "Validé" } }
+
+  // =========================
+  // Helpers JSON storage
+  // =========================
+  function loadJSON(key, fallback){
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+  function saveJSON(key, value){
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  // Offres
+  function loadOffers(){ return loadJSON(OFFERS_KEY, []); }
+  function saveOffers(o){ saveJSON(OFFERS_KEY, o); }
+
+  function nextOfferId(){
+    if (globalThis.crypto && crypto.randomUUID) return crypto.randomUUID();
+    let n = +localStorage.getItem(OFFERS_SEQ_KEY) || 0;
+    n += 1; localStorage.setItem(OFFERS_SEQ_KEY, String(n));
+    const ts = Date.now().toString(36);
+    const rnd = Math.random().toString(36).slice(2, 8);
+    return `off_${ts}_${n}_${rnd}`;
+  }
+
+  // =========================
+  // State (tab + profile + buyerPrefs)
+  // =========================
+  const state = loadJSON(STATE_KEY, {});
+  function saveState(){ saveJSON(STATE_KEY, state); }
+
+  function getUser(id){ return USERS.find(u => u.id === id); }
+
+  function ensureUser(u){
+    state[u.id] ??= { tab: "Home", profile: { ...u.profile } };
+    state[u.id].profile ??= { ...u.profile };
+
+    // Acheteur: préférences persistées dans le state (même logique que Nom/Adresse)
+    if (u.context === "acheteur") {
+      state[u.id].buyerPrefs ??= {};
+      if (!("emplacement" in state[u.id].buyerPrefs)) state[u.id].buyerPrefs.emplacement = null;
+      if (!Array.isArray(state[u.id].buyerPrefs.categories)) state[u.id].buyerPrefs.categories = [];
+      if (typeof state[u.id].pointsFlash !== "number") state[u.id].pointsFlash = 0;
+    }
+    saveState();
+  }
+
+  // =========================
+  // Favs / Valid / Reserve (par acheteur)
+  // =========================
+  function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
+  function saveFavsAll(obj){ saveJSON(FAVS_KEY, obj); }
+  function isFav(buyerId, offerId){
+    const all = loadFavsAll();
+    return !!(all[buyerId] && all[buyerId][offerId]);
+  }
+  function setFav(buyerId, offerId, flag){
+    const all = loadFavsAll();
+    all[buyerId] ??= {};
+    if (flag) all[buyerId][offerId] = true;
+    else delete all[buyerId][offerId];
+    saveFavsAll(all);
+  }
+  function favIdsForBuyer(buyerId){
+    const all = loadFavsAll();
+    return new Set(Object.keys(all[buyerId] || {}));
+  }
+  function countFavsForOffer(offerId){
+    const all = loadFavsAll();
+    let n = 0;
+    for (const buyerId of Object.keys(all)) if (all[buyerId] && all[buyerId][offerId]) n += 1;
+    return n;
+  }
+
+  // VALIDATION MANUELLE DÉSACTIVÉE
+  // Le statut "Validé" provient UNIQUEMENT du scan vendeur (TX_STATUS_KEY)
+  function isValid(){
+    return false;
+  }
+  function setValid(){
+    // no-op volontaire
+  }
+  function countValidForOffer(offerId){
+    const all = loadTxAll();
+    const buyers = all?.[offerId];
+    if (!buyers) return 0;
+    return Object.values(buyers).filter(v => v === "Validé").length;
+  }
+
+  function loadReserveAll(){ return loadJSON(RESERVE_KEY, {}); }
+  function saveReserveAll(obj){ saveJSON(RESERVE_KEY, obj); }
+  function isReserved(buyerId, offerId){
+    const all = loadReserveAll();
+    return !!(all[buyerId] && all[buyerId][offerId]);
+  }
+  function setReserved(buyerId, offerId, flag){
+    const all = loadReserveAll();
+    all[buyerId] ??= {};
+    if (flag) all[buyerId][offerId] = true;
+    else delete all[buyerId][offerId];
+    saveReserveAll(all);
+  }
+
+
+  function loadTxAll(){ try { return JSON.parse(localStorage.getItem(TX_STATUS_KEY) || "{}"); } catch { return {}; } }
+  function saveTxAll(obj){ localStorage.setItem(TX_STATUS_KEY, JSON.stringify(obj)); }
+  function getTxStatus(offerId, buyerId){
+    const all = loadTxAll();
+    return all?.[offerId]?.[buyerId] || null;
+  }
+  function setTxStatus(offerId, buyerId, status){
+    const all = loadTxAll();
+    all[offerId] ??= {};
+    if (status) all[offerId][buyerId] = status;
+    else delete all[offerId][buyerId];
+    saveTxAll(all);
+  }
+
+
+  // =========================
+  // UI refs
+  // =========================
+  const userSelect = document.getElementById("userSelect");
+  const tabsEl = document.getElementById("tabs");
+  const content = document.getElementById("content");
+  const toast = document.getElementById("toast");
+
+  function showToast(text){
+    toast.textContent = text;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1400);
+  }
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+
+  // =========================
+  // Expiration / countdown
+  // =========================
+  function parseDateMs(d){ return d ? new Date(d).getTime() : null; }
+  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+  // --- Statut offre acheteur (calculé) ---
+  function statut_offre_acheteur(emplacement, distance){
+    if (emplacement == null || distance == null) return null;
+    if (Number(distance) === Number(emplacement)) return "Réservé";
+    if (Math.abs(Number(emplacement) - Number(distance)) === 1) return "Zone";
+    return null;
+  }
+
+
+  function displayBuyerOfferStatus(offer, buyerId){
+    const tx = getTxStatus(offer.id, buyerId);
+    if (tx === "Validé") return "Validé";
+    const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
+    return statut_offre_acheteur(emp, offer.distance);
+  }
+
+
+  function countReservedBuyersForOffer(offer){
+    let count = 0;
+    for (const u of USERS) {
+      if (u.context !== "acheteur") continue;
+      const emp = state[u.id]?.buyerPrefs?.emplacement;
+      const status = statut_offre_acheteur(emp, offer.distance);
+      if (status === "Réservé") count++;
+    }
+    return count;
+  }
+
+
+
+  // Progression 0..1 basée sur (NOW - createdAt) / (expiresAt - createdAt)
+  // Fallback: fenêtre 24h avant expiration si createdAt absent.
+  function expiryProgress(exp, createdAt){
+    const end = parseDateMs(exp);
+    if (!end) return 0;
+    const now = Date.now();
+
+    let start = Number(createdAt);
+    if (!start || !Number.isFinite(start)) start = end - (1000 * 60 * 60 * 24);
+
+    if (now <= start) return 0;
+    if (now >= end) return 1;
+    return clamp((now - start) / (end - start), 0, 1);
+  }
+
+  function remainingText(exp){
+    const end = parseDateMs(exp);
+    if (!end) return "--:--:--";
+    let ms = end - Date.now();
+    if (ms <= 0) return "00:00:00";
+    const totalSec = Math.floor(ms / 1000);
+    const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+    const s = String(totalSec % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  }
+
+
+  // --- Area (Emplacement - Distance) ---
+  function computeArea(buyerId, offer){
+    const emp = state?.[buyerId]?.buyerPrefs?.emplacement;
+    const dist = offer?.distance;
+    if (emp == null || dist == null) return null;
+    const a = Math.abs(Number(emp) - Number(dist));
+    if (!Number.isFinite(a)) return null;
+    return a;
+  }
+
+
+  // =========================
+  // Tabs
+  // =========================
+  function renderTabs(u){
+    ensureUser(u);
+    const tabs = CONTEXTS[u.context];
+    if (!tabs.includes(state[u.id].tab)) state[u.id].tab = "Home";
+
+    tabsEl.innerHTML = tabs.map(t =>
+      `<button class="tab" data-tab="${t}" aria-selected="${t === state[u.id].tab}">${t}</button>`
+    ).join("");
+
+    [...tabsEl.querySelectorAll(".tab")].forEach(btn => {
+      btn.addEventListener("click", () => {
+        state[u.id].tab = btn.dataset.tab;
+        saveState();
+        render(u);
+      });
+    });
+  }
+
+  // =========================
+  // Offers cards
+  // =========================
+  function renderOffers(u, mode){
+    const allOffers = loadOffers();
+
+    const selectedCats = (u.context === "acheteur")
+      ? (state[u.id]?.buyerPrefs?.categories || [])
+      : null;
+    const catSet = (u.context === "acheteur") ? new Set(selectedCats) : null;
+
+    let visible = [];
+    if (u.context === "vendeur") {
+      visible = allOffers.filter(o => o.sellerId === u.id);
+    } else {
+      const favs = favIdsForBuyer(u.id);
+      if (mode === "favorites") visible = allOffers.filter(o => favs.has(o.id));
+      else visible = allOffers.filter(o => !favs.has(o.id)); // Offres acheteur = NON favorisées
+
+      // Filtre catégories côté acheteur (comportement inchangé)
+      if (catSet.size === 0) visible = [];
+      else visible = visible.filter(o => catSet.has(o.category));
+    }
+
+    if (!visible.length) return ``;
+
+    if (u.context === "acheteur") visible.sort((a,b) => (Number(a.distance)||0) - (Number(b.distance)||0));
+    else visible.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+
+    return `
+      <div class="offers">
+        ${visible.map(o => `
+          <div class="offer" data-id="${escapeHtml(o.id)}" data-created="${escapeHtml(o.createdAt || "")}">
+            <div class="top">
+              ${u.context === "acheteur"
+                ? `<div style="margin-bottom:6px">Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b></div>`
+                : ``}
+
+              <div>
+                ${u.context === "acheteur"
+                  ? `<span class="pill">${escapeHtml(o.type)} : ${escapeHtml(o.value)}</span>`
+                  : `<span class="pill">${escapeHtml(o.type)}</span>
+                     <span class="pill">${escapeHtml(o.value)}</span>`
+                }
+                ${u.context === "vendeur"
+                  ? (o.quantity === "Illimité"
+                      ? ``
+                      : `
+                         <span class="pill">Restant: ${escapeHtml(Math.max(0, (Number(o.quantity) || 0) - countValidForOffer(o.id)))}/${escapeHtml(o.quantity ?? "-")}</span>`)
+                  : `<span class="pill">Restant: ${escapeHtml(Math.max(0, (Number(o.quantity) || 0) - countValidForOffer(o.id)))}/${escapeHtml(o.quantity ?? "-")}</span>`
+                }
+                ${u.context === "acheteur"
+  ? `
+     ${(() => {
+        const a = computeArea(u.id, o);
+        return a !== null ? `<span class="pill">Area: ${escapeHtml(a)}</span>` : ``;
+     })()}
+    `
+  : ``}
+                ${u.context === "acheteur"
+                  ? ``
+                  : ``}
+                <span class="pill">${escapeHtml(o.category)}</span>
+                ${u.context === "acheteur" ? `
+                  ${(() => {
+                    const d = computeDistanceForBuyer(o, u.id);
+                    return `<span class="pill">Distance : ${d !== null ? d + " m" : "-"}</span>`;
+                  })()}
+                ` : ``}
+              </div>
+
+              ${u.context === "acheteur" ? `
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px">
+                  
+                ${(() => { const s = displayBuyerOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}
+                ${(() => { const s = displayBuyerOfferStatus(o, u.id); return s ? `<div class="statusBox"><span class="pill" data-status="${s}">${s}</span></div>` : ``; })()}
+                <svg class="ring" viewBox="0 0 100 100" data-exp="${escapeHtml(o.date || "")}">
+                    <circle class="bg" cx="50" cy="50" r="45"></circle>
+                    <circle class="fg" cx="50" cy="50" r="45"
+                      stroke-dasharray="${2 * Math.PI * 45}"
+                      stroke-dashoffset="${2 * Math.PI * 45 * (1 - expiryProgress(o.date, o.createdAt))}">
+                    </circle>
+                  </svg>
+                  <div class="countdown" data-exp="${escapeHtml(o.date || "")}">${remainingText(o.date)}</div>
+                </div>
+              ` : `
+                <div class="date">Expire : ${escapeHtml(o.date || "-")}</div>
+              `}
+            </div>
+
+            <div class="meta">
+              <div>
+                ${u.context === "vendeur"
+                  ? `⭐ Favori : <b>${countFavsForOffer(o.id)}</b> · 🟡 Réservé : <b>${countReservedBuyersForOffer(o)}</b> · ✅ Validé : <b>${countValidForOffer(o.id)}</b>`
+                  : `Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b> ${o.description ? `<div><button class="descBtn" data-id="${escapeHtml(o.id)}">Description</button></div>` : ``}`
+                }
+              </div>
+
+              ${u.context === "acheteur" ? `
+                <div style="display:flex; gap:8px; flex-wrap:wrap">
+                  <label class="toggleBox" title="Ajouter aux favoris">
+                    <input type="checkbox" class="favToggle" data-id="${escapeHtml(o.id)}" ${isFav(u.id, o.id) ? "checked" : ""}>
+                    <span>Favori</span>
+                  </label>
+                  
+                  
+                </div>
+              ` : ""}
+            </div>
+          
+              ${u.context === "acheteur" ? `
+                <div class="offerDesc" id="desc-${escapeHtml(o.id)}">
+                  ${escapeHtml(o.description || "Aucune description")}
+                </div>
+              ` : ``}
+            </div>
+        `).join("")}
+      </div>
+    `;
+
+  }
+
+  function wireToggles(u){
+    // Favori
+    document.querySelectorAll(".favToggle").forEach(cb => {
+      cb.addEventListener("click", (e) => e.stopPropagation());
+      cb.addEventListener("change", () => {
+        const id = cb.getAttribute("data-id");
+        const checked = cb.checked;
+
+        setFav(u.id, id, checked);
+        showToast(checked ? "Ajouté aux favoris ⭐" : "Retiré des favoris");
+
+        // Disparition temps réel selon l’onglet (comportement inchangé)
+        const tab = state[u.id]?.tab;
+        const card = cb.closest(".offer");
+        if (!card) return;
+
+        if (tab === "Offres" && checked) card.remove();
+        if (tab === "Favoris" && !checked) card.remove();
+      });
+    });
+
+    // Réserver
+    document.querySelectorAll(".resToggle").forEach(cb => {
+      cb.addEventListener("click", (e) => e.stopPropagation());
+      cb.addEventListener("change", () => {
+        const id = cb.getAttribute("data-id");
+        const checked = cb.checked;
+        setReserved(u.id, id, checked);
+        showToast(checked ? "Offre réservée 📌" : "Réservation annulée");
+      });
+    });
+
+    // Validation manuelle désactivée (scan vendeur uniquement)
+  }
+
+  // =========================
+  // Home render helpers
+  // =========================
+  
+function renderHome(u){
+
+  const geoData = JSON.parse(localStorage.getItem("geo.byUser.v1") || "{}");
+  const geo = geoData[u.id] || null;
+  const latDisplay = geo ? Number(geo.lat).toFixed(6) : "-";
+  const lngDisplay = geo ? Number(geo.lng).toFixed(6) : "-";
+
+    const p = state[u.id].profile;
+    const isVendeur = (u.context === "vendeur");
+    const vendorImg = isVendeur ? getVendorImage(u.id) : null;
+
+
+    content.innerHTML = `
+      <div class="card">
+        
+
+        
+        ${isVendeur ? `
+          <div class="vendorImageBlock">
+            ${
+              vendorImg
+              ? `
+                <div class="vendorImageWrapper">
+                  <img src="${vendorImg}" alt="Commerce">
+                  <button onclick="document.getElementById('vendorImgInput').click()">✏️</button>
+                  <input id="vendorImgInput" type="file" accept="image/*"
+                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
+                </div>
+              `
+              : `
+                <label class="vendorImageUpload">
+                  📷 Ajouter une image<br>du commerce
+                  <input type="file" accept="image/*"
+                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
+                </label>
+              `
+            }
+          </div>
+        ` : ``}
+
+        <div class="fields">
+          <div>
+            <label>Nom</label>
+            <input id="nom" value="${escapeHtml(p.nom || "")}">
+          </div>
+          <div>
+            <label>Adresse</label>
+            <input id="adr" value="${escapeHtml(p.adresse || "")}">
+
+${u.context === "vendeur" ? `
+<button id="geoVendorBtn" class="primary" style="margin-top:10px;">
+  🗺️ Géocoder l’adresse
+</button>
+<div id="geoVendorCoords" style="font-size:12px;margin-top:6px;">
+  Lat: ${latDisplay} | Lng: ${lngDisplay}
+</div>
+` : ``}
+
+${u.context === "acheteur" ? `
+<button id="geoBuyerBtn" class="primary" style="margin-top:10px;">
+  📍 Utiliser ma position
+</button>
+<div id="geoBuyerCoords" style="font-size:12px;margin-top:6px;">
+  Lat: ${latDisplay} | Lng: ${lngDisplay}
+</div>
+` : ``}
+
+          </div>
+        </div>
+
+        ${isVendeur ? `
+          <div>
+            <label>Spot</label>
+            <select id="home_vendeur_spot">
+              <option value="">-- choisir --</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+
+          <div style="margin-top:16px">
+            <div class="muted" style="margin-bottom:8px">Emplacement du vendeur</div>
+            <div id="map" style="height:320px;width:100%;border-radius:12px;overflow:hidden"></div>
+          </div>
+        ` : ``}
+
+        ${u.context === "acheteur" ? `
+          <div style="margin-top:16px">
+            <label>Emplacement</label>
+            <select id="emplacement">
+              <option value="">-- choisir --</option>
+              ${Array.from({length:5},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("")}
+            </select>
+          </div>
+
+          <div style="margin-top:16px">
+            <label>Points Flash</label>
+            <input id="pointsFlash" value="${state[u.id].pointsFlash ?? 0}" readonly>
+          </div>
+
+          <div style="margin-top:16px">
+            <div class="muted" style="margin-bottom:8px">Catégories</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              ${["Mode","Concert","Alimentation","Sport"].map(c=>`
+                <label class="toggleBox" style="cursor:pointer">
+                  <input type="checkbox" class="catToggle" value="${c}">
+                  <span>${c}</span>
+                </label>
+              `).join("")}
+            </div>
+          </div>
+        ` : ``}
+      </div>
+    `;
+
+    // Profil (inchangé)
+    document.getElementById("nom").addEventListener("input", e => {
+      state[u.id].profile.nom = e.target.value;
+      saveState();
+    });
+    document.getElementById("adr").addEventListener("input", e => {
+      state[u.id].profile.adresse = e.target.value;
+      saveState();
+    });
+
+    // Acheteur prefs (même logique que Nom/Adresse, mais séparé et fiable)
+    if (u.context === "acheteur") {
+      const prefs = state[u.id].buyerPrefs;
+
+      const emp = document.getElementById("emplacement");
+      if (emp) {
+        const saved = prefs.emplacement;
+        emp.value = (saved === undefined || saved === null) ? "" : String(saved);
+        emp.addEventListener("change", (e) => {
+          const v = e.target.value;
+          prefs.emplacement = (v === "" ? null : Number(v));
+          saveState();
+        });
+      }
+
+      document.querySelectorAll(".catToggle").forEach(cb => {
+        cb.checked = prefs.categories.includes(cb.value);
+        cb.addEventListener("change", () => {
+          const set = new Set(prefs.categories);
+          cb.checked ? set.add(cb.value) : set.delete(cb.value);
+          prefs.categories = Array.from(set);
+          saveState();
+        });
+      });
+    }
+
+    
+    // Champ SAFE : Spot vendeur
+    if (u.context === "vendeur") {
+      const spotEl = document.getElementById("home_vendeur_spot");
+      if (spotEl) {
+        spotEl.value = state[u.id].profile?.spot ?? "";
+        spotEl.addEventListener("change", e => {
+          state[u.id].profile.spot = e.target.value ? Number(e.target.value) : null;
+          saveState();
+        });
+      }
+    }
+
+// Carte vendeur (inchangé)
+    if (isVendeur && u.location) {
+      setTimeout(() => initVendorMap(u, p), 50);
+    }
+  }
+
+  function initVendorMap(u, p){
+    // Remove previous instance if any
+    if (window._leafletMap) {
+      window._leafletMap.remove();
+      window._leafletMap = null;
+    }
+    const map = L.map("map").setView([u.location.lat, u.location.lng], 13);
+    window._leafletMap = map;
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap"
+    }).addTo(map);
+
+    L.marker([u.location.lat, u.location.lng])
+      .addTo(map)
+      .bindPopup(`<b>${escapeHtml(p.nom)}</b><br>${escapeHtml(p.adresse)}`)
+      .openPopup();
+
+    setTimeout(() => map.invalidateSize(), 200);
+  }
+
+  // =========================
+  // Main render
+  // =========================
+  function render(u){
+    ensureUser(u);
+    renderTabs(u);
+
+    const tab = state[u.id].tab;
+
+    if (tab === "Home") {
+      renderHome(u);
+      return;
+    }
+
+    if (tab === "Publish") {
+      if (u.context !== "vendeur") {
+        content.innerHTML = `<div class="card"></div>`;
+        return;
+      }
+
+      content.innerHTML = `
+        <div class="card">
+          
+          
+
+          
+        ${isVendeur ? `
+          <div class="vendorImageBlock">
+            ${
+              vendorImg
+              ? `
+                <div class="vendorImageWrapper">
+                  <img src="${vendorImg}" alt="Commerce">
+                  <button onclick="document.getElementById('vendorImgInput').click()">✏️</button>
+                  <input id="vendorImgInput" type="file" accept="image/*"
+                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
+                </div>
+              `
+              : `
+                <label class="vendorImageUpload">
+                  📷 Ajouter une image<br>du commerce
+                  <input type="file" accept="image/*"
+                    onchange="handleVendorImageUpload(this.files[0], userSelect.value)">
+                </label>
+              `
+            }
+          </div>
+        ` : ``}
+
+        <div class="fields">
+            <div>
+              <label>Type offre</label>
+              <select id="type">
+                <option value="">-- choisir --</option>
+                <option value="Remise">Remise</option>
+                <option value="Offre">Offre</option>
+              </select>
+            </div>
+            <div>
+              <label>Valeur</label>
+              <div id="valueContainer"></div>
+            </div>
+            <div>
+              <label>Quantité</label>
+              <div id="qtyContainer"></div>
+            </div>
+            
+            <div>
+              <label>Catégorie</label>
+              <select id="cat">
+                <option value="">-- choisir --</option>
+                ${["Mode","Concert","Alimentation","Sport"].map(c => `<option value="${c}">${c}</option>`).join("")}
+              </select>
+            </div>
+            <div>
+              <label>Date expiration</label>
+              <input type="datetime-local" id="date">
+            </div>
+          </div>
+
+          
+          <div style="grid-column:1 / -1">
+            <label>Description</label>
+            <textarea id="description" rows="3"
+              style="width:100%;border-radius:10px;background:var(--card);color:var(--text);
+              border:1px solid rgba(255,255,255,.15);padding:10px"></textarea>
+          </div>
+
+<div class="actions">
+            <button class="primary" id="pub">Publier</button>
+          </div>
+
+          <div id="msg" class="muted" style="margin-top:10px"></div>
+        </div>
+      `;
+
+      const msg = document.getElementById("msg");
+      
+      const typeEl = document.getElementById("type");
+      const valueContainer = document.getElementById("valueContainer");
+
+      function renderValueField(){
+        if (typeEl.value === "Offre") {
+          valueContainer.innerHTML = `
+            <div class="valueBlock">
+              <div class="field">
+                <input id="value" placeholder="Valeur">
+              </div>
+              <div class="valueRow">
+                <div class="field">
+                  <label>Minimum d’achat (€)</label>
+                  <input id="minBuy" type="number" min="0" step="1" placeholder="€">
+                </div>
+                <div class="field">
+                  <label>Maximum d’achat (€)</label>
+                  <input id="limit" type="number" min="0" step="1" placeholder="€">
+                </div>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        // Mode Remise
+        valueContainer.innerHTML = `
+          <div class="valueBlock">
+            <div class="field">
+              <select id="value">
+                <option value="">-- choisir --</option>
+                ${[10,20,30,40,50,60,70,80].map(v => `<option value="${v}%">${v}%</option>`).join("")}
+                <option value="__autre__">Autre</option>
+              </select>
+            </div>
+
+            <div class="valueRow">
+              <div class="field">
+                <label>Minimum d’achat (€)</label>
+                <input id="minBuy" type="number" min="0" step="1" placeholder="€">
+              </div>
+              <div class="field">
+                <label>Maximum d’achat (€)</label>
+                <input id="limit" type="number" min="0" step="1" placeholder="€">
+              </div>
+            </div>
+          </div>
+        `;
+
+        const valueEl = document.getElementById("value");
+        valueEl.addEventListener("change", () => {
+          if (valueEl.value === "__autre__") {
+            valueContainer.innerHTML = `
+              <div class="valueBlock">
+                <div class="field">
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <input
+                      id="value"
+                      type="number"
+                      min="0"
+                      step="1"
+                      placeholder="Valeur"
+                      style="flex:1"
+                    >
+                    <span class="pill">%</span>
+                  </div>
+                </div>
+
+                <div class="valueRow">
+                  <div class="field">
+                    <label>Minimum d’achat (€)</label>
+                    <input id="minBuy" type="number" min="0" step="1" placeholder="€">
+                  </div>
+                  <div class="field">
+                    <label>Maximum d’achat (€)</label>
+                    <input id="limit" type="number" min="0" step="1" placeholder="€">
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        });
+      }
+
+      typeEl.addEventListener("change", renderValueField);
+      renderValueField();
+
+
+      const qtyContainer = document.getElementById("qtyContainer");
+
+      function renderQtyField(){
+        qtyContainer.innerHTML = `
+          <select id="qty">
+            ${Array.from({length:10},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("")}
+            <option value="__autre__">Autre</option>
+            <option value="__illimite__">Illimité</option>
+          </select>
+        `;
+
+        const qtyEl = document.getElementById("qty");
+        qtyEl.addEventListener("change", () => {
+          if (qtyEl.value === "__autre__") {
+            qtyContainer.innerHTML = `
+              <input
+                id="qty"
+                type="number"
+                min="1"
+                step="1"
+                placeholder="Quantité"
+              >
+            `;
+          }
+        });
+      }
+
+      renderQtyField();
+
+document.getElementById("pub").addEventListener("click", () => {
+        const type = document.getElementById("type").value;
+        let value = document.getElementById("value").value;
+        if (type === "Remise" && value && !String(value).includes("%")) {
+          value = value + "%";
+        }
+        let qty = document.getElementById("qty").value;
+
+        // Illimité accepté comme valeur métier
+        if (qty === "__illimite__") {
+          qty = "Illimité";
+        }
+
+        // Validation numérique uniquement si ce n’est pas Illimité
+        if (qty !== "Illimité") {
+          if (isNaN(qty) || Number(qty) <= 0) {
+            return msg.textContent = "⚠️ Quantité invalide";
+          }
+          qty = Number(qty);
+        }
+        const cat = document.getElementById("cat").value;
+        const date = document.getElementById("date").value;
+        const description = document.getElementById("description")?.value || "";
+
+        if (!type) return msg.textContent = "⚠️ Choisir un type";
+        if (!value) return msg.textContent = "⚠️ Choisir une valeur";
+        if (!qty || qty <= 0) return msg.textContent = "⚠️ Choisir une quantité valide";
+        if (!cat) return msg.textContent = "⚠️ Choisir une catégorie";
+        if (!date) return msg.textContent = "⚠️ Choisir une date d’expiration";
+
+        const offers = loadOffers();
+        offers.push({
+          id: nextOfferId(),
+          sellerId: u.id,
+          sellerName: state[u.id].profile?.nom || u.profile.nom || u.label,
+          type,
+          value,
+          quantity: Number(qty),
+          category: cat,
+          date,
+          createdAt: Date.now(),
+          description
+        });
+        saveOffers(offers);
+
+        state[u.id].tab = "Offres";
+        saveState();
+        showToast("Offre publiée ✅");
+        render(u);
+      });
+
+      return;
+    }
+
+    if (tab === "Offres") {
+      content.innerHTML = `
+        <div class="card">
+          
+          
+          ${renderOffers(u, "all")}
+        </div>
+      `;
+      if (u.context === "acheteur") wireToggles(u);
+      return;
+    }
+
+    if (tab === "Favoris") {
+      if (u.context !== "acheteur") {
+        content.innerHTML = `<div class="card"></div>`;
+        return;
+      }
+
+      content.innerHTML = `
+        <div class="card">
+          
+          
+          ${renderOffers(u, "favorites")}
+        </div>
+      `;
+      wireToggles(u);
+      return;
+    }
+
+
+    
+if (tab === "Scan") {
+
+  if (u.context !== "vendeur") {
+    content.innerHTML = `<div class="card"></div>`;
+    return;
+  }
+
+  content.innerHTML = `
+    <div class="card" style="text-align:center">
+      <h2>📷 Scanner QR</h2>
+
+      <video id="video" muted playsinline 
+        style="width:100%;max-width:350px;border-radius:12px"></video>
+
+      <br><br>
+
+      <button id="startScan" class="primary">Démarrer Scan</button>
+      <button id="stopScan" class="primary" style="background:#64748b;margin-left:8px">Stop</button>
+      
+
+      
+    </div>
+  `;
+
+  initQrScanner();
+  return;
+}
+
+
+    // fallback
+    content.innerHTML = `<div class="card"></div>`;
+  }
+
+  
+  // Toggle offer description (buyer)
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".descBtn");
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const desc = document.getElementById("desc-" + id);
+    if (!desc) return;
+    desc.classList.toggle("open");
+  });
+
+
+  // =========================
+  // Countdown rings update
+  // =========================
+  function updateRings(){
+    document.querySelectorAll('.ring').forEach(svg=>{
+      const exp = svg.getAttribute('data-exp');
+      const offerEl = svg.closest('.offer');
+      const createdAt = offerEl ? Number(offerEl.getAttribute('data-created')) : null;
+
+      const p = expiryProgress(exp, createdAt);
+      const r = 45;
+      const c = 2 * Math.PI * r;
+      const fg = svg.querySelector('.fg');
+      if (fg) fg.style.strokeDashoffset = c * (1 - p);
+    });
+
+    document.querySelectorAll('.countdown').forEach(el=>{
+      const exp = el.getAttribute('data-exp');
+      el.textContent = remainingText(exp);
+    });
+  }
+
+  // =========================
+  // Boot
+  // =========================
+  userSelect.innerHTML = USERS.map(u => `<option value="${u.id}">${u.label}</option>`).join("");
+
+  userSelect.addEventListener("change", () => render(getUser(userSelect.value)));
+  userSelect.value = USERS[0].id;
+
+  render(getUser(userSelect.value));
+  updateRings();
+  setInterval(updateRings, 1000);
+
+  // --- Seller modal (buyer offer -> click seller name) ---
+  function sellerDisplayName(sellerId){
+    const u = getUser(sellerId);
+    const p = state?.[sellerId]?.profile || u?.profile || {};
+    return p.nom || u?.label || sellerId || "-";
+  }
+  function sellerAddress(sellerId){
+    const u = getUser(sellerId);
+    const p = state?.[sellerId]?.profile || u?.profile || {};
+    return p.adresse || p.address || "-";
+  }
+  function openSellerModal(sellerId){
+    const overlay = document.getElementById("sellerModal");
+    const body = document.getElementById("sellerModalBody");
+    if (!overlay || !body) return;
+    body.innerHTML = `
+      <div style="margin-bottom:8px">Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
+      <div>Adresse : <b>${escapeHtml(sellerAddress(sellerId))}</b></div>
+    
+      <div style="margin-top:12px">
+        <iframe
+          width="100%"
+          height="220"
+          style="border:0; border-radius:12px"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=${encodeURIComponent(sellerAddress(sellerId))}&output=embed">
+        </iframe>
+      </div>
+`;
+    overlay.style.display = "flex";
+  }
+  function closeSellerModal(){
+    const overlay = document.getElementById("sellerModal");
+    if (overlay) overlay.style.display = "none";
+  }
+
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest(".sellerLink");
+    if (link) {
+      e.preventDefault();
+      e.stopPropagation();
+      const sellerId = link.dataset.sellerId;
+      if (sellerId) openSellerModal(sellerId);
+      return;
+    }
+    if (e.target && (e.target.id === "sellerModal")) closeSellerModal();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "sellerModalClose") closeSellerModal();
+  });
+
+
+
+// ==========================
+// GEO V3 CLEAN PATCH
+// ==========================
+
+const GEO_KEY = "geo.byUser.v1";
+const GEO_RESERVED = 10;
+const GEO_ZONE = 250;
+
+function loadGeo(){ return JSON.parse(localStorage.getItem(GEO_KEY) || "{}"); }
+function saveGeo(g){ localStorage.setItem(GEO_KEY, JSON.stringify(g)); }
+
+function setGeo(userId, lat, lng){
+  const g = loadGeo();
+  g[userId] = {lat:Number(lat), lng:Number(lng), ts:Date.now()};
+  saveGeo(g);
+}
+
+function getGeo(userId){
+  return loadGeo()[userId] || null;
+}
+
+function haversine(lat1, lon1, lat2, lon2){
+  const R = 6371000;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+            Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function computeDistanceForBuyer(offer, buyerId){
+  const buyerGeo = getGeo(buyerId);
+  const sellerGeo = getGeo(offer.sellerId);
+
+  if(!buyerGeo || !sellerGeo) return null;
+
+  return Math.round(
+    haversine(
+      buyerGeo.lat,
+      buyerGeo.lng,
+      sellerGeo.lat,
+      sellerGeo.lng
+    )
+  );
+}
+
+function geoStatusForBuyerOffer(offer, buyerId){
+  const b = getGeo(buyerId);
+  const s = getGeo(offer.sellerId);
+  if(!b || !s) return null;
+  const d = haversine(b.lat,b.lng,s.lat,s.lng);
+  if(d <= GEO_RESERVED) return "Réservé";
+  if(d <= GEO_ZONE) return "Zone";
+  return null;
+}
+
+// Override status logic
+displayBuyerOfferStatus = function(offer, buyerId){
+  const tx = getTxStatus(offer.id, buyerId);
+  if(tx === "Validé") return "Validé";
+  return geoStatusForBuyerOffer(offer,buyerId);
+};
+
+// Buyer GPS button auto inject
+document.addEventListener("click", e=>{
+  if(e.target.id==="geoBuyerBtn"){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      setGeo(userSelect.value,pos.coords.latitude,pos.coords.longitude);
+      alert("Position mise à jour");
+    });
+  }
+});
+
+// Vendor auto geocode
+async function geoVendor(){
+  const adr = document.getElementById("adr")?.value;
+  if(!adr) return;
+  const r = await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(adr));
+  const j = await r.json();
+  if(j[0]){
+    setGeo(userSelect.value,j[0].lat,j[0].lon);
+    alert("Adresse géocodée");
+  }
+}
+document.addEventListener("click", e=>{
+  if(e.target.id==="geoVendorBtn") geoVendor();
+});
+
+// Hide old Spot / Emplacement UI if still present
+document.addEventListener("DOMContentLoaded", ()=>{
+  document.querySelectorAll("label").forEach(l=>{
+    if(l.textContent.includes("Spot") || l.textContent.includes("Emplacement")){
+      l.closest("div")?.remove();
+    }
+  });
+});
+
+
+</script>
+
+  <div id="sellerModal" class="modalOverlay" style="display:none">
+    <div class="modalCard card">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px">
+        <div style="font-weight:800">Vendeur</div>
+        <button id="sellerModalClose" class="ghostBtn" aria-label="Fermer">✕</button>
+      </div>
+      <div id="sellerModalBody" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+<script>
+const GEO_KEY="geo.byUser.v1";
+
+function loadGeo(){ return JSON.parse(localStorage.getItem(GEO_KEY)||"{}"); }
+function saveGeo(g){ localStorage.setItem(GEO_KEY,JSON.stringify(g)); }
+function setGeo(id,lat,lng){
+  const g=loadGeo();
+  g[id]={lat:Number(lat),lng:Number(lng)};
+  saveGeo(g);
+}
+
+document.addEventListener("click", async (e)=>{
+
+  if(e.target.id==="geoVendorBtn"){
+    const uId=userSelect.value;
+    const adr=document.getElementById("adr").value;
+    if(!adr) return alert("Adresse vide");
+    const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(adr));
+    const j=await r.json();
+    if(j[0]){
+      setGeo(uId,j[0].lat,j[0].lon);
+      document.getElementById("geoVendorCoords").textContent=
+        "Lat: "+Number(j[0].lat).toFixed(6)+" | Lng: "+Number(j[0].lon).toFixed(6);
+    } else alert("Adresse introuvable");
+  }
+
+  if(e.target.id==="geoBuyerBtn"){
+    const uId=userSelect.value;
+    if(!navigator.geolocation) return alert("Non supporté");
+    navigator.geolocation.getCurrentPosition(pos=>{
+      setGeo(uId,pos.coords.latitude,pos.coords.longitude);
+      document.getElementById("geoBuyerCoords").textContent=
+        "Lat: "+pos.coords.latitude.toFixed(6)+" | Lng: "+pos.coords.longitude.toFixed(6);
+    });
+  }
+
+});
+</script>
+
+
+<script>
+// ===== BUYER GEO SAFE (NON-DESTRUCTIVE) =====
+
+const GEO_KEY = "geo.buyer.v1";
+
+function saveBuyerGeo(lat, lng){
+  localStorage.setItem(GEO_KEY, JSON.stringify({
+    lat: Number(lat),
+    lng: Number(lng),
+    ts: Date.now()
+  }));
+}
+
+function loadBuyerGeo(){
+  try {
+    return JSON.parse(localStorage.getItem(GEO_KEY));
+  } catch {
+    return null;
+  }
+}
+
+function getBuyerPosition(){
+  if(!navigator.geolocation){
+    alert("Géolocalisation non supportée");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    saveBuyerGeo(pos.coords.latitude, pos.coords.longitude);
+    render(getUser(userSelect.value));
+  });
+}
+
+function enhanceBuyerHome(){
+  const u = getUser(userSelect.value);
+  if(!u || u.context !== "acheteur") return;
+
+  const adrInput = document.getElementById("adr");
+  if(!adrInput) return;
+
+  if(document.getElementById("buyerGeoBlock")) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.id = "buyerGeoBlock";
+  wrapper.style.marginTop = "10px";
+
+  const btn = document.createElement("button");
+  btn.textContent = "📍 Utiliser ma position";
+  btn.onclick = getBuyerPosition;
+
+  const display = document.createElement("div");
+  display.style.fontSize = "12px";
+  display.style.marginTop = "6px";
+
+  const geo = loadBuyerGeo();
+  display.textContent = geo
+    ? "Lat: " + geo.lat.toFixed(6) + " | Lng: " + geo.lng.toFixed(6)
+    : "Lat: - | Lng: -";
+
+  wrapper.appendChild(btn);
+  wrapper.appendChild(display);
+
+  adrInput.parentNode.insertBefore(wrapper, adrInput.nextSibling);
+}
+
+// Hook after render (safe wrap)
+const _render_original = render;
+render = function(){
+  _render_original.apply(this, arguments);
+  setTimeout(enhanceBuyerHome, 0);
+};
+</script>
+
 
 <script>
 let codeReader;
-let videoElement = document.getElementById('video');
+let videoElement;
 
-async function startScanner() {
+function initQrScanner(){
+  videoElement = document.getElementById('video');
+  
+
+  document.getElementById("startScan").onclick = startScanner;
+  document.getElementById("stopScan").onclick = stopScanner;
+  
+}
+
+async function startScanner(){
   codeReader = new ZXing.BrowserQRCodeReader();
-
   try {
-    codeReader.decodeFromVideoDevice(
-      null,
-      videoElement,
-      (result, err) => {
-        if (result) {
-          const value = result.text;
-          saveToHistory(value);
-          alert("QR détecté : " + value);
-          stopScanner();
-          loadHistory();
+    codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
+      
+
+if (result) {
+
+        const buyerId = result.text.trim();
+        const vendeur = getUser(userSelect.value);
+        const offers = loadOffers();
+
+        let validated = false;
+
+        for (const o of offers) {
+
+          const currentStatus = getTxStatus(o.id, buyerId);
+
+          if (
+            o.sellerId === vendeur.id &&
+            geoStatusForBuyerOffer(o, buyerId) === "Réservé" &&
+            currentStatus !== "Validé"
+          ) {
+
+            setTxStatus(o.id, buyerId, "Validé");
+
+            // 🔥 +1 Point Flash (only if not already validated)
+            state[buyerId].pointsFlash = (state[buyerId].pointsFlash || 0) + 1;
+            saveState();
+
+            validated = true;
+            break;
+          }
+
         }
+
+        if (validated) {
+          alert("✅ Offre validée +1 Point Flash");
+        } else {
+          alert("⚠️ Aucune offre Réservée trouvée ou déjà validée");
+        }
+
+        stopScanner();
+        render(getUser(userSelect.value));
       }
-    );
+
+
+    });
   } catch (err) {
     alert("Erreur caméra : " + err);
   }
 }
 
-function stopScanner() {
-  if (codeReader) {
-    codeReader.reset();
-  }
+function stopScanner(){
+  if (codeReader) codeReader.reset();
 }
 
-function saveToHistory(data) {
-  let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
-  history.push({
-    value: data,
-    date: new Date().toLocaleString()
-  });
-  localStorage.setItem("qrHistory", JSON.stringify(history));
+
+
+</script>
+
+
+<script>
+const VENDOR_IMG_KEY = "vendor.image.byUser.v1";
+
+function loadVendorImages(){
+  try { return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY)||"{}"); }
+  catch { return {}; }
 }
 
-function loadHistory() {
-  let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
-  const historyList = document.getElementById("history");
-  historyList.innerHTML = "";
-
-  history.slice().reverse().forEach(item => {
-    let li = document.createElement("li");
-    li.textContent = item.date + " - " + item.value;
-    historyList.appendChild(li);
-  });
+function saveVendorImages(obj){
+  localStorage.setItem(VENDOR_IMG_KEY, JSON.stringify(obj));
 }
 
-function clearHistory() {
-  localStorage.removeItem("qrHistory");
-  loadHistory();
+function setVendorImage(userId, dataUrl){
+  const imgs = loadVendorImages();
+  imgs[userId] = dataUrl;
+  saveVendorImages(imgs);
 }
 
-loadHistory();
+function getVendorImage(userId){
+  return loadVendorImages()[userId] || null;
+}
+
+function handleVendorImageUpload(file, userId){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    setVendorImage(userId, e.target.result);
+    render(getUser(userSelect.value));
+  };
+  reader.readAsDataURL(file);
+}
 </script>
 
 </body>
