@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_extension_vendor_image_safe_v9_heart_favorite.html</title>
+  <title>index_extension_vendor_image_safe_v12_countdown_smaller.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -112,7 +112,7 @@
       transform: rotate(-90deg);
       transform-origin: 50% 50%;
     }
-    .ring .bg{ stroke: rgba(255,255,255,.15); }
+    .ring .bg{ stroke: #e5e7eb; }
     .ring .fg{ stroke: #9fb0d0; transition: stroke-dashoffset .6s linear; }
     .countdown{ color: var(--muted); font-size: 18px; margin-top: 6px; }
 
@@ -550,7 +550,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_extension_vendor_image_safe_v9_heart_favorite.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_extension_vendor_image_safe_v12_countdown_smaller.html</div>
 
 
 <header>
@@ -788,15 +788,25 @@ label[for="emplacement"] {
 
   function remainingText(exp){
     const end = parseDateMs(exp);
-    if (!end) return "--:--:--";
+    if (!end) return "--";
     let ms = end - Date.now();
-    if (ms <= 0) return "00:00:00";
+    if (ms <= 0) return "0s";
+
     const totalSec = Math.floor(ms / 1000);
-    const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
-    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
-    const s = String(totalSec % 60).padStart(2, "0");
-    return `${h}:${m}:${s}`;
-  }
+
+    const days = Math.floor(totalSec / 86400);
+    const hours = Math.floor((totalSec % 86400) / 3600);
+    const minutes = Math.floor((totalSec % 3600) / 60);
+    const seconds = totalSec % 60;
+
+    let parts = [];
+    if (days > 0) parts.push(days + "j");
+    if (hours > 0) parts.push(hours + "h");
+    if (minutes > 0) parts.push(minutes + "m");
+    if (seconds > 0 || parts.length === 0) parts.push(seconds + "s");
+
+    return parts.join("");
+}
 
 
   // --- Area (Emplacement - Distance) ---
