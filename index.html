@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_stable_with_vendor_thumb_full_clean.html</title>
+  <title>index_step2_vendor_image_home_only.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -542,7 +542,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_stable_with_vendor_thumb_full_clean.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_step2_vendor_image_home_only.html</div>
 
 
 <header>
@@ -858,14 +858,7 @@ label[for="emplacement"] {
           <div class="offer" data-id="${escapeHtml(o.id)}" data-created="${escapeHtml(o.createdAt || "")}">
             <div class="top">
               ${u.context === "acheteur"
-                ? `<div style="margin-bottom:6px">${
-  getVendorImage(o.sellerId)
-    ? `<div style="width:80px;height:80px;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;">
-         <img src="${getVendorImage(o.sellerId)}"
-              style="width:100%;height:100%;object-fit:cover;">
-       </div>`
-    : `Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b>`
-}</div>`
+                ? `<div style="margin-bottom:6px">Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b></div>`
                 : ``}
 
               <div>
@@ -924,14 +917,7 @@ label[for="emplacement"] {
               <div>
                 ${u.context === "vendeur"
                   ? `⭐ Favori : <b>${countFavsForOffer(o.id)}</b> · 🟡 Réservé : <b>${countReservedBuyersForOffer(o)}</b> · ✅ Validé : <b>${countValidForOffer(o.id)}</b>`
-                  : `${
-  getVendorImage(o.sellerId)
-    ? `<div style="width:80px;height:80px;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;">
-         <img src="${getVendorImage(o.sellerId)}"
-              style="width:100%;height:100%;object-fit:cover;">
-       </div>`
-    : `Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b>`
-} ${o.description ? `<div><button class="descBtn" data-id="${escapeHtml(o.id)}">Description</button></div>` : ``}`
+                  : `Vendeur : <b><span class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}">${escapeHtml(o.sellerName || "-")}</span></b> ${o.description ? `<div><button class="descBtn" data-id="${escapeHtml(o.id)}">Description</button></div>` : ``}`
                 }
               </div>
 
@@ -1015,21 +1001,25 @@ function renderHome(u){
 
         
 ${u.context === "vendeur" ? `
-<div style="margin-bottom:16px; display:flex; justify-content:center;">
+<div style="display:flex;justify-content:center;margin-bottom:16px">
   ${getVendorImage(u.id)
     ? `
-      <div style="position:relative;width:140px;height:140px;">
+      <div style="position:relative;width:140px;height:140px">
         <img src="${getVendorImage(u.id)}"
-             style="width:100%;height:100%;object-fit:cover;border-radius:14px;border:1px solid #e2e8f0;">
+             style="width:100%;height:100%;object-fit:cover;border-radius:14px;border:1px solid #e2e8f0">
         <button onclick="document.getElementById('vendorImgInput').click()"
-          style="position:absolute;bottom:6px;right:6px;border:none;border-radius:50%;width:30px;height:30px;background:#2563eb;color:white;">✏️</button>
+          style="position:absolute;bottom:6px;right:6px;border:none;border-radius:50%;
+                 width:30px;height:30px;background:#2563eb;color:white;cursor:pointer">✏️</button>
         <input id="vendorImgInput" type="file" accept="image/*"
           style="display:none"
           onchange="handleVendorImageUpload(this.files[0],'${u.id}')">
       </div>
     `
     : `
-      <label style="width:140px;height:140px;border:2px dashed #cbd5e1;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-align:center;font-size:13px;color:#64748b;">
+      <label style="width:140px;height:140px;border:2px dashed #cbd5e1;
+                    border-radius:14px;display:flex;align-items:center;
+                    justify-content:center;cursor:pointer;
+                    text-align:center;font-size:13px;color:#64748b">
         📷 Ajouter image<br>du commerce
         <input type="file" accept="image/*"
           style="display:none"
@@ -1713,10 +1703,117 @@ document.addEventListener("DOMContentLoaded", ()=>{
     </div>
   </div>
 
+<script>
+const GEO_KEY="geo.byUser.v1";
 
+function loadGeo(){ return JSON.parse(localStorage.getItem(GEO_KEY)||"{}"); }
+function saveGeo(g){ localStorage.setItem(GEO_KEY,JSON.stringify(g)); }
+function setGeo(id,lat,lng){
+  const g=loadGeo();
+  g[id]={lat:Number(lat),lng:Number(lng)};
+  saveGeo(g);
+}
+
+document.addEventListener("click", async (e)=>{
+
+  if(e.target.id==="geoVendorBtn"){
+    const uId=userSelect.value;
+    const adr=document.getElementById("adr").value;
+    if(!adr) return alert("Adresse vide");
+    const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(adr));
+    const j=await r.json();
+    if(j[0]){
+      setGeo(uId,j[0].lat,j[0].lon);
+      document.getElementById("geoVendorCoords").textContent=
+        "Lat: "+Number(j[0].lat).toFixed(6)+" | Lng: "+Number(j[0].lon).toFixed(6);
+    } else alert("Adresse introuvable");
+  }
+
+  if(e.target.id==="geoBuyerBtn"){
+    const uId=userSelect.value;
+    if(!navigator.geolocation) return alert("Non supporté");
+    navigator.geolocation.getCurrentPosition(pos=>{
+      setGeo(uId,pos.coords.latitude,pos.coords.longitude);
+      document.getElementById("geoBuyerCoords").textContent=
+        "Lat: "+pos.coords.latitude.toFixed(6)+" | Lng: "+pos.coords.longitude.toFixed(6);
+    });
+  }
+
+});
+</script>
 
 
 <script>
+// ===== BUYER GEO SAFE (NON-DESTRUCTIVE) =====
+
+const GEO_KEY = "geo.buyer.v1";
+
+function saveBuyerGeo(lat, lng){
+  localStorage.setItem(GEO_KEY, JSON.stringify({
+    lat: Number(lat),
+    lng: Number(lng),
+    ts: Date.now()
+  }));
+}
+
+function loadBuyerGeo(){
+  try {
+    return JSON.parse(localStorage.getItem(GEO_KEY));
+  } catch {
+    return null;
+  }
+}
+
+function getBuyerPosition(){
+  if(!navigator.geolocation){
+    alert("Géolocalisation non supportée");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    saveBuyerGeo(pos.coords.latitude, pos.coords.longitude);
+    render(getUser(userSelect.value));
+  });
+}
+
+function enhanceBuyerHome(){
+  const u = getUser(userSelect.value);
+  if(!u || u.context !== "acheteur") return;
+
+  const adrInput = document.getElementById("adr");
+  if(!adrInput) return;
+
+  if(document.getElementById("buyerGeoBlock")) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.id = "buyerGeoBlock";
+  wrapper.style.marginTop = "10px";
+
+  const btn = document.createElement("button");
+  btn.textContent = "📍 Utiliser ma position";
+  btn.onclick = getBuyerPosition;
+
+  const display = document.createElement("div");
+  display.style.fontSize = "12px";
+  display.style.marginTop = "6px";
+
+  const geo = loadBuyerGeo();
+  display.textContent = geo
+    ? "Lat: " + geo.lat.toFixed(6) + " | Lng: " + geo.lng.toFixed(6)
+    : "Lat: - | Lng: -";
+
+  wrapper.appendChild(btn);
+  wrapper.appendChild(display);
+
+  adrInput.parentNode.insertBefore(wrapper, adrInput.nextSibling);
+}
+
+// Hook after render (safe wrap)
+const _render_original = render;
+render = function(){
+  _render_original.apply(this, arguments);
+  setTimeout(enhanceBuyerHome, 0);
+};
 </script>
 
 
@@ -1796,44 +1893,61 @@ function stopScanner(){
 
 
 <script>
+// ===== VENDOR IMAGE STORAGE (STEP 1 SAFE) =====
+
 const VENDOR_IMG_KEY = "vendor.image.v1";
 
 function loadVendorImages(){
-  try { return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY) || "{}"); }
-  catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY) || "{}");
+  } catch {
+    return {};
+  }
 }
+
 function saveVendorImages(obj){
   localStorage.setItem(VENDOR_IMG_KEY, JSON.stringify(obj));
 }
-function getVendorImage(id){
-  return loadVendorImages()[id] || null;
-}
-function setVendorImage(id, dataUrl){
+
+function setVendorImage(userId, dataUrl){
   const imgs = loadVendorImages();
-  imgs[id] = dataUrl;
+  imgs[userId] = dataUrl;
   saveVendorImages(imgs);
+}
+
+function getVendorImage(userId){
+  return loadVendorImages()[userId] || null;
 }
 
 function handleVendorImageUpload(file, userId){
   if(!file) return;
+
   const reader = new FileReader();
   reader.onload = function(e){
     const img = new Image();
     img.onload = function(){
+
+      // Crop center square
       const size = Math.min(img.width, img.height);
       const sx = (img.width - size) / 2;
       const sy = (img.height - size) / 2;
+
       const canvas = document.createElement("canvas");
       canvas.width = 300;
       canvas.height = 300;
+
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, sx, sy, size, size, 0, 0, 300, 300);
+
       const cropped = canvas.toDataURL("image/jpeg", 0.85);
       setVendorImage(userId, cropped);
-      render(getUser(userSelect.value));
+
+      console.log("Vendor image stored for:", userId);
     };
+
     img.src = e.target.result;
   };
+
   reader.readAsDataURL(file);
 }
 </script>
