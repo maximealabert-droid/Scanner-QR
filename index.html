@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_extension_vendor_image_safe_v12_countdown_smaller.html</title>
+  <title>index_extension_vendor_image_safe_v13_sort_by_distance.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -550,7 +550,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_extension_vendor_image_safe_v12_countdown_smaller.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_extension_vendor_image_safe_v13_sort_by_distance.html</div>
 
 
 <header>
@@ -867,8 +867,20 @@ label[for="emplacement"] {
 
     if (!visible.length) return ``;
 
-    if (u.context === "acheteur") visible.sort((a,b) => (Number(a.distance)||0) - (Number(b.distance)||0));
-    else visible.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+    if (u.context === "acheteur") {
+      visible.sort((a,b) => {
+        const da = computeDistanceForBuyer(a, u.id);
+        const db = computeDistanceForBuyer(b, u.id);
+
+        if (da === null && db === null) return 0;
+        if (da === null) return 1;
+        if (db === null) return -1;
+
+        return da - db;
+      });
+    } else {
+      visible.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+    }
 
     return `
       <div class="offers">
