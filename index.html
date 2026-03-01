@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_step2_vendor_image_home_safe.html</title>
+  <title>index_extension_vendor_image_safe.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -542,7 +542,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_step2_vendor_image_home_safe.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_extension_vendor_image_safe.html</div>
 
 
 <header>
@@ -996,35 +996,6 @@ function renderHome(u){
 
     content.innerHTML = `
       <div class="card">
-${u.context === "vendeur" ? `
-<div style="display:flex;justify-content:center;margin-bottom:16px">
-  ${getVendorImage(u.id)
-    ? `
-      <div style="position:relative;width:140px;height:140px">
-        <img src="${getVendorImage(u.id)}"
-             style="width:100%;height:100%;object-fit:cover;border-radius:14px;border:1px solid #e2e8f0">
-        <button onclick="document.getElementById('vendorImgInput').click()"
-          style="position:absolute;bottom:6px;right:6px;border:none;border-radius:50%;
-                 width:30px;height:30px;background:#2563eb;color:white;cursor:pointer">✏️</button>
-        <input id="vendorImgInput" type="file" accept="image/*"
-          style="display:none"
-          onchange="handleVendorImageUpload(this.files[0],'${u.id}')">
-      </div>
-    `
-    : `
-      <label style="width:140px;height:140px;border:2px dashed #cbd5e1;
-                    border-radius:14px;display:flex;align-items:center;
-                    justify-content:center;cursor:pointer;
-                    text-align:center;font-size:13px;color:#64748b">
-        📷 Ajouter image<br>du commerce
-        <input type="file" accept="image/*"
-          style="display:none"
-          onchange="handleVendorImageUpload(this.files[0],'${u.id}')">
-      </label>
-    `}
-</div>
-` : ``}
-
         
 
         <div class="fields">
@@ -1892,55 +1863,118 @@ function stopScanner(){
 
 
 <script>
-// ===== VENDOR IMAGE STORAGE (SAFE) =====
-const VENDOR_IMG_KEY = "vendor.image.v1";
+// ===============================
+// VENDOR IMAGE EXTENSION (SAFE)
+// ===============================
+(function(){
 
-function loadVendorImages(){
-  try { return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY) || "{}"); }
-  catch { return {}; }
-}
+  const VENDOR_IMG_KEY = "vendor.image.v1";
 
-function saveVendorImages(obj){
-  localStorage.setItem(VENDOR_IMG_KEY, JSON.stringify(obj));
-}
+  function loadVendorImages(){
+    try { return JSON.parse(localStorage.getItem(VENDOR_IMG_KEY) || "{}"); }
+    catch { return {}; }
+  }
 
-function setVendorImage(userId, dataUrl){
-  const imgs = loadVendorImages();
-  imgs[userId] = dataUrl;
-  saveVendorImages(imgs);
-}
+  function saveVendorImages(obj){
+    localStorage.setItem(VENDOR_IMG_KEY, JSON.stringify(obj));
+  }
 
-function getVendorImage(userId){
-  return loadVendorImages()[userId] || null;
-}
+  function setVendorImage(userId, dataUrl){
+    const imgs = loadVendorImages();
+    imgs[userId] = dataUrl;
+    saveVendorImages(imgs);
+  }
 
-function handleVendorImageUpload(file, userId){
-  if(!file) return;
+  function getVendorImage(userId){
+    return loadVendorImages()[userId] || null;
+  }
 
-  const reader = new FileReader();
-  reader.onload = function(e){
-    const img = new Image();
-    img.onload = function(){
-      const size = Math.min(img.width, img.height);
-      const sx = (img.width - size) / 2;
-      const sy = (img.height - size) / 2;
+  function handleVendorImageUpload(file){
+    if(!file) return;
 
-      const canvas = document.createElement("canvas");
-      canvas.width = 300;
-      canvas.height = 300;
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
 
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, sx, sy, size, size, 0, 0, 300, 300);
+        const size = Math.min(img.width, img.height);
+        const sx = (img.width - size) / 2;
+        const sy = (img.height - size) / 2;
 
-      const cropped = canvas.toDataURL("image/jpeg", 0.85);
-      setVendorImage(userId, cropped);
+        const canvas = document.createElement("canvas");
+        canvas.width = 300;
+        canvas.height = 300;
 
-      render(getUser(userSelect.value));
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, sx, sy, size, size, 0, 0, 300, 300);
+
+        const cropped = canvas.toDataURL("image/jpeg", 0.85);
+        setVendorImage(userSelect.value, cropped);
+
+        injectVendorImageBlock();
+      };
+      img.src = e.target.result;
     };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
+    reader.readAsDataURL(file);
+  }
+
+  function injectVendorImageBlock(){
+
+    const u = USERS.find(x => x.id === userSelect.value);
+    if(!u || u.context !== "vendeur") return;
+    if(state[u.id]?.tab !== "Home") return;
+
+    const card = document.querySelector("#content .card");
+    if(!card) return;
+
+    if(document.getElementById("vendorImageBlock")) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.id = "vendorImageBlock";
+    wrapper.style.display = "flex";
+    wrapper.style.justifyContent = "center";
+    wrapper.style.marginBottom = "16px";
+
+    const imgData = getVendorImage(u.id);
+
+    if(imgData){
+      wrapper.innerHTML = `
+        <div style="position:relative;width:140px;height:140px">
+          <img src="${imgData}"
+               style="width:100%;height:100%;object-fit:cover;border-radius:14px;border:1px solid #e2e8f0">
+          <button style="position:absolute;bottom:6px;right:6px;border:none;border-radius:50%;
+                         width:30px;height:30px;background:#2563eb;color:white;cursor:pointer">✏️</button>
+          <input type="file" accept="image/*" style="display:none">
+        </div>
+      `;
+      const btn = wrapper.querySelector("button");
+      const input = wrapper.querySelector("input");
+      btn.onclick = () => input.click();
+      input.onchange = (e) => handleVendorImageUpload(e.target.files[0]);
+    } else {
+      wrapper.innerHTML = `
+        <label style="width:140px;height:140px;border:2px dashed #cbd5e1;
+                      border-radius:14px;display:flex;align-items:center;
+                      justify-content:center;cursor:pointer;
+                      text-align:center;font-size:13px;color:#64748b">
+          📷 Ajouter image<br>du commerce
+          <input type="file" accept="image/*" style="display:none">
+        </label>
+      `;
+      const input = wrapper.querySelector("input");
+      input.onchange = (e) => handleVendorImageUpload(e.target.files[0]);
+    }
+
+    card.insertBefore(wrapper, card.firstChild);
+  }
+
+  const observer = new MutationObserver(() => {
+    injectVendorImageBlock();
+  });
+
+  observer.observe(document.getElementById("content"), { childList: true });
+
+})();
 </script>
 
 </body>
