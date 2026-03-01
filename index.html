@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_master_base_v4_scan_square_no_geo_alert.html</title>
+  <title>index_master_base_v5_scan_square_strict.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -265,6 +265,22 @@
     width: 100%;
     max-width: 420px;
     margin: 0 auto;
+    object-fit: cover;
+  }
+
+
+  /* Strict square QR camera */
+  #reader {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  #reader video {
+    width: 100% !important;
+    height: 100% !important;
     object-fit: cover;
   }
 
@@ -587,7 +603,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v4_scan_square_no_geo_alert.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v5_scan_square_strict.html</div>
 
 
 <header>
