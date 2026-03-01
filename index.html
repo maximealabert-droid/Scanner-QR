@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_master_base_v4_auto_scan_square.html</title>
+  <title>index_master_base_v3_qr_clean_safe_buyer_home_hidden_clean.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -256,16 +256,6 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     display:block;
-  }
-
-
-  /* Scan camera square format */
-  #reader, #scanner-container, video {
-    aspect-ratio: 1 / 1;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    object-fit: cover;
   }
 
 </style>
@@ -587,7 +577,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v4_auto_scan_square.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v3_qr_clean_safe_buyer_home_hidden_clean.html</div>
 
 
 <header>
@@ -1542,11 +1532,6 @@ document.getElementById("pub").addEventListener("click", () => {
     }
 
     if (tab === "Scan") {
-      setTimeout(() => {
-        if (typeof startScanner === "function") {
-          startScanner();
-        }
-      }, 0);
 
   if (u.context !== "vendeur") {
     content.innerHTML = `<div class="card"></div>`;
@@ -2092,6 +2077,31 @@ function stopScanner(){
 
   observer.observe(document.getElementById("content"), { childList: true });
 
+})();
+</script>
+
+
+<script>
+(function(){
+  const originalRender = window.renderHome;
+  if (!originalRender) return;
+
+  window.renderHome = function(){
+    originalRender.apply(this, arguments);
+
+    const u = window.users && window.users[window.currentUser];
+    if (!u || u.context !== "acheteur") return;
+
+    // Hide Adresse block
+    document.querySelectorAll(".card .field-label").forEach(label => {
+      if (label.textContent.trim() === "Adresse") {
+        if (label.parentElement) label.parentElement.style.display = "none";
+      }
+      if (label.textContent.trim() === "Emplacement") {
+        if (label.parentElement) label.parentElement.style.display = "none";
+      }
+    });
+  };
 })();
 </script>
 
