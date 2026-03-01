@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_master_base_v3_auto_start_scan.html</title>
+  <title>index_master_base_v5_scan_ui_improved.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -258,6 +258,16 @@
     display:block;
   }
 
+
+  /* Scan camera square format */
+  #reader, #scanner-container, video {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    object-fit: cover;
+  }
+
 </style>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -386,7 +396,13 @@ document.addEventListener("click", e=>{
   if(e.target.id==="geoBuyerBtn"){
     navigator.geolocation.getCurrentPosition(pos=>{
       setGeo(userSelect.value,pos.coords.latitude,pos.coords.longitude);
-      alert("Position mise à jour");
+      
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
     });
   }
 });
@@ -399,7 +415,13 @@ async function geoVendor(){
   const j = await r.json();
   if(j[0]){
     setGeo(userSelect.value,j[0].lat,j[0].lon);
-    alert("Adresse géocodée");
+    
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
   }
 }
 document.addEventListener("click", e=>{
@@ -427,7 +449,13 @@ function publish() {
   const date  = document.getElementById("date")?.value || "";
 
   if (!type || !value || !qty) {
-    alert("Veuillez remplir tous les champs.");
+    
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
     return;
   }
 
@@ -447,7 +475,13 @@ function publish() {
 
   localStorage.setItem("offers", JSON.stringify(offers));
 
-  alert("Offre publiée ✅");
+  
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
 
   if (typeof render === "function") render();
 }
@@ -577,7 +611,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v3_auto_start_scan.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v5_scan_ui_improved.html</div>
 
 
 <header>
@@ -1739,7 +1773,13 @@ document.addEventListener("click", e=>{
   if(e.target.id==="geoBuyerBtn"){
     navigator.geolocation.getCurrentPosition(pos=>{
       setGeo(userSelect.value,pos.coords.latitude,pos.coords.longitude);
-      alert("Position mise à jour");
+      
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
     });
   }
 });
@@ -1752,7 +1792,13 @@ async function geoVendor(){
   const j = await r.json();
   if(j[0]){
     setGeo(userSelect.value,j[0].lat,j[0].lon);
-    alert("Adresse géocodée");
+    
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
   }
 }
 document.addEventListener("click", e=>{
@@ -1797,19 +1843,37 @@ document.addEventListener("click", async (e)=>{
   if(e.target.id==="geoVendorBtn"){
     const uId=userSelect.value;
     const adr=document.getElementById("adr").value;
-    if(!adr) return alert("Adresse vide");
+    if(!adr) return 
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
     const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(adr));
     const j=await r.json();
     if(j[0]){
       setGeo(uId,j[0].lat,j[0].lon);
       document.getElementById("geoVendorCoords").textContent=
         "Lat: "+Number(j[0].lat).toFixed(6)+" | Lng: "+Number(j[0].lon).toFixed(6);
-    } else alert("Adresse introuvable");
+    } else 
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
   }
 
   if(e.target.id==="geoBuyerBtn"){
     const uId=userSelect.value;
-    if(!navigator.geolocation) return alert("Non supporté");
+    if(!navigator.geolocation) return 
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
     navigator.geolocation.getCurrentPosition(pos=>{
       setGeo(uId,pos.coords.latitude,pos.coords.longitude);
       document.getElementById("geoBuyerCoords").textContent=
@@ -1844,7 +1908,13 @@ function loadBuyerGeo(){
 
 function getBuyerPosition(){
   if(!navigator.geolocation){
-    alert("Géolocalisation non supportée");
+    
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
     return;
   }
 
@@ -1945,9 +2015,21 @@ if (result) {
         }
 
         if (validated) {
-          alert("✅ Offre validée +1 Point Flash");
+          
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
         } else {
-          alert("⚠️ Aucune offre Réservée trouvée ou déjà validée");
+          
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
         }
 
         stopScanner();
@@ -1957,7 +2039,13 @@ if (result) {
 
     });
   } catch (err) {
-    alert("Erreur caméra : " + err);
+    
+    const box = document.getElementById("scanResultBox");
+    if (box) {
+      box.style.display = "block";
+      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
+    }
+    
   }
 }
 
@@ -2087,3 +2175,25 @@ function stopScanner(){
 
 </body>
 </html>
+
+<script>
+(function(){
+  const originalStop = window.stopScanner;
+  if (originalStop) {
+    window.stopScanner = function(){
+      originalStop.apply(this, arguments);
+      const btn = document.getElementById("startScanBtn");
+      if (btn) btn.style.display = "inline-block";
+    };
+  }
+
+  const originalStart = window.startScanner;
+  if (originalStart) {
+    window.startScanner = function(){
+      const btn = document.getElementById("startScanBtn");
+      if (btn) btn.style.display = "none";
+      originalStart.apply(this, arguments);
+    };
+  }
+})();
+</script>
