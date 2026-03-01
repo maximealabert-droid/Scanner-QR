@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_master_base_v5_scan_ui_improved.html</title>
+  <title>index_master_base_v4_auto_scan_square.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -396,13 +396,7 @@ document.addEventListener("click", e=>{
   if(e.target.id==="geoBuyerBtn"){
     navigator.geolocation.getCurrentPosition(pos=>{
       setGeo(userSelect.value,pos.coords.latitude,pos.coords.longitude);
-      
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+      alert("Position mise à jour");
     });
   }
 });
@@ -415,13 +409,7 @@ async function geoVendor(){
   const j = await r.json();
   if(j[0]){
     setGeo(userSelect.value,j[0].lat,j[0].lon);
-    
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    alert("Adresse géocodée");
   }
 }
 document.addEventListener("click", e=>{
@@ -449,13 +437,7 @@ function publish() {
   const date  = document.getElementById("date")?.value || "";
 
   if (!type || !value || !qty) {
-    
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    alert("Veuillez remplir tous les champs.");
     return;
   }
 
@@ -475,13 +457,7 @@ function publish() {
 
   localStorage.setItem("offers", JSON.stringify(offers));
 
-  
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+  alert("Offre publiée ✅");
 
   if (typeof render === "function") render();
 }
@@ -611,7 +587,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v5_scan_ui_improved.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v4_auto_scan_square.html</div>
 
 
 <header>
@@ -1773,13 +1749,7 @@ document.addEventListener("click", e=>{
   if(e.target.id==="geoBuyerBtn"){
     navigator.geolocation.getCurrentPosition(pos=>{
       setGeo(userSelect.value,pos.coords.latitude,pos.coords.longitude);
-      
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+      alert("Position mise à jour");
     });
   }
 });
@@ -1792,13 +1762,7 @@ async function geoVendor(){
   const j = await r.json();
   if(j[0]){
     setGeo(userSelect.value,j[0].lat,j[0].lon);
-    
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    alert("Adresse géocodée");
   }
 }
 document.addEventListener("click", e=>{
@@ -1843,37 +1807,19 @@ document.addEventListener("click", async (e)=>{
   if(e.target.id==="geoVendorBtn"){
     const uId=userSelect.value;
     const adr=document.getElementById("adr").value;
-    if(!adr) return 
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    if(!adr) return alert("Adresse vide");
     const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(adr));
     const j=await r.json();
     if(j[0]){
       setGeo(uId,j[0].lat,j[0].lon);
       document.getElementById("geoVendorCoords").textContent=
         "Lat: "+Number(j[0].lat).toFixed(6)+" | Lng: "+Number(j[0].lon).toFixed(6);
-    } else 
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    } else alert("Adresse introuvable");
   }
 
   if(e.target.id==="geoBuyerBtn"){
     const uId=userSelect.value;
-    if(!navigator.geolocation) return 
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    if(!navigator.geolocation) return alert("Non supporté");
     navigator.geolocation.getCurrentPosition(pos=>{
       setGeo(uId,pos.coords.latitude,pos.coords.longitude);
       document.getElementById("geoBuyerCoords").textContent=
@@ -1908,13 +1854,7 @@ function loadBuyerGeo(){
 
 function getBuyerPosition(){
   if(!navigator.geolocation){
-    
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    alert("Géolocalisation non supportée");
     return;
   }
 
@@ -2015,21 +1955,9 @@ if (result) {
         }
 
         if (validated) {
-          
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+          alert("✅ Offre validée +1 Point Flash");
         } else {
-          
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+          alert("⚠️ Aucune offre Réservée trouvée ou déjà validée");
         }
 
         stopScanner();
@@ -2039,13 +1967,7 @@ if (result) {
 
     });
   } catch (err) {
-    
-    const box = document.getElementById("scanResultBox");
-    if (box) {
-      box.style.display = "block";
-      box.innerHTML = "QR détecté : <b>" + decodedText + "</b>";
-    }
-    
+    alert("Erreur caméra : " + err);
   }
 }
 
@@ -2175,25 +2097,3 @@ function stopScanner(){
 
 </body>
 </html>
-
-<script>
-(function(){
-  const originalStop = window.stopScanner;
-  if (originalStop) {
-    window.stopScanner = function(){
-      originalStop.apply(this, arguments);
-      const btn = document.getElementById("startScanBtn");
-      if (btn) btn.style.display = "inline-block";
-    };
-  }
-
-  const originalStart = window.startScanner;
-  if (originalStart) {
-    window.startScanner = function(){
-      const btn = document.getElementById("startScanBtn");
-      if (btn) btn.style.display = "none";
-      originalStart.apply(this, arguments);
-    };
-  }
-})();
-</script>
