@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_V7_no_expired_buyers_only_v2.html</title>
+  <title>index_V7_status_distance_rule.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -605,7 +605,7 @@ label[for="emplacement"] {
 
 
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_V7_no_expired_buyers_only_v2.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_V7_status_distance_rule.html</div>
 
 
 <header>
@@ -797,19 +797,27 @@ label[for="emplacement"] {
   function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
   // --- Statut offre acheteur (calculé) ---
-  function statut_offre_acheteur(emplacement, distance){
-    if (emplacement == null || distance == null) return null;
-    if (Number(distance) === Number(emplacement)) return "Réservé";
-    if (Math.abs(Number(emplacement) - Number(distance)) === 1) return "Zone";
-    return null;
+  
+function statut_offre_acheteur(offer, buyerId){
+  const d = computeDistanceForBuyer(offer, buyerId);
+
+  if (d === null || !Number.isFinite(d)) {
+    return "Hors zone";
   }
+
+  if (d < 50) return "Réservé";
+  if (d < 1000) return "Zone";
+
+  return "Hors zone";
+}
+
 
 
   function displayBuyerOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
     if (tx === "Validé") return "Validé";
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
-    return statut_offre_acheteur(emp, offer.distance);
+    return statut_offre_acheteur(offer, buyerId);
   }
 
 
@@ -818,7 +826,7 @@ label[for="emplacement"] {
     for (const u of USERS) {
       if (u.context !== "acheteur") continue;
       const emp = state[u.id]?.buyerPrefs?.emplacement;
-      const status = statut_offre_acheteur(emp, offer.distance);
+      const status = statut_offre_acheteur(offer, buyerId);
       if (status === "Réservé") count++;
     }
     return count;
