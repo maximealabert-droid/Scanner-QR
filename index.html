@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_master_base_v6_auto_geo_acheteur1_only.html</title>
+  <title>index_V7_no_expired_buyers_only_v2.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -475,34 +475,7 @@ function publish() {
 
   alert("Offre publiée ✅");
 
-  if (typeof render === "function") 
-function startAutoGeoAcheteur1() {
-
-  if (!navigator.geolocation) return;
-
-  setInterval(function() {
-
-    if (typeof users === "undefined") return;
-    if (typeof currentUser === "undefined") return;
-
-    if (currentUser !== "acheteur1") return;
-
-    navigator.geolocation.getCurrentPosition(function(pos) {
-
-      users[currentUser].lat = pos.coords.latitude;
-      users[currentUser].lng = pos.coords.longitude;
-
-      localStorage.setItem("users", JSON.stringify(users));
-
-    }, function() {
-      // silent fail
-    });
-
-  }, 60000); // 60 seconds
-}
-
-render();
-startAutoGeoAcheteur1();
+  if (typeof render === "function") render();
 }
 
 </script>
@@ -630,7 +603,9 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v6_auto_geo_acheteur1_only.html</div>
+
+
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_V7_no_expired_buyers_only_v2.html</div>
 
 
 <header>
@@ -943,6 +918,16 @@ label[for="emplacement"] {
       // Filtre catégories côté acheteur (comportement inchangé)
       if (catSet.size === 0) visible = [];
       else visible = visible.filter(o => catSet.has(o.category));
+    }
+
+    
+    // ✅ EXCLUSION OFFRES EXPIRÉES (ACHETEURS UNIQUEMENT)
+    if (u.context === "acheteur") {
+      visible = visible.filter(o => {
+        const endMs = Number(parseDateMs(o.date));
+        if (!endMs || !Number.isFinite(endMs)) return false;
+        return endMs >= Date.now();
+      });
     }
 
     if (!visible.length) return ``;
