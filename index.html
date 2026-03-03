@@ -47,7 +47,10 @@ body {
 video {
   width: 100%;
   max-width: 350px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border-radius: 12px;
+  background: black;
 }
 
 button.action {
@@ -59,6 +62,24 @@ button.action {
   background: #0078D4;
   color: white;
   cursor: pointer;
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: red;
 }
 
 ul {
@@ -77,12 +98,6 @@ li {
   font-size: 14px;
   word-break: break-all;
 }
-
-#result {
-  margin-top: 15px;
-  font-weight: bold;
-  color: #0078D4;
-}
 </style>
 </head>
 
@@ -96,7 +111,6 @@ li {
 <div id="home" class="tab-content active">
   <h2>🏠 Accueil</h2>
   <p>Bienvenue dans l'application Scanner QR4.</p>
-  <p>Allez dans l'onglet Scan pour démarrer automatiquement la caméra.</p>
 </div>
 
 <div id="scan" class="tab-content">
@@ -104,10 +118,11 @@ li {
 
   <video id="video" muted playsinline></video>
   <br>
-  <button class="action" onclick="stopScanner()">Stop</button>
-  <button class="action" onclick="clearHistory()">Effacer historique</button>
 
-  <p id="result"></p>
+  <button id="startBtn" class="action" onclick="startScanner()">Démarrer</button>
+  <button id="stopBtn" class="action" onclick="stopScanner()" style="display:none;">Stop</button>
+
+  <div id="result"></div>
 
   <h3>Historique</h3>
   <ul id="history"></ul>
@@ -119,7 +134,6 @@ let videoElement = document.getElementById('video');
 
 function openTab(evt, tabName) {
 
-  // Hide all tabs
   document.querySelectorAll('.tab-content').forEach(tab => {
     tab.classList.remove('active');
   });
@@ -128,14 +142,10 @@ function openTab(evt, tabName) {
     btn.classList.remove('active');
   });
 
-  // Show selected tab
   document.getElementById(tabName).classList.add('active');
   evt.currentTarget.classList.add('active');
 
-  // Auto start / stop camera
-  if (tabName === 'scan') {
-    startScanner();
-  } else {
+  if (tabName !== 'scan') {
     stopScanner();
   }
 }
@@ -145,23 +155,44 @@ async function startScanner() {
 
   codeReader = new ZXing.BrowserQRCodeReader();
 
+  document.getElementById("startBtn").style.display = "none";
+  document.getElementById("stopBtn").style.display = "inline-block";
+  document.getElementById("result").textContent = "";
+  document.getElementById("result").className = "";
+
   try {
     codeReader.decodeFromVideoDevice(
       null,
       videoElement,
       (result, err) => {
         if (result) {
-          const value = result.text;
+          const value = result.text.trim();
+          handleResult(value);
           saveToHistory(value);
-          document.getElementById("result").textContent = "QR détecté : " + value;
           stopScanner();
           loadHistory();
         }
       }
     );
   } catch (err) {
-    document.getElementById("result").textContent = "Erreur caméra : " + err;
+    showMessage("Erreur caméra", "error");
   }
+}
+
+function handleResult(value) {
+  if (value === "acheteur1") {
+    showMessage("Success", "success");
+  } else if (value === "acheteur2") {
+    showMessage("Echec", "error");
+  } else {
+    showMessage("QR inconnu", "error");
+  }
+}
+
+function showMessage(message, type) {
+  const resultDiv = document.getElementById("result");
+  resultDiv.textContent = message;
+  resultDiv.className = type;
 }
 
 function stopScanner() {
@@ -169,6 +200,9 @@ function stopScanner() {
     codeReader.reset();
     codeReader = null;
   }
+
+  document.getElementById("startBtn").style.display = "inline-block";
+  document.getElementById("stopBtn").style.display = "none";
 }
 
 function saveToHistory(data) {
@@ -190,11 +224,6 @@ function loadHistory() {
     li.textContent = item.date + " - " + item.value;
     historyList.appendChild(li);
   });
-}
-
-function clearHistory() {
-  localStorage.removeItem("qrHistory");
-  loadHistory();
 }
 
 loadHistory();
