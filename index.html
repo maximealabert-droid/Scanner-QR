@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_V7_scan_button_fix.html</title>
+  <title>index_V8_qr_scanner_clean_autostop.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -621,7 +621,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_V7_qr_scanner_square_autostop_v3.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_V8_qr_scanner_clean_autostop.html</div>
 
 
 <header>
@@ -1936,91 +1936,128 @@ render = function(){
 </script>
 
 
+
 <script>
-let codeReader;
-let videoElement;
+let codeReader = null;
+let videoElement = null;
+let scanLocked = false;
+let isScanning = false;
 
 function initQrScanner(){
   videoElement = document.getElementById('video');
-  
 
-  document.getElementById("startScan").onclick = startScanner;
-  document.getElementById("stopScan").onclick = stopScanner;
-  
+  const startBtn = document.getElementById("startScan");
+  const stopBtn  = document.getElementById("stopScan");
+
+  if(startBtn) startBtn.onclick = startScanner;
+  if(stopBtn)  stopBtn.onclick  = stopScanner;
+
+  updateScanButtons();
 }
 
-async function startScanner() {
-  // UI ON
-  const startBtn = document.getElementById("btnStartScan");
-  const stopBtn = document.getElementById("btnStopScan");
-  if (startBtn) startBtn.style.display = "none";
-  if (stopBtn) stopBtn.style.display = "inline-block";
+function updateScanButtons(){
+  const startBtn = document.getElementById("startScan");
+  const stopBtn  = document.getElementById("stopScan");
+
+  if(!startBtn || !stopBtn) return;
+
+  startBtn.style.display = isScanning ? "none" : "block";
+  stopBtn.style.display  = isScanning ? "block" : "none";
+}
+
+async function startScanner(){
+
+  if(isScanning) return;
+
+  scanLocked = false;
+  isScanning = true;
+  updateScanButtons();
 
   codeReader = new ZXing.BrowserQRCodeReader();
+
   try {
-    codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
-      
 
-if (result) {
+    await codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
 
-        const buyerId = result.text.trim();
-        const vendeur = getUser(userSelect.value);
-        const offers = loadOffers();
+      if(result && !scanLocked){
 
-        let validated = false;
+        scanLocked = true;
 
-        for (const o of offers) {
-
-          const currentStatus = getTxStatus(o.id, buyerId);
-
-          if (
-            o.sellerId === vendeur.id &&
-            geoStatusForBuyerOffer(o, buyerId) === "Réservé" &&
-            currentStatus !== "Validé"
-          ) {
-
-            setTxStatus(o.id, buyerId, "Validé");
-
-            // 🔥 +1 Point Flash (only if not already validated)
-            state[buyerId].pointsFlash = (state[buyerId].pointsFlash || 0) + 1;
-            saveState();
-
-            validated = true;
-            break;
-          }
-
-        }
-
-        if (validated) {
-          alert("✅ Offre validée +1 Point Flash");
-        } else {
-          alert("⚠️ Aucune offre Réservée trouvée ou déjà validée");
-        }
+        handleScanResult(result.text.trim());
 
         stopScanner();
-        render(getUser(userSelect.value));
       }
 
-
     });
+
   } catch (err) {
-    alert("Erreur caméra : " + err);
+    showScanResult("❌ Erreur caméra : " + err);
+    stopScanner();
   }
 }
 
-function stopScanner() {
-  // UI OFF
-  const startBtn = document.getElementById("btnStartScan");
-  const stopBtn = document.getElementById("btnStopScan");
-  if (stopBtn) stopBtn.style.display = "none";
-  if (startBtn) startBtn.style.display = "inline-block";
+function stopScanner(){
 
-  if (codeReader) codeReader.reset();
+  isScanning = false;
+  updateScanButtons();
+
+  if(codeReader){
+    codeReader.reset();
+    codeReader = null;
+  }
+
+  if(videoElement && videoElement.srcObject){
+    videoElement.srcObject.getTracks().forEach(track => track.stop());
+    videoElement.srcObject = null;
+  }
 }
 
+function showScanResult(text){
+  const resultBox = document.getElementById("scanResult");
+  if(resultBox){
+    resultBox.innerHTML = text;
+  }
+}
 
+function handleScanResult(buyerId){
 
+  const vendeur = getUser(userSelect.value);
+  const offers = loadOffers();
+
+  let validated = false;
+
+  for (const o of offers) {
+
+    const currentStatus = getTxStatus(o.id, buyerId);
+
+    if (
+      o.sellerId === vendeur.id &&
+      geoStatusForBuyerOffer(o, buyerId) === "Réservé" &&
+      currentStatus !== "Validé"
+    ) {
+
+      setTxStatus(o.id, buyerId, "Validé");
+
+      state[buyerId].pointsFlash =
+        (state[buyerId].pointsFlash || 0) + 1;
+
+      saveState();
+
+      validated = true;
+      break;
+    }
+  }
+
+  if(validated){
+    showScanResult("✅ Offre validée<br>+1 Point Flash");
+  } else {
+    showScanResult("⚠️ Aucune offre Réservée trouvée<br>ou déjà validée");
+  }
+
+  render(getUser(userSelect.value));
+}
 </script>
+
 
 
 <script>
