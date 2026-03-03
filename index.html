@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_V9_offres_filters_maps_geo_CLEAN_banner_v7.html</title>
+  <title>index_V9_offres_filters_maps_geo_CLEAN_banner_v17.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -660,12 +660,22 @@ document.addEventListener("DOMContentLoaded", function(){
   // =========================
   const CONTEXTS = {
     vendeur: ["Home","Offres","Publish","Scan"],
-    acheteur: ["Home","Offres","Favoris","QR"]
+    acheteur: ["Home","Offres","QR"]
   };
 
   const USERS = [
     {id:"vendeur1",label:"Vendeur1",context:"vendeur",profile:{nom:"Paul Martin", adresse:"12 rue des Lilas, 75010 Paris"}, location:{lat:48.8721,lng:2.3656}},
     {id:"vendeur2",label:"Vendeur2",context:"vendeur",profile:{nom:"Claire Dubois", adresse:"48 avenue Victor Hugo, 69002 Lyon"}, location:{lat:45.7578,lng:4.8320}},
+  {
+    id:"vendeur3",
+    label:"Vendeur3",
+    context:"vendeur",
+    profile:{
+      nom:"Bouboule",
+      adresse:"8 avenue Jean Jaurès, 69002 Lyon"
+    },
+    location:{lat:45.7578,lng:4.8320}
+  },
     {id:"acheteur1",label:"Acheteur1",context:"acheteur",profile:{nom:"Lucas Bernard", adresse:"5 boulevard de la République, 31000 Toulouse"}},
     {id:"acheteur2",label:"Acheteur2",context:"acheteur",profile:{nom:"Bubble Time", adresse:"22 rue Nationale, 59000 Lille"}},
   ];
@@ -1222,18 +1232,12 @@ ${u.context === "acheteur" ? `
           </div>
 
           <div style="margin-top:16px">
-            <div class="muted" style="margin-bottom:8px">Emplacement du vendeur</div>
             <div id="map" style="height:320px;width:100%;border-radius:12px;overflow:hidden"></div>
           </div>
         ` : ``}
 
         ${u.context === "acheteur" ? `
           <div style="margin-top:16px">
-            <label>Emplacement</label>
-            <select id="emplacement">
-              <option value="">-- choisir --</option>
-              ${Array.from({length:5},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("")}
-            </select>
           </div>
 
           <div style="margin-top:16px">
@@ -1246,7 +1250,7 @@ ${u.context === "acheteur" ? `
             <div style="display:flex;gap:10px;flex-wrap:wrap">
               ${["Mode","Concert","Alimentation","Sport"].map(c=>`
                 <label class="toggleBox" style="cursor:pointer">
-                  <input type="checkbox" class="catToggle" value="${c}">
+                  <input type="checkbox" class="catToggle" value="${c}" checked>
                   <span>${c}</span>
                 </label>
               `).join("")}
@@ -1624,7 +1628,7 @@ document.getElementById("pub").addEventListener("click", () => {
             </label>
 
             <label style="display:flex;align-items:center;gap:8px;margin-top:18px">
-              <input type="checkbox" id="filterFav" ${ui.favoritesOnly?"checked":""}>
+              <input type="checkbox" id="filterFav" ${ui.favoritesOnly?"checked":""} checked>
               ⭐ Favoris
             </label>
 
