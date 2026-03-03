@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_V7_scan_clean_v2.html</title>
+  <title>index_V7_scan_button_fix.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -302,21 +302,6 @@
   display: block;
 }
 
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -511,44 +496,6 @@ function publish() {
   if (typeof render === "function") render();
 }
 
-
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
 </script>
 
 <style>
@@ -558,41 +505,11 @@ function handleQRResult(text) {
     right:12px;
     z-index:2;
   }
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
 
 <style>
-  
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-</style>
+  </style>
 
 
 <style>
@@ -608,21 +525,6 @@ function handleQRResult(text) {
     background-color: #4da3ff !important;
     color: #ffffff !important;
   }
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
 
@@ -640,21 +542,6 @@ function handleQRResult(text) {
     font-size:18px; line-height:1; padding:6px 10px;
     border-radius:10px;
   }
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
 
@@ -665,21 +552,6 @@ function handleQRResult(text) {
     color:#ffffff !important;
     border:none !important;
   }
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
 
@@ -690,21 +562,6 @@ function handleQRResult(text) {
     color:#ffffff !important;
     border:none !important;
   }
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
 
@@ -743,21 +600,6 @@ function handleQRResult(text) {
 main{
   padding-bottom: calc(92px + env(safe-area-inset-bottom));
 }
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
 
@@ -773,66 +615,13 @@ label[for="home_vendeur_spot"],
 label[for="emplacement"] {
   display: none !important;
 }
-
-.qr-square {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-#qr-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>
 
-<script src="https://unpkg.com/@zxing/library@latest">
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
-</script>
+<script src="https://unpkg.com/@zxing/library@latest"></script>
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_V7_scan_clean_v2.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_V7_qr_scanner_square_autostop_v3.html</div>
 
 
 <header>
@@ -1800,14 +1589,7 @@ document.getElementById("pub").addEventListener("click", () => {
     <div class="card" style="text-align:center">
       <h2>📷 Scanner QR</h2>
 
-      <div class="qr-square">
-<div id="qr-container" class="qr-square"></div>
-<div id="qr-result" style="text-align:center;font-weight:600;margin-top:15px;"></div>
-<div style="text-align:center;margin-top:15px;">
-  <button id="startBtn" onclick="startScanner()">Démarrer</button>
-  <button id="stopBtn" onclick="stopScanner()" style="display:none;">Stop</button>
-</div>
-</div>
+      <div class="qr-square"><video id="video" muted playsinline></video></div>
 
       <br><br>
 
@@ -2028,44 +1810,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 
-
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
 </script>
 
   <div id="sellerModal" class="modalOverlay" style="display:none">
@@ -2115,44 +1859,6 @@ document.addEventListener("click", async (e)=>{
   }
 
 });
-
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
 </script>
 
 
@@ -2227,44 +1933,6 @@ render = function(){
   _render_original.apply(this, arguments);
   setTimeout(enhanceBuyerHome, 0);
 };
-
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
 </script>
 
 
@@ -2281,7 +1949,13 @@ function initQrScanner(){
   
 }
 
-async function startScanner(){
+async function startScanner() {
+  // UI ON
+  const startBtn = document.getElementById("btnStartScan");
+  const stopBtn = document.getElementById("btnStopScan");
+  if (startBtn) startBtn.style.display = "none";
+  if (stopBtn) stopBtn.style.display = "inline-block";
+
   codeReader = new ZXing.BrowserQRCodeReader();
   try {
     codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
@@ -2334,50 +2008,18 @@ if (result) {
   }
 }
 
-function stopScanner(){
+function stopScanner() {
+  // UI OFF
+  const startBtn = document.getElementById("btnStartScan");
+  const stopBtn = document.getElementById("btnStopScan");
+  if (stopBtn) stopBtn.style.display = "none";
+  if (startBtn) startBtn.style.display = "inline-block";
+
   if (codeReader) codeReader.reset();
 }
 
 
 
-
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
 </script>
 
 
@@ -2494,44 +2136,6 @@ function handleQRResult(text) {
   observer.observe(document.getElementById("content"), { childList: true });
 
 })();
-
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
 </script>
 
 
@@ -2556,44 +2160,6 @@ function handleQRResult(text) {
     };
   }
 })();
-
-let html5QrCode;
-let scannerActive = false;
-
-function startScanner() {
-  if (scannerActive) return;
-
-  document.getElementById("qr-result").innerHTML = "";
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("stopBtn").style.display = "inline-block";
-
-  html5QrCode = new Html5Qrcode("qr-container");
-  scannerActive = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      handleQRResult(decodedText);
-    }
-  );
-}
-
-function stopScanner() {
-  if (!scannerActive) return;
-
-  html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    scannerActive = false;
-    document.getElementById("startBtn").style.display = "inline-block";
-    document.getElementById("stopBtn").style.display = "none";
-  });
-}
-
-function handleQRResult(text) {
-  stopScanner();
-  document.getElementById("qr-result").innerText = text;
-}
 </script>
 
 </body>
