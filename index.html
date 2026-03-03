@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_V9_offres_filters_maps_geo_CLEAN_banner_v2.html</title>
+  <title>index_V9_offres_filters_maps_geo_CLEAN_banner_v7.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -323,7 +323,7 @@
     if (!overlay || !body) return;
     body.innerHTML = `
       <div style="margin-bottom:8px">Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
-      <div>Adresse : <b>${escapeHtml(sellerAddress(sellerId))}</b></div>
+      
     
       <div style="margin-top:12px">
         <iframe
@@ -1184,7 +1184,7 @@ function renderHome(u){
             <input id="nom" value="${escapeHtml(p.nom || "")}">
           </div>
           <div>
-            <label>Adresse</label>
+            ${u.context === "vendeur" ? `<label>Adresse</label>` : ``}
             <input id="adr" value="${escapeHtml(p.adresse || "")}">
 
 ${u.context === "vendeur" ? `
@@ -1878,7 +1878,7 @@ document.getElementById("pub").addEventListener("click", () => {
     if (!overlay || !body) return;
     body.innerHTML = `
       <div style="margin-bottom:8px">Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
-      <div>Adresse : <b>${escapeHtml(sellerAddress(sellerId))}</b></div>
+      
     
       <div style="margin-top:12px">
         <iframe
