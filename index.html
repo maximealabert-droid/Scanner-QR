@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_V7_geo_thresholds_updated.html</title>
+  <title>index_V7_qr_scanner_square_autostop.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -284,6 +284,24 @@
     object-fit: cover;
   }
 
+
+/* ✅ QR scanner square viewport */
+.qr-square {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+}
+.qr-square video{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 </style>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -348,8 +366,8 @@
 // ==========================
 
 const GEO_KEY = "geo.byUser.v1";
-const GEO_RESERVED = 50;
-const GEO_ZONE = 1000;
+const GEO_RESERVED = 10;
+const GEO_ZONE = 250;
 
 function loadGeo(){ return JSON.parse(localStorage.getItem(GEO_KEY) || "{}"); }
 function saveGeo(g){ localStorage.setItem(GEO_KEY, JSON.stringify(g)); }
@@ -603,9 +621,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-
-
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_V7_geo_thresholds_updated.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_master_base_v5_scan_square_strict.html</div>
 
 
 <header>
@@ -918,16 +934,6 @@ label[for="emplacement"] {
       // Filtre catégories côté acheteur (comportement inchangé)
       if (catSet.size === 0) visible = [];
       else visible = visible.filter(o => catSet.has(o.category));
-    }
-
-    
-    // ✅ EXCLUSION OFFRES EXPIRÉES (ACHETEURS UNIQUEMENT)
-    if (u.context === "acheteur") {
-      visible = visible.filter(o => {
-        const endMs = Number(parseDateMs(o.date));
-        if (!endMs || !Number.isFinite(endMs)) return false;
-        return endMs >= Date.now();
-      });
     }
 
     if (!visible.length) return ``;
@@ -1583,8 +1589,7 @@ document.getElementById("pub").addEventListener("click", () => {
     <div class="card" style="text-align:center">
       <h2>📷 Scanner QR</h2>
 
-      <video id="video" muted playsinline 
-        style="width:100%;max-width:350px;border-radius:12px"></video>
+      <div class="qr-square"><video id="video" muted playsinline></video></div>
 
       <br><br>
 
@@ -1711,8 +1716,8 @@ document.getElementById("pub").addEventListener("click", () => {
 // ==========================
 
 const GEO_KEY = "geo.byUser.v1";
-const GEO_RESERVED = 50;
-const GEO_ZONE = 1000;
+const GEO_RESERVED = 10;
+const GEO_ZONE = 250;
 
 function loadGeo(){ return JSON.parse(localStorage.getItem(GEO_KEY) || "{}"); }
 function saveGeo(g){ localStorage.setItem(GEO_KEY, JSON.stringify(g)); }
