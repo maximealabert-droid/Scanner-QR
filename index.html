@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v12_green_device.html</title>
+  <title>index_v14_click_seller_thumbnail.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -1034,7 +1034,7 @@ function renderOffers(u, mode){
                         const img = imgs[o.sellerId] || null;
                         if (img) {
                           return `
-                            <div style="width:70px;height:70px;border-radius:14px;overflow:hidden">
+                            <div class="sellerLink" data-seller-id="${escapeHtml(o.sellerId)}" style="width:70px;height:70px;border-radius:14px;overflow:hidden;cursor:pointer">
                               <img src="${img}" style="width:100%;height:100%;object-fit:cover">
                             </div>
                           `;
