@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_device_geo_offres.html</title>
+  <title>index_device_geo_offres_button_map.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -1321,36 +1321,12 @@ ${u.context === "acheteur" ? `
       window._leafletMap.remove();
       window._leafletMap = null;
     }
-    const map = L.map("map").setView([0,0],2);
+    const map = L.map("map").setView([u.location.lat, u.location.lng], 13);
     window._leafletMap = map;
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "© OpenStreetMap"
     }).addTo(map);
-  // === DEVICE GEOLOCATION ===
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        L.marker([lat, lng])
-          .addTo(map)
-          .bindPopup("📍 Ma position");
-
-        map.setView([lat, lng], 14);
-      },
-      function(err) {
-        console.log("Geolocation error:", err);
-      },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 8000
-      }
-    );
-  }
-
 
     L.marker([u.location.lat, u.location.lng])
       .addTo(map)
@@ -1682,7 +1658,7 @@ document.getElementById("pub").addEventListener("click", () => {
         wireToggles(u);
       }
 
-      function renderMap(){
+      function renderMap() {
 
         const container = document.getElementById("offersContainer");
         container.innerHTML =
