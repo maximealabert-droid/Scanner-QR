@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_device_geo_offres_button_map.html</title>
+  <title>index_v11.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -1658,7 +1658,7 @@ document.getElementById("pub").addEventListener("click", () => {
         wireToggles(u);
       }
 
-      function renderMap() {
+      function renderMap(){
 
         const container = document.getElementById("offersContainer");
         container.innerHTML =
@@ -1666,19 +1666,37 @@ document.getElementById("pub").addEventListener("click", () => {
 
         const offers = getFilteredOffers();
 
-        // default view: buyer geo if any, else Paris
-        const buyerGeo = getGeo(u.id);
-        const map = L.map("mapView").setView(
-          buyerGeo ? [buyerGeo.lat, buyerGeo.lng] : [48.8566, 2.3522],
-          buyerGeo ? 14 : 6
-        );
+        // Initialisation neutre
+        const map = L.map("mapView").setView([0,0], 2);
 
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        // === POSITION DU DEVICE ===
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            pos => {
+              const lat = pos.coords.latitude;
+              const lng = pos.coords.longitude;
+
+              L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup("📍 Ma position");
+
+              map.setView([lat, lng], 14);
+            },
+            err => {
+              console.log("Geolocation error:", err);
+            },
+            {
+              enableHighAccuracy: true,
+              maximumAge: 0,
+              timeout: 8000
+            }
+          );
+        }L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "© OpenStreetMap"
         }).addTo(map);
 
         const bounds = [];
-        if (buyerGeo) bounds.push([buyerGeo.lat, buyerGeo.lng]);
+        
 
         offers.forEach(o => {
           const geo = getGeo(o.sellerId);
