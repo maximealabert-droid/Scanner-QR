@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_V8_1_qr_scanner_overlay_stable.html</title>
+  <title>index_V8_qr_scanner_overlay_FIXED_scan_hardstop.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -621,7 +621,7 @@ label[for="emplacement"] {
 </head>
 <body>
 
-<div style="font-size:11px;color:#888;padding:6px 10px;">index_V8_1_qr_scanner_overlay_stable.html</div>
+<div style="font-size:11px;color:#888;padding:6px 10px;">index_V8_qr_scanner_overlay_FIXED_scan_hardstop.html</div>
 
 
 <header>
@@ -1652,7 +1652,7 @@ document.getElementById("pub").addEventListener("click", () => {
   userSelect.addEventListener("change", () => render(getUser(userSelect.value)));
   userSelect.value = USERS[0].id;
 
-  updateScanButtons();
+  render(getUser(userSelect.value));
   updateRings();
   setInterval(updateRings, 1000);
 
@@ -1891,7 +1891,7 @@ function getBuyerPosition(){
 
   navigator.geolocation.getCurrentPosition(pos=>{
     saveBuyerGeo(pos.coords.latitude, pos.coords.longitude);
-    updateScanButtons();
+    render(getUser(userSelect.value));
   });
 }
 
@@ -1937,9 +1937,11 @@ render = function(){
 
 
 
+
 <script>
 let codeReader = null;
 let videoElement = null;
+let scanControls = null;
 let scanLocked = false;
 let isScanning = false;
 
@@ -1969,43 +1971,53 @@ async function startScanner(){
 
   if(isScanning) return;
 
-  const overlay = document.getElementById('scanOverlay');
-  if(overlay){ overlay.style.opacity = '0'; }
-
   scanLocked = false;
   isScanning = true;
   updateScanButtons();
+
+  const overlay = document.getElementById("scanOverlay");
+  if(overlay) overlay.style.opacity = "0";
 
   codeReader = new ZXing.BrowserQRCodeReader();
 
   try {
 
-    await codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
+    scanControls = await codeReader.decodeFromVideoDevice(
+      null,
+      videoElement,
+      (result, err) => {
 
-      if(result && !scanLocked){
+        if(result && !scanLocked){
 
-        scanLocked = true;
+          scanLocked = true;
 
-        handleScanResult(result.text.trim());
+          handleScanResult(result.text.trim());
 
-        stopScanner();
+          stopScanner(true); // hard stop
+        }
       }
-
-    });
+    );
 
   } catch (err) {
-    showScanResult("❌ Erreur caméra : " + err);
-    stopScanner();
+    console.error("Camera error:", err);
+    stopScanner(true);
   }
 }
 
-function stopScanner(){
+function stopScanner(hard=false){
 
   isScanning = false;
   updateScanButtons();
 
+  try {
+    if(scanControls && hard){
+      scanControls.stop();
+      scanControls = null;
+    }
+  } catch(e){}
+
   if(codeReader){
-    codeReader.reset();
+    try { codeReader.reset(); } catch(e){}
     codeReader = null;
   }
 
@@ -2022,45 +2034,8 @@ function showScanResult(text){
     overlay.style.opacity = "1";
   }
 }
-
-function handleScanResult(buyerId){
-
-  const vendeur = getUser(userSelect.value);
-  const offers = loadOffers();
-
-  let validated = false;
-
-  for (const o of offers) {
-
-    const currentStatus = getTxStatus(o.id, buyerId);
-
-    if (
-      o.sellerId === vendeur.id &&
-      geoStatusForBuyerOffer(o, buyerId) === "Réservé" &&
-      currentStatus !== "Validé"
-    ) {
-
-      setTxStatus(o.id, buyerId, "Validé");
-
-      state[buyerId].pointsFlash =
-        (state[buyerId].pointsFlash || 0) + 1;
-
-      saveState();
-
-      validated = true;
-      break;
-    }
-  }
-
-  if(validated){
-    showScanResult("✅ Offre validée<br>+1 Point Flash");
-  } else {
-    showScanResult("⚠️ Aucune offre Réservée trouvée<br>ou déjà validée");
-  }
-
-  updateScanButtons();
-}
 </script>
+
 
 
 
@@ -2203,16 +2178,5 @@ function handleScanResult(buyerId){
 })();
 </script>
 
-
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-  if(typeof render === "function" && typeof getUser === "function"){
-    const firstUser = userSelect?.value;
-    if(firstUser){
-      render(getUser(firstUser));
-    }
-  }
-});
-</script>
 </body>
 </html>
