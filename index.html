@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scanner QR4</title>
+<title>index_tabs_overlay_result.html</title>
 
 <script src="https://unpkg.com/@zxing/library@latest"></script>
 
@@ -14,6 +14,13 @@ body {
   padding: 0;
   margin: 0;
   background: #f4f6f8;
+}
+
+.filename {
+  font-size: 12px;
+  color: #888;
+  padding: 6px;
+  background: #f0f0f0;
 }
 
 .tabs {
@@ -44,13 +51,46 @@ body {
   display: block;
 }
 
-video {
+/* Scanner container */
+.scanner-container {
+  position: relative;
   width: 100%;
   max-width: 350px;
+  margin: 0 auto;
+}
+
+video {
+  width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 12px;
   background: black;
+}
+
+/* Overlay result centered over scanner */
+.overlay-result {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.6);
+  display: none;
+}
+
+.success {
+  background: rgba(0, 128, 0, 0.8);
+}
+
+.error {
+  background: rgba(200, 0, 0, 0.8);
 }
 
 button.action {
@@ -62,24 +102,6 @@ button.action {
   background: #0078D4;
   color: white;
   cursor: pointer;
-}
-
-#result {
-  margin-top: 20px;
-  font-size: 28px;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-}
-
-.success {
-  color: green;
-}
-
-.error {
-  color: red;
 }
 
 ul {
@@ -103,6 +125,8 @@ li {
 
 <body>
 
+<div class="filename">index_tabs_overlay_result.html</div>
+
 <div class="tabs">
   <button class="tab-button active" onclick="openTab(event,'home')">Home</button>
   <button class="tab-button" onclick="openTab(event,'scan')">Scan</button>
@@ -110,19 +134,18 @@ li {
 
 <div id="home" class="tab-content active">
   <h2>🏠 Accueil</h2>
-  <p>Bienvenue dans l'application Scanner QR4.</p>
 </div>
 
 <div id="scan" class="tab-content">
   <h2>📷 Scanner QR4</h2>
 
-  <video id="video" muted playsinline></video>
-  <br>
+  <div class="scanner-container">
+    <video id="video" muted playsinline></video>
+    <div id="overlay" class="overlay-result"></div>
+  </div>
 
   <button id="startBtn" class="action" onclick="startScanner()">Démarrer</button>
   <button id="stopBtn" class="action" onclick="stopScanner()" style="display:none;">Stop</button>
-
-  <div id="result"></div>
 
   <h3>Historique</h3>
   <ul id="history"></ul>
@@ -131,9 +154,9 @@ li {
 <script>
 let codeReader = null;
 let videoElement = document.getElementById('video');
+let overlay = document.getElementById("overlay");
 
 function openTab(evt, tabName) {
-
   document.querySelectorAll('.tab-content').forEach(tab => {
     tab.classList.remove('active');
   });
@@ -145,7 +168,9 @@ function openTab(evt, tabName) {
   document.getElementById(tabName).classList.add('active');
   evt.currentTarget.classList.add('active');
 
-  if (tabName !== 'scan') {
+  if (tabName === 'scan') {
+    startScanner();
+  } else {
     stopScanner();
   }
 }
@@ -153,12 +178,13 @@ function openTab(evt, tabName) {
 async function startScanner() {
   if (codeReader) return;
 
+  overlay.style.display = "none";
+  overlay.className = "overlay-result";
+
   codeReader = new ZXing.BrowserQRCodeReader();
 
   document.getElementById("startBtn").style.display = "none";
   document.getElementById("stopBtn").style.display = "inline-block";
-  document.getElementById("result").textContent = "";
-  document.getElementById("result").className = "";
 
   try {
     codeReader.decodeFromVideoDevice(
@@ -175,24 +201,24 @@ async function startScanner() {
       }
     );
   } catch (err) {
-    showMessage("Erreur caméra", "error");
+    showOverlay("Erreur caméra", "error");
   }
 }
 
 function handleResult(value) {
   if (value === "acheteur1") {
-    showMessage("Success", "success");
+    showOverlay("Success", "success");
   } else if (value === "acheteur2") {
-    showMessage("Echec", "error");
+    showOverlay("Echec", "error");
   } else {
-    showMessage("QR inconnu", "error");
+    showOverlay("QR inconnu", "error");
   }
 }
 
-function showMessage(message, type) {
-  const resultDiv = document.getElementById("result");
-  resultDiv.textContent = message;
-  resultDiv.className = type;
+function showOverlay(message, type) {
+  overlay.textContent = message;
+  overlay.style.display = "flex";
+  overlay.classList.add(type);
 }
 
 function stopScanner() {
