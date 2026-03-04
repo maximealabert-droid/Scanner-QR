@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v17.html</title>
+  <title>index_v18.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -1670,6 +1670,9 @@ document.getElementById("pub").addEventListener("click", () => {
         const map = L.map("mapView").setView([0,0], 2);
 
         // === POSITION DU DEVICE ===
+        let deviceMarker = null;
+
+        function refreshDevicePosition(){
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             pos => {
@@ -1689,11 +1692,14 @@ document.getElementById("pub").addEventListener("click", () => {
         popupAnchor: [0,-40]
       });
 
-      L.marker([lat, lng], { icon: deviceIcon })
-        .addTo(map)
-        .bindPopup("📍 Ma position");
-
-              map.setView([lat, lng], 14);
+      if(!deviceMarker){
+        deviceMarker = L.marker([lat, lng], { icon: deviceIcon })
+          .addTo(map)
+          .bindPopup("📍 Ma position");
+        map.setView([lat, lng], 14);
+      }else{
+        deviceMarker.setLatLng([lat, lng]);
+      }
             },
             err => {
               console.log("Geolocation error:", err);
@@ -1704,8 +1710,12 @@ document.getElementById("pub").addEventListener("click", () => {
               timeout: 8000
             }
           );
+        }
+
+        refreshDevicePosition();
+        setInterval(refreshDevicePosition,5000);
         };
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "© OpenStreetMap"
         }).addTo(map);
 
