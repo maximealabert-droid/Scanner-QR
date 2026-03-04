@@ -1671,8 +1671,6 @@ document.getElementById("pub").addEventListener("click", () => {
 
         // === POSITION DU DEVICE ===
         let deviceMarker = null;
-
-        function refreshDevicePosition(){
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             pos => {
@@ -1710,11 +1708,21 @@ document.getElementById("pub").addEventListener("click", () => {
               timeout: 8000
             }
           );
-        }
-
-        refreshDevicePosition();
-        setInterval(refreshDevicePosition,5000);
         };
+
+        // refresh device position every 5s (same pattern as test file)
+        setInterval(()=>{
+          if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(pos=>{
+              const lat = pos.coords.latitude;
+              const lng = pos.coords.longitude;
+              if(deviceMarker){
+                deviceMarker.setLatLng([lat,lng]);
+              }
+            });
+          }
+        },5000);
+
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "© OpenStreetMap"
         }).addTo(map);
