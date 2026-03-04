@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v19.html</title>
+  <title>index_v26.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -302,6 +302,25 @@
   display: block;
 }
 
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -505,11 +524,49 @@ function publish() {
     right:12px;
     z-index:2;
   }
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
 
 <style>
-  </style>
+  
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
+</style>
 
 
 <style>
@@ -525,6 +582,25 @@ function publish() {
     background-color: #4da3ff !important;
     color: #ffffff !important;
   }
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
 
@@ -542,6 +618,25 @@ function publish() {
     font-size:18px; line-height:1; padding:6px 10px;
     border-radius:10px;
   }
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
 
@@ -552,6 +647,25 @@ function publish() {
     color:#ffffff !important;
     border:none !important;
   }
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
 
@@ -562,6 +676,25 @@ function publish() {
     color:#ffffff !important;
     border:none !important;
   }
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
 
@@ -600,6 +733,25 @@ function publish() {
 main{
   padding-bottom: calc(92px + env(safe-area-inset-bottom));
 }
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
 
@@ -615,6 +767,25 @@ label[for="home_vendeur_spot"],
 label[for="emplacement"] {
   display: none !important;
 }
+
+.settingsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-top:1px solid #eee;
+  cursor:pointer;
+}
+.settingsLeft{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.chevron{
+  font-size:20px;
+  color:#999;
+}
+
 </style>
 
 <script src="https://unpkg.com/@zxing/library@latest"></script>
@@ -1174,7 +1345,43 @@ ${o.type === "Offre"
   // Home render helpers
   // =========================
   
+
+function renderCategories(u){
+  const prefs = state[u.id].buyerPrefs;
+  content.innerHTML = `
+    <div class="headerBar">
+      <button id="backHome">‹ Retour</button>
+      <div class="title">Catégories</div>
+    </div>
+
+    <div class="card">
+      ${["Mode","Concert","Alimentation","Sport"].map(c=>`
+        <label class="catLine">
+          <input type="checkbox" class="catToggle" value="${c}">
+          <span>${c}</span>
+        </label>
+      `).join("")}
+    </div>
+  `;
+
+  document.getElementById("backHome").onclick = ()=>{
+    renderHome(u);
+  };
+
+  document.querySelectorAll(".catToggle").forEach(cb=>{
+    cb.checked = prefs.categories.includes(cb.value);
+    cb.addEventListener("change", ()=>{
+      const set = new Set(prefs.categories);
+      cb.checked ? set.add(cb.value) : set.delete(cb.value);
+      prefs.categories = Array.from(set);
+      saveState();
+    });
+  });
+}
+
+
 function renderHome(u){
+  window.currentUser = u;
 
   const geoData = JSON.parse(localStorage.getItem("geo.byUser.v1") || "{}");
   const geo = geoData[u.id] || null;
@@ -1193,9 +1400,12 @@ function renderHome(u){
             <label>Nom</label>
             <input id="nom" value="${escapeHtml(p.nom || "")}">
           </div>
-          <div>
-            ${u.context === "vendeur" ? `<label>Adresse</label>` : ``}
-            <input id="adr" value="${escapeHtml(p.adresse || "")}">
+          ${u.context === "vendeur" ? `
+<div>
+  <label>Adresse</label>
+  <input id="adr" value="${escapeHtml(p.adresse || "")}">
+</div>
+` : ``}
 
 ${u.context === "vendeur" ? `
 <button id="geoVendorBtn" class="primary" style="margin-top:10px;">
@@ -1215,12 +1425,32 @@ ${u.context === "acheteur" ? `
 </div>
 ` : ``}
 
+          ${u.context === "acheteur" ? `
+          <div style="margin-top:16px">
           </div>
+
+          <div style="margin-top:16px">
+            <label>Points Flash</label>
+            <input id="pointsFlash" value="${state[u.id].pointsFlash ?? 0}" readonly>
+
+<div class="settingsRow" id="openCategories" onclick="if(window.currentUser){renderCategories(window.currentUser);}">
+  <div class="settingsLeft">
+    <span>🏷️</span>
+    <span>Catégories</span>
+  </div>
+  <div class="chevron">›</div>
+</div>
+
+          </div>
+
+          
+        ` : ``}
+</div>
         </div>
 
         ${isVendeur ? `
           <div>
-            <label>Spot</label>
+            
             <select id="home_vendeur_spot">
               <option value="">-- choisir --</option>
               <option value="1">1</option>
@@ -1236,27 +1466,7 @@ ${u.context === "acheteur" ? `
           </div>
         ` : ``}
 
-        ${u.context === "acheteur" ? `
-          <div style="margin-top:16px">
-          </div>
-
-          <div style="margin-top:16px">
-            <label>Points Flash</label>
-            <input id="pointsFlash" value="${state[u.id].pointsFlash ?? 0}" readonly>
-          </div>
-
-          <div style="margin-top:16px">
-            <div class="muted" style="margin-bottom:8px">Catégories</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              ${["Mode","Concert","Alimentation","Sport"].map(c=>`
-                <label class="toggleBox" style="cursor:pointer">
-                  <input type="checkbox" class="catToggle" value="${c}" checked>
-                  <span>${c}</span>
-                </label>
-              `).join("")}
-            </div>
-          </div>
-        ` : ``}
+        
       </div>
     `;
 
@@ -1284,6 +1494,8 @@ ${u.context === "acheteur" ? `
           saveState();
         });
       }
+
+      const openCat=document.getElementById("openCategories"); if(openCat){openCat.onclick=()=>renderCategories(u);} 
 
       document.querySelectorAll(".catToggle").forEach(cb => {
         cb.checked = prefs.categories.includes(cb.value);
