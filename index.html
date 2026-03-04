@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v33.html</title>
+  <title>index_v38.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -1036,7 +1036,7 @@ border-bottom:1px solid #e2e8f0;
 </div>
 
 <script>
-const CATEGORIES = ["Mode","Concert","Alimentation","Sport","Tech","Gaming","Culture"];
+const CATEGORIES = ["Mode","Concert","Alimentation","Sport","Tech","Gaming","Culture","Voyage","Bien‑être","Maison","Animaux","Auto"];
 document.addEventListener("DOMContentLoaded", function(){
   document.getElementById("fileTitleBanner").textContent = document.title;
 });
@@ -1595,9 +1595,11 @@ function renderCategories(u){
   });
 
   content.innerHTML = `
-    <div class="headerBar">
-      <button id="backHome">‹ Retour</button>
-      <div class="title">Catégories</div>
+    
+<div style="padding:12px 16px;">
+  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
+</div>
+
     </div>
 
     <div class="card" style="padding:0;">
