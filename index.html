@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v18.html</title>
+  <title>index_v19.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -1668,6 +1668,7 @@ document.getElementById("pub").addEventListener("click", () => {
 
         // Initialisation neutre
         const map = L.map("mapView").setView([0,0], 2);
+        window.__offersMap = map;
 
         // === POSITION DU DEVICE ===
         if (navigator.geolocation) {
@@ -1689,7 +1690,7 @@ document.getElementById("pub").addEventListener("click", () => {
         popupAnchor: [0,-40]
       });
 
-      L.marker([lat, lng], { icon: deviceIcon })
+      window.__deviceMarker = L.marker([lat, lng], { icon: deviceIcon })
         .addTo(map)
         .bindPopup("📍 Ma position");
 
@@ -2393,48 +2394,36 @@ function stopScanner(){
 
 <script>
 (function(){
-let geoTimer=null;
+  function startTracking(){
+    if(window.__devicePosInterval) return;
+    window.__devicePosInterval = setInterval(function(){
+      if(!(window.ui && ui.view==="map")) return;
+      if(!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(function(pos){
+        if(!window.__deviceMarker) return;
+        var lat = pos.coords.latitude;
+        var lng = pos.coords.longitude;
+        window.__deviceMarker.setLatLng([lat,lng]);
+      }, function(err){
+        console.log("Geolocation error:", err);
+      }, { enableHighAccuracy:true, maximumAge:0, timeout:8000 });
+    }, 5000);
+  }
 
-function updateDevice(){
- if(!navigator.geolocation) return;
- navigator.geolocation.getCurrentPosition(pos=>{
-   const lat=pos.coords.latitude;
-   const lng=pos.coords.longitude;
+  function stopTracking(){
+    if(window.__devicePosInterval){
+      clearInterval(window.__devicePosInterval);
+      window.__devicePosInterval = null;
+    }
+  }
 
-   if(window.L){
-     // find leaflet map
-     const maps = document.querySelectorAll(".leaflet-container");
-     if(!maps.length) return;
-     const mapEl = maps[0];
-     const map = mapEl._leaflet_map || Object.values(mapEl).find(v=>v&&v.setView&&v.eachLayer);
-     if(!map) return;
-
-     map.eachLayer(layer=>{
-       if(layer.getPopup && layer.getPopup() && layer.getPopup().getContent()==="📍 Ma position"){
-         layer.setLatLng([lat,lng]);
-       }
-     });
-   }
- });
-}
-
-function checkMap(){
- try{
-   if(window.ui && ui.view==="map"){
-     if(!geoTimer){
-       updateDevice();
-       geoTimer=setInterval(updateDevice,5000);
-     }
-   }else{
-     if(geoTimer){
-       clearInterval(geoTimer);
-       geoTimer=null;
-     }
-   }
- }catch(e){}
-}
-
-setInterval(checkMap,1000);
+  // watcher of view changes
+  setInterval(function(){
+    try{
+      if(window.ui && ui.view==="map") startTracking();
+      else stopTracking();
+    }catch(e){}
+  }, 800);
 })();
 </script>
 
