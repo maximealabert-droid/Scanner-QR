@@ -1627,7 +1627,10 @@ document.getElementById("pub").addEventListener("click", () => {
               </select>
             </label>
 
-            
+            <label style="display:flex;align-items:center;gap:8px;margin-top:18px">
+              <input type="checkbox" id="filterFav" ${ui.favoritesOnly?"checked":""}>
+              ⭐ Favoris
+            </label>
 
             <button id="toggleView" class="primary" style="margin-top:10px">
               ${ui.view==="list"?"🗺️ Maps":"📋 Liste"}
@@ -1701,7 +1704,8 @@ document.getElementById("pub").addEventListener("click", () => {
               timeout: 8000
             }
           );
-        }L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        };
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "© OpenStreetMap"
         }).addTo(map);
 
@@ -2384,67 +2388,6 @@ function stopScanner(){
       return originalStop.apply(this, arguments);
     };
   }
-})();
-</script>
-
-
-<script>
-// Safe device marker mover (does not modify existing map code)
-(function(){
-  function moveDeviceMarker(){
-    if(!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(function(pos){
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-
-      if(!window.L) return;
-
-      // find leaflet markers
-      document.querySelectorAll(".leaflet-marker-icon").forEach(function(icon){
-        const marker = icon._leaflet_pos ? icon : null;
-      });
-
-      // use leaflet layer scan
-      if(window.L && window.L.Marker && window.L.map){
-        const maps = document.querySelectorAll(".leaflet-container");
-        maps.forEach(function(el){
-          const map = el._leaflet_map || el._leaflet_id && window.L && window.L._layers;
-        });
-      }
-
-      // simpler: move marker with popup text
-      if(window.L){
-        Object.values(L).forEach(()=>{});
-      }
-
-      // fallback: scan layers
-      if(window._leaflet_maps){
-        window._leaflet_maps.forEach(function(map){
-          map.eachLayer(function(layer){
-            if(layer.getPopup && layer.getPopup()){
-              const txt = layer.getPopup().getContent();
-              if(txt && txt.indexOf("Ma position") !== -1){
-                layer.setLatLng([lat,lng]);
-              }
-            }
-          });
-        });
-      }
-    });
-  }
-
-  // track leaflet maps
-  if(!window._leaflet_maps){
-    window._leaflet_maps = [];
-    const orig = L.map;
-    L.map = function(){
-      const m = orig.apply(this, arguments);
-      window._leaflet_maps.push(m);
-      return m;
-    };
-  }
-
-  setInterval(moveDeviceMarker,5000);
 })();
 </script>
 
