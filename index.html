@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v47.html</title>
+  <title>index_v55.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2401,6 +2401,29 @@ ${o.type === "Offre"
   
 
 
+
+function renderFavShops(u){
+  content.innerHTML = `
+    <div style="padding:12px 16px;">
+      <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
+    </div>
+
+    <div class="card" style="padding:20px;">
+      <div class="muted">Commerces favoris</div>
+      <div style="margin-top:12px;">Page vide pour le moment.</div>
+    </div>
+  `;
+
+  const back = document.getElementById("backHome");
+  if(back){
+    back.onclick = ()=>{
+      if(window.currentUser){
+        renderHome(window.currentUser);
+      }
+    };
+  }
+}
+
 function renderCategories(u){
   const prefs = state[u.id].buyerPrefs;
   const selected = prefs.categories || [];
@@ -2515,6 +2538,14 @@ ${u.context === "acheteur" ? `
   </div>
   <div class="chevron">›</div>
 </div>
+<div class="settingsRow" id="openFavShops" onclick="if(window.currentUser){renderFavShops(window.currentUser);}">
+  <div class="settingsLeft">
+    <span>🏬</span>
+    <span>Commerces Favoris</span>
+  </div>
+  <div class="chevron">›</div>
+</div>
+
 
           </div>
 
