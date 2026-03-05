@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v43.html</title>
+  <title>index_v44.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -18,14 +18,14 @@
       --shadow-sm: 0 2px 10px rgba(15, 23, 42, .06);
     }
     body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--text); }
-    header{
-      position: sticky; top:0; z-index:10;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 16px;
-      display:flex; flex-direction:column; gap:10px;
-    }
+    
+header{
+  position:static;
+  padding:0;
+  margin:0;
+  min-height:0;
+}
+
     .row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
     label { color: var(--muted); font-size:14px; }
     select, input, textarea{
