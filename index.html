@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v56.html</title>
+  <title>index_v60.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -479,17 +479,17 @@ header{
 overlay.style.display = "flex";
 
 const favBtn = document.getElementById("sellerFavBtn");
-const favsInit = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+const favsInit = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
 favBtn.textContent = favsInit.includes(sellerId) ? "❤️" : "🤍";
 
 favBtn.onclick = () => {
-  let favs = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+  let favs = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
   if (favs.includes(sellerId)) {
     favs = favs.filter(id => id !== sellerId);
   } else {
     favs.push(sellerId);
   }
-  localStorage.setItem("favoriteSellers", JSON.stringify(favs));
+  localStorage.setItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default"), JSON.stringify(favs));
   favBtn.textContent = favs.includes(sellerId) ? "❤️" : "🤍";
 };
 
@@ -650,31 +650,6 @@ function publish() {
   alert("Offre publiée ✅");
 
   if (typeof render === "function") render();
-}
-
-
-function renderFavShops(){
-  const content = document.getElementById("content") || document.body;
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span onclick="location.reload()" style="font-size:30px;cursor:pointer;">‹</span>
-    </div>
-    <div class="card" style="padding:20px;">
-      <div class="muted">Commerces Favoris</div>
-      <div style="margin-top:10px;">Page vide pour le moment</div>
-    </div>`;
-}
-
-function renderTransactions(){
-  const content = document.getElementById("content") || document.body;
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span onclick="location.reload()" style="font-size:30px;cursor:pointer;">‹</span>
-    </div>
-    <div class="card" style="padding:20px;">
-      <div class="muted">Transactions</div>
-      <div style="margin-top:10px;">Page vide pour le moment</div>
-    </div>`;
 }
 
 </script>
@@ -2560,14 +2535,6 @@ ${u.context === "acheteur" ? `
   </div>
   <div class="chevron">›</div>
 </div>
-
-<div class="settingsRow" id="openTransactions" onclick="renderTransactions()">
-  <div class="settingsLeft">
-    <span>💳</span>
-    <span>Transactions</span>
-  </div>
-  <div class="chevron">›</div>
-</div>
 <div class="settingsRow" id="openFavShops" onclick="renderFavShops()">
   <div class="settingsLeft">
     <span>🏬</span>
@@ -3300,17 +3267,17 @@ document.getElementById("pub").addEventListener("click", () => {
 overlay.style.display = "flex";
 
 const favBtn = document.getElementById("sellerFavBtn");
-const favsInit = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+const favsInit = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
 favBtn.textContent = favsInit.includes(sellerId) ? "❤️" : "🤍";
 
 favBtn.onclick = () => {
-  let favs = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+  let favs = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
   if (favs.includes(sellerId)) {
     favs = favs.filter(id => id !== sellerId);
   } else {
     favs.push(sellerId);
   }
-  localStorage.setItem("favoriteSellers", JSON.stringify(favs));
+  localStorage.setItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default"), JSON.stringify(favs));
   favBtn.textContent = favs.includes(sellerId) ? "❤️" : "🤍";
 };
 
@@ -3809,6 +3776,58 @@ document.addEventListener("DOMContentLoaded",function(){
     }
   });
 });
+
+
+function renderFavShops(){
+
+  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+  const favs = JSON.parse(localStorage.getItem("favoriteSellers_"+userId) || "[]");
+
+  // Source vendeurs : priorite au state global s'il existe
+  let sellers = [];
+  if(typeof users !== "undefined" && Array.isArray(users)){
+    sellers = users;
+  }else{
+    sellers = JSON.parse(localStorage.getItem("users") || "[]");
+  }
+
+  let list = "";
+
+  favs.forEach(id=>{
+    const s = sellers.find(x => x.id === id);
+    if(!s) return;
+
+    const photo = s.photo || s.image || "";
+    const name  = s.name || s.shopName || id;
+
+    list += `
+      <div class="card" style="display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:8px">
+        <img src="${photo}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
+        <div><b>${name}</b></div>
+      </div>
+    `;
+  });
+
+  if(!list){
+    list = `<div class="card" style="padding:20px">Aucun commerce favori</div>`;
+  }
+
+  const content = document.getElementById("content") || document.body;
+
+  content.innerHTML = `
+    <div style="padding:12px 16px;">
+      <span onclick="renderHome(window.currentUser)" style="font-size:28px;cursor:pointer;">‹</span>
+    </div>
+
+    <div class="card" style="padding:12px;margin-bottom:10px">
+      <b>Commerces Favoris</b>
+    </div>
+
+    ${list}
+  `;
+}
+
+
 </script>
 
 </body>
