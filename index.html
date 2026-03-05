@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v55.html</title>
+  <title>index_v56.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -458,7 +458,10 @@ header{
     const body = document.getElementById("sellerModalBody");
     if (!overlay || !body) return;
     body.innerHTML = `
-      <div style="margin-bottom:8px">Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div>Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
+        <span id="sellerFavBtn" style="font-size:22px;cursor:pointer;">🤍</span>
+      </div>
       
     
       <div style="margin-top:12px">
@@ -472,7 +475,24 @@ header{
         </iframe>
       </div>
 `;
-    overlay.style.display = "flex";
+    
+overlay.style.display = "flex";
+
+const favBtn = document.getElementById("sellerFavBtn");
+const favsInit = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+favBtn.textContent = favsInit.includes(sellerId) ? "❤️" : "🤍";
+
+favBtn.onclick = () => {
+  let favs = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+  if (favs.includes(sellerId)) {
+    favs = favs.filter(id => id !== sellerId);
+  } else {
+    favs.push(sellerId);
+  }
+  localStorage.setItem("favoriteSellers", JSON.stringify(favs));
+  favBtn.textContent = favs.includes(sellerId) ? "❤️" : "🤍";
+};
+
   }
   function closeSellerModal(){
     const overlay = document.getElementById("sellerModal");
@@ -630,6 +650,31 @@ function publish() {
   alert("Offre publiée ✅");
 
   if (typeof render === "function") render();
+}
+
+
+function renderFavShops(){
+  const content = document.getElementById("content") || document.body;
+  content.innerHTML = `
+    <div style="padding:12px 16px;">
+      <span onclick="location.reload()" style="font-size:30px;cursor:pointer;">‹</span>
+    </div>
+    <div class="card" style="padding:20px;">
+      <div class="muted">Commerces Favoris</div>
+      <div style="margin-top:10px;">Page vide pour le moment</div>
+    </div>`;
+}
+
+function renderTransactions(){
+  const content = document.getElementById("content") || document.body;
+  content.innerHTML = `
+    <div style="padding:12px 16px;">
+      <span onclick="location.reload()" style="font-size:30px;cursor:pointer;">‹</span>
+    </div>
+    <div class="card" style="padding:20px;">
+      <div class="muted">Transactions</div>
+      <div style="margin-top:10px;">Page vide pour le moment</div>
+    </div>`;
 }
 
 </script>
@@ -2401,29 +2446,6 @@ ${o.type === "Offre"
   
 
 
-
-function renderFavShops(u){
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
-    </div>
-
-    <div class="card" style="padding:20px;">
-      <div class="muted">Commerces favoris</div>
-      <div style="margin-top:12px;">Page vide pour le moment.</div>
-    </div>
-  `;
-
-  const back = document.getElementById("backHome");
-  if(back){
-    back.onclick = ()=>{
-      if(window.currentUser){
-        renderHome(window.currentUser);
-      }
-    };
-  }
-}
-
 function renderCategories(u){
   const prefs = state[u.id].buyerPrefs;
   const selected = prefs.categories || [];
@@ -2538,7 +2560,15 @@ ${u.context === "acheteur" ? `
   </div>
   <div class="chevron">›</div>
 </div>
-<div class="settingsRow" id="openFavShops" onclick="if(window.currentUser){renderFavShops(window.currentUser);}">
+
+<div class="settingsRow" id="openTransactions" onclick="renderTransactions()">
+  <div class="settingsLeft">
+    <span>💳</span>
+    <span>Transactions</span>
+  </div>
+  <div class="chevron">›</div>
+</div>
+<div class="settingsRow" id="openFavShops" onclick="renderFavShops()">
   <div class="settingsLeft">
     <span>🏬</span>
     <span>Commerces Favoris</span>
@@ -3249,7 +3279,10 @@ document.getElementById("pub").addEventListener("click", () => {
     const body = document.getElementById("sellerModalBody");
     if (!overlay || !body) return;
     body.innerHTML = `
-      <div style="margin-bottom:8px">Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div>Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
+        <span id="sellerFavBtn" style="font-size:22px;cursor:pointer;">🤍</span>
+      </div>
       
     
       <div style="margin-top:12px">
@@ -3263,7 +3296,24 @@ document.getElementById("pub").addEventListener("click", () => {
         </iframe>
       </div>
 `;
-    overlay.style.display = "flex";
+    
+overlay.style.display = "flex";
+
+const favBtn = document.getElementById("sellerFavBtn");
+const favsInit = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+favBtn.textContent = favsInit.includes(sellerId) ? "❤️" : "🤍";
+
+favBtn.onclick = () => {
+  let favs = JSON.parse(localStorage.getItem("favoriteSellers") || "[]");
+  if (favs.includes(sellerId)) {
+    favs = favs.filter(id => id !== sellerId);
+  } else {
+    favs.push(sellerId);
+  }
+  localStorage.setItem("favoriteSellers", JSON.stringify(favs));
+  favBtn.textContent = favs.includes(sellerId) ? "❤️" : "🤍";
+};
+
   }
   function closeSellerModal(){
     const overlay = document.getElementById("sellerModal");
