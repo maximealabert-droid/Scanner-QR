@@ -1877,7 +1877,10 @@ border-bottom:1px solid #e2e8f0;
 <script>
 const CATEGORIES = ["Mode","Concert","Alimentation","Sport","Tech","Gaming","Culture","Voyage","Bien‑être","Maison","Animaux","Auto"];
 document.addEventListener("DOMContentLoaded", function(){
-  document.getElementById("fileTitleBanner").textContent = document.title;
+  var banner = document.getElementById("fileTitleBanner");
+  if (banner) banner.textContent = document.title;
+  var topName = document.getElementById("htmlNameBar");
+  if (topName) topName.textContent = document.title;
 });
 </script>
 
@@ -3557,7 +3560,7 @@ if (result) {
 
           if (
             o.sellerId === vendeur.id &&
-            geoStatusForBuyerOffer(o, buyerId) === "Réservé" &&
+            getOfferStatus(o, buyerId) === "En cours" &&
             currentStatus !== "Validé"
           ) {
 
@@ -3576,7 +3579,7 @@ if (result) {
         if (validated) {
           alert("✅ Offre validée +1 Point Flash");
         } else {
-          alert("⚠️ Aucune offre "En cours" trouvée pour cet acheteur");
+          alert("⚠️ Aucune offre En cours trouvée pour cet acheteur");
         }
 
         stopScanner();
