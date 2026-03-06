@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_v60.html</title>
+  <title>index_5.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2105,7 +2105,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   }
 
 
-  function displayBuyerOfferStatus(offer, buyerId){
+  function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
     if (tx === "Validé") return "Validé";
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
@@ -2333,15 +2333,9 @@ ${o.type === "Offre"
               ${u.context === "acheteur" ? `
                 <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px">
                   
-                ${(() => { const s = displayBuyerOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}
-                ${(() => { const s = displayBuyerOfferStatus(o, u.id); return s ? `<div class="statusBox"><span class="pill" data-status="${s}">${s}</span></div>` : ``; })()}
-                <svg class="ring" viewBox="0 0 100 100" data-exp="${escapeHtml(o.date || "")}">
-                    <circle class="bg" cx="50" cy="50" r="45"></circle>
-                    <circle class="fg" cx="50" cy="50" r="45"
-                      stroke-dasharray="${2 * Math.PI * 45}"
-                      stroke-dashoffset="${2 * Math.PI * 45 * (1 - expiryProgress(o.date, o.createdAt))}">
-                    </circle>
-                  </svg>
+                ${(() => { const s = getOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}
+                ${(() => { const s = getOfferStatus(o, u.id); return s ? `<div class="statusBox"><span class="pill" data-status="${s}">${s}</span></div>` : ``; })()}
+                
                   <div class="countdown" data-exp="${escapeHtml(o.date || "")}">${remainingText(o.date)}</div>
                   ${(() => {
                     const d = computeDistanceForBuyer(o, u.id);
@@ -3053,7 +3047,7 @@ document.getElementById("pub").addEventListener("click", () => {
           bounds.push([geo.lat, geo.lng]);
 
           const distance = computeDistanceForBuyer(o, u.id);
-          const status = displayBuyerOfferStatus(o, u.id) || "-";
+          const status = getOfferStatus(o, u.id) || "-";
           const sellerName = sellerDisplayName(o.sellerId);
 
           marker.bindPopup(`
@@ -3827,6 +3821,30 @@ function renderFavShops(){
   `;
 }
 
+
+
+function getOfferStatus(offer, buyerId){
+
+  const now = Date.now();
+
+  // expiration timestamp
+  const exp = offer.date ? new Date(offer.date).getTime() : null;
+
+  // quantity
+  const qty = Number(offer.quantity ?? 0);
+
+  // validated via transaction
+  const tx = (typeof getTxStatus === "function" && buyerId) ? getTxStatus(offer.id, buyerId) : null;
+  if(tx === "Validé") return "Validée";
+
+  if(exp && exp > now && qty === 0)
+    return "Épuisée";
+
+  if(exp && exp <= now)
+    return "Expirée";
+
+  return "En cours";
+}
 
 </script>
 
