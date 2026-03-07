@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_29.html</title>
+  <title>index_30.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2118,6 +2118,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
 
   
 
+
 function renderTransactions(){
   const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
 
@@ -2127,11 +2128,15 @@ function renderTransactions(){
   let rows = "";
 
   buyerTx.forEach(t=>{
-    const offer = (typeof allOffers!=="undefined") ? allOffers.find(o=>o.id===t.offerId) : null;
-    if(!offer) return;
 
     const seller = (typeof USERS!=="undefined") ? USERS.find(u=>u.id===t.sellerId) : null;
     const sellerName = seller?.profile?.nom || seller?.label || t.sellerId;
+
+    let offerType = "Offre";
+    if(typeof allOffers!=="undefined"){
+      const offer = allOffers.find(o=>o.id===t.offerId);
+      if(offer && offer.type) offerType = offer.type;
+    }
 
     rows += `
     <div class="card" style="padding:14px;margin-bottom:10px">
@@ -2139,7 +2144,7 @@ function renderTransactions(){
         <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
         <div>
           <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
+          <div style="font-size:14px;color:#555">${escapeHtml(offerType)}</div>
         </div>
       </div>
     </div>
@@ -2167,6 +2172,7 @@ function renderTransactions(){
 
   content.prepend(backBtn);
 }
+
 
 
 
@@ -2607,14 +2613,8 @@ ${u.context === "acheteur" ? `
     <span>💳</span>
     <span>Transactions</span>
   </div>
-  <div class="chevron">›</div>
-</div>
-  <div class="chevron">›</div>
 </div>
 </div>
-
-
-          </div>
 
           
         ` : ``}
