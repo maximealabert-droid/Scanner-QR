@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_14.html</title>
+  <title>index_16.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2116,7 +2116,60 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   }
 
 
-  function getOfferStatus(offer, buyerId){
+  
+function renderTransactions(){
+  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+
+  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
+  const buyerTx = validatedAll[userId] || {};
+
+  let rows = "";
+  Object.keys(buyerTx).forEach(offerId=>{
+    const offer = allOffers.find(o=>o.id===offerId);
+    if(!offer) return;
+
+    const seller = USERS.find(u=>u.id===offer.sellerId);
+    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
+
+    rows += `
+    <div class="card" style="padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
+        <div>
+          <div style="font-weight:700">${escapeHtml(sellerName)}</div>
+          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
+        </div>
+      </div>
+    </div>
+    `;
+  });
+
+  if(!rows){
+    rows = `<div class="card" style="padding:20px">Aucune transaction</div>`;
+  }
+
+  const content = document.getElementById("content") || document.body;
+
+  content.innerHTML = `
+    <div style="padding:12px 16px;">
+      <span id="backHomeTx" style="font-size:33px;cursor:pointer;">‹</span>
+    </div>
+
+    <div class="card" style="padding:12px;margin-bottom:10px">
+      <b>Transactions</b>
+    </div>
+
+    ${rows}
+  `;
+
+  const backBtn = document.getElementById("backHomeTx");
+  if(backBtn) backBtn.onclick = ()=>{
+    renderHome(getUser(userSelect.value));
+  };
+}
+
+
+function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
     if (tx === "Validé") return "Validé";
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
@@ -2546,6 +2599,17 @@ ${u.context === "acheteur" ? `
     <span>Commerces Favoris</span>
   </div>
   <div class="chevron">›</div>
+</div>
+
+<div class="settingsRow" id="openTransactions" onclick="renderTransactions()">
+  <div class="settingsLeft">
+    <span>💳</span>
+    <span>Transactions</span>
+  </div>
+  <div class="chevron">›</div>
+</div>
+  <div class="chevron">›</div>
+</div>
 </div>
 
 
@@ -3837,6 +3901,59 @@ function renderFavShops(){
   };
 }
 
+
+
+
+function renderTransactions(){
+  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+
+  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
+  const buyerTx = validatedAll[userId] || {};
+
+  let rows = "";
+  Object.keys(buyerTx).forEach(offerId=>{
+    const offer = allOffers.find(o=>o.id===offerId);
+    if(!offer) return;
+
+    const seller = USERS.find(u=>u.id===offer.sellerId);
+    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
+
+    rows += `
+    <div class="card" style="padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
+        <div>
+          <div style="font-weight:700">${escapeHtml(sellerName)}</div>
+          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
+        </div>
+      </div>
+    </div>
+    `;
+  });
+
+  if(!rows){
+    rows = `<div class="card" style="padding:20px">Aucune transaction</div>`;
+  }
+
+  const content = document.getElementById("content") || document.body;
+
+  content.innerHTML = `
+    <div style="padding:12px 16px;">
+      <span id="backHomeTx" style="font-size:33px;cursor:pointer;">‹</span>
+    </div>
+
+    <div class="card" style="padding:12px;margin-bottom:10px">
+      <b>Transactions</b>
+    </div>
+
+    ${rows}
+  `;
+
+  const backBtn = document.getElementById("backHomeTx");
+  if(backBtn) backBtn.onclick = ()=>{
+    renderHome(getUser(userSelect.value));
+  };
+}
 
 
 function getOfferStatus(offer, buyerId){
