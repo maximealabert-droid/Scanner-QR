@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_21.html</title>
+  <title>index_22.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2117,14 +2117,18 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
 
 
   
-function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
 
-  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
-  const buyerTx = validatedAll[userId] || {};
+function renderTransactions(){
+  const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+
+  const txAll = JSON.parse(localStorage.getItem("txStatus.byOfferBuyer.v1") || "{}");
 
   let rows = "";
-  Object.keys(buyerTx).forEach(offerId=>{
+
+  Object.keys(txAll).forEach(offerId=>{
+    const buyers = txAll[offerId];
+    if(!buyers || !buyers[buyerId]) return;
+
     const offer = allOffers.find(o=>o.id===offerId);
     if(!offer) return;
 
@@ -2148,25 +2152,10 @@ function renderTransactions(){
     rows = `<div class="card" style="padding:20px">Aucune transaction</div>`;
   }
 
-  const content = document.getElementById("content") || document.body;
-
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span id="backHomeTx" style="font-size:33px;cursor:pointer;">‹</span>
-    </div>
-
-    <div class="card" style="padding:12px;margin-bottom:10px">
-      <b>Transactions</b>
-    </div>
-
-    ${rows}
-  `;
-
-  const backBtn = document.getElementById("backHomeTx");
-  if(backBtn) backBtn.onclick = ()=>{
-    renderHome(getUser(userSelect.value));
-  };
+  const content = document.getElementById("content");
+  if(content) content.innerHTML = rows;
 }
+
 
 
 function getOfferStatus(offer, buyerId){
@@ -3904,14 +3893,18 @@ function renderFavShops(){
 
 
 
-function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
 
-  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
-  const buyerTx = validatedAll[userId] || {};
+function renderTransactions(){
+  const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+
+  const txAll = JSON.parse(localStorage.getItem("txStatus.byOfferBuyer.v1") || "{}");
 
   let rows = "";
-  Object.keys(buyerTx).forEach(offerId=>{
+
+  Object.keys(txAll).forEach(offerId=>{
+    const buyers = txAll[offerId];
+    if(!buyers || !buyers[buyerId]) return;
+
     const offer = allOffers.find(o=>o.id===offerId);
     if(!offer) return;
 
@@ -3935,25 +3928,10 @@ function renderTransactions(){
     rows = `<div class="card" style="padding:20px">Aucune transaction</div>`;
   }
 
-  const content = document.getElementById("content") || document.body;
-
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span id="backHomeTx" style="font-size:33px;cursor:pointer;">‹</span>
-    </div>
-
-    <div class="card" style="padding:12px;margin-bottom:10px">
-      <b>Transactions</b>
-    </div>
-
-    ${rows}
-  `;
-
-  const backBtn = document.getElementById("backHomeTx");
-  if(backBtn) backBtn.onclick = ()=>{
-    renderHome(getUser(userSelect.value));
-  };
+  const content = document.getElementById("content");
+  if(content) content.innerHTML = rows;
 }
+
 
 
 function getOfferStatus(offer, buyerId){
