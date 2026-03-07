@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_26.html</title>
+  <title>index_27.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2119,6 +2119,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   
 
 
+
 function renderTransactions(){
   const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
   const txAll = JSON.parse(localStorage.getItem("txStatus.byOfferBuyer.v1") || "{}");
@@ -2129,10 +2130,10 @@ function renderTransactions(){
     const buyers = txAll[offerId];
     if(!buyers || !buyers[buyerId]) return;
 
-    const offer = allOffers.find(o=>o.id===offerId);
+    const offer = (Array.isArray(allOffers) ? allOffers.find(o=>o.id===offerId) : null);
     if(!offer) return;
 
-    const seller = USERS.find(u=>u.id===offer.sellerId);
+    const seller = (Array.isArray(USERS) ? USERS.find(u=>u.id===offer.sellerId) : null);
     const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
 
     rows += `
@@ -2153,7 +2154,6 @@ function renderTransactions(){
   }
 
   const content = document.getElementById("content") || document.body;
-
   window.__currentSubPage = "transactions";
 
   content.innerHTML = `
@@ -2174,6 +2174,7 @@ function renderTransactions(){
     renderHome(getUser(userSelect.value));
   };
 }
+
 
 
 
@@ -3911,6 +3912,7 @@ function renderFavShops(){
 
 
 
+
 function renderTransactions(){
   const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
   const txAll = JSON.parse(localStorage.getItem("txStatus.byOfferBuyer.v1") || "{}");
@@ -3921,10 +3923,10 @@ function renderTransactions(){
     const buyers = txAll[offerId];
     if(!buyers || !buyers[buyerId]) return;
 
-    const offer = allOffers.find(o=>o.id===offerId);
+    const offer = (Array.isArray(allOffers) ? allOffers.find(o=>o.id===offerId) : null);
     if(!offer) return;
 
-    const seller = USERS.find(u=>u.id===offer.sellerId);
+    const seller = (Array.isArray(USERS) ? USERS.find(u=>u.id===offer.sellerId) : null);
     const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
 
     rows += `
@@ -3945,7 +3947,6 @@ function renderTransactions(){
   }
 
   const content = document.getElementById("content") || document.body;
-
   window.__currentSubPage = "transactions";
 
   content.innerHTML = `
@@ -3966,6 +3967,7 @@ function renderTransactions(){
     renderHome(getUser(userSelect.value));
   };
 }
+
 
 
 
