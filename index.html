@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_12.html</title>
+  <title>index_13.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2111,15 +2111,8 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
     if (tx === "Validé") return "Validé";
-
-    const qty = Number(offer.quantity ?? offer.qty ?? 0);
-    const used = countValidForOffer ? countValidForOffer(offer.id) : 0;
-    const remaining = isNaN(qty) ? Infinity : Math.max(0, qty - used);
-
-    if(remaining === 0) return "Epuisé";
-
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
-    return statut_offre_acheteur(emp, offer.distance) || "En cours";
+    return statut_offre_acheteur(emp, offer.distance);
   }
 
 
@@ -2155,20 +2148,18 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
     const end = parseDateMs(exp);
     if (!end) return "--";
     let ms = end - Date.now();
-    if (ms <= 0) return "0s";
+    if (ms <= 0) return "0m";
 
     const totalSec = Math.floor(ms / 1000);
 
     const days = Math.floor(totalSec / 86400);
     const hours = Math.floor((totalSec % 86400) / 3600);
     const minutes = Math.floor((totalSec % 3600) / 60);
-    const seconds = totalSec % 60;
 
     let parts = [];
     if (days > 0) parts.push(days + "j");
     if (hours > 0) parts.push(hours + "h");
-    if (minutes > 0) parts.push(minutes + "m");
-    if (seconds > 0 || parts.length === 0) parts.push(seconds + "s");
+    if (minutes > 0 || parts.length === 0) parts.push(minutes + "m");
 
     return parts.join("");
 }
