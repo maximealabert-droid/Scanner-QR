@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_19.html</title>
+  <title>index_20.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -585,7 +585,7 @@ function geoStatusForBuyerOffer(offer, buyerId){
 // Override status logic
 displayBuyerOfferStatus = function(offer, buyerId){
   const tx = getTxStatus(offer.id, buyerId);
-  if(tx === "Validé") return "Validé";
+  if(tx === "Validée") return "Validée";
   return geoStatusForBuyerOffer(offer,buyerId);
 };
 
@@ -953,7 +953,7 @@ header{
   .statusBox .pill{
     border: none !important;
   }
-  .statusBox .pill[data-status="Validé"]{
+  .statusBox .pill[data-status="Validée"]{
     background-color: #1fa34a !important;
     color: #ffffff !important;
   }
@@ -1255,7 +1255,7 @@ header{
 
 <style>
   /* Statut Validé en vert (offres acheteur) */
-  .pill[data-status="Validé"]{
+  .pill[data-status="Validée"]{
     background-color:#1fa34a !important;
     color:#ffffff !important;
     border:none !important;
@@ -1945,7 +1945,7 @@ document.addEventListener("DOMContentLoaded", function(){
   const FAVS_KEY        = "favorites.byBuyer.v1";
   const VALID_KEY       = "validated.byBuyer.v1";
   const RESERVE_KEY     = "reserved.byBuyer.v1";
-  const TX_STATUS_KEY = "txStatus.byOfferBuyer.v1"; // { offerId: { buyerId: "Validé" } }
+  const TX_STATUS_KEY = "txStatus.byOfferBuyer.v1"; // { offerId: { buyerId: "Validée" } }
 
   // =========================
   // Helpers JSON storage
@@ -2037,7 +2037,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   }
 
   // VALIDATION MANUELLE DÉSACTIVÉE
-  // Le statut "Validé" provient UNIQUEMENT du scan vendeur (TX_STATUS_KEY)
+  // Le statut "Validée" provient UNIQUEMENT du scan vendeur (TX_STATUS_KEY)
   function isValid(){
     return false;
   }
@@ -2048,7 +2048,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
     const all = loadTxAll();
     const buyers = all?.[offerId];
     if (!buyers) return 0;
-    return Object.values(buyers).filter(v => v === "Validé").length;
+    return Object.values(buyers).filter(v => v === "Validée").length;
   }
 
   function loadReserveAll(){ return loadJSON(RESERVE_KEY, {}); }
@@ -2171,7 +2171,7 @@ function renderTransactions(){
 
 function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
-    if (tx === "Validé") return "Validé";
+    if (tx === "Validée") return "Validée";
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
     return statut_offre_acheteur(emp, offer.distance);
   }
@@ -3434,7 +3434,7 @@ function geoStatusForBuyerOffer(offer, buyerId){
 // Override status logic
 displayBuyerOfferStatus = function(offer, buyerId){
   const tx = getTxStatus(offer.id, buyerId);
-  if(tx === "Validé") return "Validé";
+  if(tx === "Validée") return "Validée";
   return geoStatusForBuyerOffer(offer,buyerId);
 };
 
@@ -3633,10 +3633,10 @@ if (result) {
           if (
             o.sellerId === vendeur.id &&
             getOfferStatus(o, buyerId) === "En cours" &&
-            currentStatus !== "Validé"
+            currentStatus !== "Validée"
           ) {
 
-            setTxStatus(o.id, buyerId, "Validé");
+            setTxStatus(o.id, buyerId, "Validée");
 
             // 🔥 +1 Point Flash (only if not already validated)
             state[buyerId].pointsFlash = (state[buyerId].pointsFlash || 0) + 1;
@@ -3968,7 +3968,7 @@ function getOfferStatus(offer, buyerId){
 
   // validated via transaction
   const tx = (typeof getTxStatus === "function" && buyerId) ? getTxStatus(offer.id, buyerId) : null;
-  if(tx === "Validé") return "Validée";
+  if(tx === "Validée") return "Validée";
 
   if(exp && exp > now && qty === 0)
     return "Épuisée";
