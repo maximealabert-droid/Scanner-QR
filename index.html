@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_16.html</title>
+  <title>index_17.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -479,26 +479,18 @@ header{
 overlay.style.display = "flex";
 
 const favBtn = document.getElementById("sellerFavBtn");
-const activeBuyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
-const storageKey = "favoriteSellers_" + activeBuyerId;
-const favsInit = JSON.parse(localStorage.getItem(storageKey) || "[]");
+const favsInit = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
 favBtn.textContent = favsInit.includes(sellerId) ? "❤️" : "🤍";
 
 favBtn.onclick = () => {
-  let favs = JSON.parse(localStorage.getItem(storageKey) || "[]");
-
+  let favs = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
   if (favs.includes(sellerId)) {
     favs = favs.filter(id => id !== sellerId);
   } else {
     favs.push(sellerId);
   }
-
-  localStorage.setItem(storageKey, JSON.stringify(favs));
+  localStorage.setItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default"), JSON.stringify(favs));
   favBtn.textContent = favs.includes(sellerId) ? "❤️" : "🤍";
-
-  if (window.__currentSubPage === "favShops") {
-    renderFavShops();
-  }
 };
 
   }
@@ -2116,60 +2108,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   }
 
 
-  
-function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
-
-  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
-  const buyerTx = validatedAll[userId] || {};
-
-  let rows = "";
-  Object.keys(buyerTx).forEach(offerId=>{
-    const offer = allOffers.find(o=>o.id===offerId);
-    if(!offer) return;
-
-    const seller = USERS.find(u=>u.id===offer.sellerId);
-    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
-
-    rows += `
-    <div class="card" style="padding:14px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
-        <div>
-          <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
-        </div>
-      </div>
-    </div>
-    `;
-  });
-
-  if(!rows){
-    rows = `<div class="card" style="padding:20px">Aucune transaction</div>`;
-  }
-
-  const content = document.getElementById("content") || document.body;
-
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span id="backHomeTx" style="font-size:33px;cursor:pointer;">‹</span>
-    </div>
-
-    <div class="card" style="padding:12px;margin-bottom:10px">
-      <b>Transactions</b>
-    </div>
-
-    ${rows}
-  `;
-
-  const backBtn = document.getElementById("backHomeTx");
-  if(backBtn) backBtn.onclick = ()=>{
-    renderHome(getUser(userSelect.value));
-  };
-}
-
-
-function getOfferStatus(offer, buyerId){
+  function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
     if (tx === "Validé") return "Validé";
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
@@ -2209,18 +2148,20 @@ function getOfferStatus(offer, buyerId){
     const end = parseDateMs(exp);
     if (!end) return "--";
     let ms = end - Date.now();
-    if (ms <= 0) return "0m";
+    if (ms <= 0) return "0s";
 
     const totalSec = Math.floor(ms / 1000);
 
     const days = Math.floor(totalSec / 86400);
     const hours = Math.floor((totalSec % 86400) / 3600);
     const minutes = Math.floor((totalSec % 3600) / 60);
+    const seconds = totalSec % 60;
 
     let parts = [];
     if (days > 0) parts.push(days + "j");
     if (hours > 0) parts.push(hours + "h");
-    if (minutes > 0 || parts.length === 0) parts.push(minutes + "m");
+    if (minutes > 0) parts.push(minutes + "m");
+    if (seconds > 0 || parts.length === 0) parts.push(seconds + "s");
 
     return parts.join("");
 }
@@ -2478,7 +2419,6 @@ ${o.type === "Offre"
 
 
 function renderCategories(u){
-  window.__currentSubPage = "categories";
   const prefs = state[u.id].buyerPrefs;
   const selected = prefs.categories || [];
 
@@ -2533,7 +2473,6 @@ function renderCategories(u){
 
 
 function renderHome(u){
-  window.__currentSubPage = "";
   window.currentUser = u;
 
   const geoData = JSON.parse(localStorage.getItem("geo.byUser.v1") || "{}");
@@ -2599,17 +2538,6 @@ ${u.context === "acheteur" ? `
     <span>Commerces Favoris</span>
   </div>
   <div class="chevron">›</div>
-</div>
-
-<div class="settingsRow" id="openTransactions" onclick="renderTransactions()">
-  <div class="settingsLeft">
-    <span>💳</span>
-    <span>Transactions</span>
-  </div>
-  <div class="chevron">›</div>
-</div>
-  <div class="chevron">›</div>
-</div>
 </div>
 
 
@@ -3848,29 +3776,31 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
 function renderFavShops(){
+
   const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
   const favs = JSON.parse(localStorage.getItem("favoriteSellers_"+userId) || "[]");
 
-  let sellers = USERS.filter(u => u.context === "vendeur");
-  sellers = sellers.filter(s => favs.includes(s.id));
+  // Source vendeurs : priorite au state global s'il existe
+  let sellers = [];
+  if(typeof users !== "undefined" && Array.isArray(users)){
+    sellers = users;
+  }else{
+    sellers = JSON.parse(localStorage.getItem("users") || "[]");
+  }
 
   let list = "";
-  sellers.forEach(s => {
-    const sellerName = state?.[s.id]?.profile?.nom || s.profile?.nom || s.label || s.id;
-    let img = "";
-    try{
-      const imgs = JSON.parse(localStorage.getItem("vendor.image.v1") || "{}");
-      img = imgs[s.id] || "";
-    }catch(e){}
+
+  favs.forEach(id=>{
+    const s = sellers.find(x => x.id === id);
+    if(!s) return;
+
+    const photo = s.photo || s.image || "";
+    const name  = s.name || s.shopName || id;
 
     list += `
-      <div class="card" style="padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:56px;height:56px;border-radius:12px;overflow:hidden;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex:0 0 56px">
-            ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover">` : `<span style="font-size:24px">🏬</span>`}
-          </div>
-          <div style="font-weight:700;font-size:20px">${escapeHtml(sellerName)}</div>
-        </div>
+      <div class="card" style="display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:8px">
+        <img src="${photo}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
+        <div><b>${name}</b></div>
       </div>
     `;
   });
@@ -3880,11 +3810,10 @@ function renderFavShops(){
   }
 
   const content = document.getElementById("content") || document.body;
-  window.__currentSubPage = "favShops";
 
   content.innerHTML = `
     <div style="padding:12px 16px;">
-      <span id="backHomeFav" style="font-size:33px;cursor:pointer;">‹</span>
+      <span onclick="renderHome(window.currentUser)" style="font-size:28px;cursor:pointer;">‹</span>
     </div>
 
     <div class="card" style="padding:12px;margin-bottom:10px">
@@ -3893,67 +3822,8 @@ function renderFavShops(){
 
     ${list}
   `;
-
-  const backBtn = document.getElementById("backHomeFav");
-  if(backBtn) backBtn.onclick = ()=> {
-    window.__currentSubPage = "";
-    renderHome(getUser(userSelect.value));
-  };
 }
 
-
-
-
-function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
-
-  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
-  const buyerTx = validatedAll[userId] || {};
-
-  let rows = "";
-  Object.keys(buyerTx).forEach(offerId=>{
-    const offer = allOffers.find(o=>o.id===offerId);
-    if(!offer) return;
-
-    const seller = USERS.find(u=>u.id===offer.sellerId);
-    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
-
-    rows += `
-    <div class="card" style="padding:14px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
-        <div>
-          <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
-        </div>
-      </div>
-    </div>
-    `;
-  });
-
-  if(!rows){
-    rows = `<div class="card" style="padding:20px">Aucune transaction</div>`;
-  }
-
-  const content = document.getElementById("content") || document.body;
-
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span id="backHomeTx" style="font-size:33px;cursor:pointer;">‹</span>
-    </div>
-
-    <div class="card" style="padding:12px;margin-bottom:10px">
-      <b>Transactions</b>
-    </div>
-
-    ${rows}
-  `;
-
-  const backBtn = document.getElementById("backHomeTx");
-  if(backBtn) backBtn.onclick = ()=>{
-    renderHome(getUser(userSelect.value));
-  };
-}
 
 
 function getOfferStatus(offer, buyerId){
