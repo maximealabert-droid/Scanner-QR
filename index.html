@@ -2118,26 +2118,29 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
 
   
 function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
-
-  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
-  const buyerTx = validatedAll[userId] || {};
-
+  const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+  const offers = loadOffers();
   let rows = "";
-  Object.keys(buyerTx).forEach(offerId=>{
-    const offer = allOffers.find(o=>o.id===offerId);
-    if(!offer) return;
 
-    const seller = USERS.find(u=>u.id===offer.sellerId);
-    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
+  offers.forEach(offer => {
+    if (getTxStatus(offer.id, buyerId) !== "Validé") return;
+
+    const seller = USERS.find(u => u.id === offer.sellerId);
+    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId || "-";
+    const validationTs = getTxValidationDate(offer.id, buyerId);
+    const validationText = validationTs ? new Date(validationTs).toLocaleString("fr-FR") : "-";
+    const offerLabel = offer.type === "Offre"
+      ? (offer.value || "Offre")
+      : [offer.type, offer.value].filter(Boolean).join(" : ");
 
     rows += `
     <div class="card" style="padding:14px;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:12px">
         <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
-        <div>
+        <div style="flex:1">
           <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
+          <div style="font-size:14px;color:#555">${escapeHtml(offerLabel || "Offre")}</div>
+          <div style="font-size:13px;color:#64748b;margin-top:4px">Validation : ${escapeHtml(validationText)}</div>
         </div>
       </div>
     </div>
@@ -3637,6 +3640,7 @@ if (result) {
           ) {
 
             setTxStatus(o.id, buyerId, "Validé");
+            setTxValidationDate(o.id, buyerId);
 
             // 🔥 +1 Point Flash (only if not already validated)
             state[buyerId].pointsFlash = (state[buyerId].pointsFlash || 0) + 1;
@@ -3905,26 +3909,29 @@ function renderFavShops(){
 
 
 function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
-
-  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
-  const buyerTx = validatedAll[userId] || {};
-
+  const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+  const offers = loadOffers();
   let rows = "";
-  Object.keys(buyerTx).forEach(offerId=>{
-    const offer = allOffers.find(o=>o.id===offerId);
-    if(!offer) return;
 
-    const seller = USERS.find(u=>u.id===offer.sellerId);
-    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
+  offers.forEach(offer => {
+    if (getTxStatus(offer.id, buyerId) !== "Validé") return;
+
+    const seller = USERS.find(u => u.id === offer.sellerId);
+    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId || "-";
+    const validationTs = getTxValidationDate(offer.id, buyerId);
+    const validationText = validationTs ? new Date(validationTs).toLocaleString("fr-FR") : "-";
+    const offerLabel = offer.type === "Offre"
+      ? (offer.value || "Offre")
+      : [offer.type, offer.value].filter(Boolean).join(" : ");
 
     rows += `
     <div class="card" style="padding:14px;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:12px">
         <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
-        <div>
+        <div style="flex:1">
           <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
+          <div style="font-size:14px;color:#555">${escapeHtml(offerLabel || "Offre")}</div>
+          <div style="font-size:13px;color:#64748b;margin-top:4px">Validation : ${escapeHtml(validationText)}</div>
         </div>
       </div>
     </div>
