@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_30.html</title>
+  <title>index_31.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2119,8 +2119,16 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   
 
 
+
+function getActiveBuyerId(){
+  if(window.userSelect && userSelect.value){
+    return userSelect.value;
+  }
+  return "default";
+}
+
 function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+  const userId = getActiveBuyerId();
 
   const txAll = JSON.parse(localStorage.getItem("tx.byBuyer.v1") || "{}");
   const buyerTx = txAll[userId] || [];
@@ -3849,7 +3857,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
 function renderFavShops(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+  const userId = getActiveBuyerId();
   const favs = JSON.parse(localStorage.getItem("favoriteSellers_"+userId) || "[]");
 
   let sellers = USERS.filter(u => u.context === "vendeur");
@@ -3906,7 +3914,7 @@ function renderFavShops(){
 
 
 function renderTransactions(){
-  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+  const userId = getActiveBuyerId();
 
   const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
   const buyerTx = validatedAll[userId] || {};
