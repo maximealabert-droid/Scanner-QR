@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_27.html</title>
+  <title>index_16.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -585,7 +585,7 @@ function geoStatusForBuyerOffer(offer, buyerId){
 // Override status logic
 displayBuyerOfferStatus = function(offer, buyerId){
   const tx = getTxStatus(offer.id, buyerId);
-  if(tx === "Validée") return "Validée";
+  if(tx === "Validé") return "Validé";
   return geoStatusForBuyerOffer(offer,buyerId);
 };
 
@@ -953,7 +953,7 @@ header{
   .statusBox .pill{
     border: none !important;
   }
-  .statusBox .pill[data-status="Validée"]{
+  .statusBox .pill[data-status="Validé"]{
     background-color: #1fa34a !important;
     color: #ffffff !important;
   }
@@ -1255,7 +1255,7 @@ header{
 
 <style>
   /* Statut Validé en vert (offres acheteur) */
-  .pill[data-status="Validée"]{
+  .pill[data-status="Validé"]{
     background-color:#1fa34a !important;
     color:#ffffff !important;
     border:none !important;
@@ -1945,7 +1945,7 @@ document.addEventListener("DOMContentLoaded", function(){
   const FAVS_KEY        = "favorites.byBuyer.v1";
   const VALID_KEY       = "validated.byBuyer.v1";
   const RESERVE_KEY     = "reserved.byBuyer.v1";
-  const TX_STATUS_KEY = "txStatus.byOfferBuyer.v1"; // { offerId: { buyerId: "Validée" } }
+  const TX_STATUS_KEY = "txStatus.byOfferBuyer.v1"; // { offerId: { buyerId: "Validé" } }
 
   // =========================
   // Helpers JSON storage
@@ -2037,7 +2037,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   }
 
   // VALIDATION MANUELLE DÉSACTIVÉE
-  // Le statut "Validée" provient UNIQUEMENT du scan vendeur (TX_STATUS_KEY)
+  // Le statut "Validé" provient UNIQUEMENT du scan vendeur (TX_STATUS_KEY)
   function isValid(){
     return false;
   }
@@ -2048,7 +2048,7 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
     const all = loadTxAll();
     const buyers = all?.[offerId];
     if (!buyers) return 0;
-    return Object.values(buyers).filter(v => v === "Validée").length;
+    return Object.values(buyers).filter(v => v === "Validé").length;
   }
 
   function loadReserveAll(){ return loadJSON(RESERVE_KEY, {}); }
@@ -2117,35 +2117,30 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
 
 
   
-
-
-
 function renderTransactions(){
-  const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
-  const txAll = JSON.parse(localStorage.getItem("txStatus.byOfferBuyer.v1") || "{}");
+  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+
+  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
+  const buyerTx = validatedAll[userId] || {};
 
   let rows = "";
-
-  Object.keys(txAll).forEach(offerId=>{
-    const buyers = txAll[offerId];
-    if(!buyers || !buyers[buyerId]) return;
-
-    const offer = (Array.isArray(allOffers) ? allOffers.find(o=>o.id===offerId) : null);
+  Object.keys(buyerTx).forEach(offerId=>{
+    const offer = allOffers.find(o=>o.id===offerId);
     if(!offer) return;
 
-    const seller = (Array.isArray(USERS) ? USERS.find(u=>u.id===offer.sellerId) : null);
+    const seller = USERS.find(u=>u.id===offer.sellerId);
     const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
 
     rows += `
-      <div class="card" style="padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
-          <div>
-            <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-            <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
-          </div>
+    <div class="card" style="padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
+        <div>
+          <div style="font-weight:700">${escapeHtml(sellerName)}</div>
+          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
         </div>
       </div>
+    </div>
     `;
   });
 
@@ -2154,7 +2149,6 @@ function renderTransactions(){
   }
 
   const content = document.getElementById("content") || document.body;
-  window.__currentSubPage = "transactions";
 
   content.innerHTML = `
     <div style="padding:12px 16px;">
@@ -2170,18 +2164,14 @@ function renderTransactions(){
 
   const backBtn = document.getElementById("backHomeTx");
   if(backBtn) backBtn.onclick = ()=>{
-    window.__currentSubPage = "";
     renderHome(getUser(userSelect.value));
   };
 }
 
 
-
-
-
 function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
-    if (tx === "Validée") return "Validée";
+    if (tx === "Validé") return "Validé";
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
     return statut_offre_acheteur(emp, offer.distance);
   }
@@ -2601,12 +2591,14 @@ ${u.context === "acheteur" ? `
     <span>🏷️</span>
     <span>Catégories</span>
   </div>
+  <div class="chevron">›</div>
 </div>
 <div class="settingsRow" id="openFavShops" onclick="renderFavShops()">
   <div class="settingsLeft">
     <span>🏬</span>
     <span>Commerces Favoris</span>
   </div>
+  <div class="chevron">›</div>
 </div>
 
 <div class="settingsRow" id="openTransactions" onclick="renderTransactions()">
@@ -2614,7 +2606,9 @@ ${u.context === "acheteur" ? `
     <span>💳</span>
     <span>Transactions</span>
   </div>
+  <div class="chevron">›</div>
 </div>
+  <div class="chevron">›</div>
 </div>
 </div>
 
@@ -3440,7 +3434,7 @@ function geoStatusForBuyerOffer(offer, buyerId){
 // Override status logic
 displayBuyerOfferStatus = function(offer, buyerId){
   const tx = getTxStatus(offer.id, buyerId);
-  if(tx === "Validée") return "Validée";
+  if(tx === "Validé") return "Validé";
   return geoStatusForBuyerOffer(offer,buyerId);
 };
 
@@ -3639,10 +3633,10 @@ if (result) {
           if (
             o.sellerId === vendeur.id &&
             getOfferStatus(o, buyerId) === "En cours" &&
-            currentStatus !== "Validée"
+            currentStatus !== "Validé"
           ) {
 
-            setTxStatus(o.id, buyerId, "Validée");
+            setTxStatus(o.id, buyerId, "Validé");
 
             // 🔥 +1 Point Flash (only if not already validated)
             state[buyerId].pointsFlash = (state[buyerId].pointsFlash || 0) + 1;
@@ -3910,35 +3904,30 @@ function renderFavShops(){
 
 
 
-
-
-
 function renderTransactions(){
-  const buyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
-  const txAll = JSON.parse(localStorage.getItem("txStatus.byOfferBuyer.v1") || "{}");
+  const userId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
+
+  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
+  const buyerTx = validatedAll[userId] || {};
 
   let rows = "";
-
-  Object.keys(txAll).forEach(offerId=>{
-    const buyers = txAll[offerId];
-    if(!buyers || !buyers[buyerId]) return;
-
-    const offer = (Array.isArray(allOffers) ? allOffers.find(o=>o.id===offerId) : null);
+  Object.keys(buyerTx).forEach(offerId=>{
+    const offer = allOffers.find(o=>o.id===offerId);
     if(!offer) return;
 
-    const seller = (Array.isArray(USERS) ? USERS.find(u=>u.id===offer.sellerId) : null);
+    const seller = USERS.find(u=>u.id===offer.sellerId);
     const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
 
     rows += `
-      <div class="card" style="padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
-          <div>
-            <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-            <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
-          </div>
+    <div class="card" style="padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
+        <div>
+          <div style="font-weight:700">${escapeHtml(sellerName)}</div>
+          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
         </div>
       </div>
+    </div>
     `;
   });
 
@@ -3947,7 +3936,6 @@ function renderTransactions(){
   }
 
   const content = document.getElementById("content") || document.body;
-  window.__currentSubPage = "transactions";
 
   content.innerHTML = `
     <div style="padding:12px 16px;">
@@ -3963,13 +3951,9 @@ function renderTransactions(){
 
   const backBtn = document.getElementById("backHomeTx");
   if(backBtn) backBtn.onclick = ()=>{
-    window.__currentSubPage = "";
     renderHome(getUser(userSelect.value));
   };
 }
-
-
-
 
 
 function getOfferStatus(offer, buyerId){
@@ -3984,7 +3968,7 @@ function getOfferStatus(offer, buyerId){
 
   // validated via transaction
   const tx = (typeof getTxStatus === "function" && buyerId) ? getTxStatus(offer.id, buyerId) : null;
-  if(tx === "Validée") return "Validée";
+  if(tx === "Validé") return "Validée";
 
   if(exp && exp > now && qty === 0)
     return "Épuisée";
@@ -3995,20 +3979,6 @@ function getOfferStatus(offer, buyerId){
   return "En cours";
 }
 
-</script>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-  const txBtn = document.getElementById("openTransactions");
-  if(txBtn){
-    txBtn.addEventListener("click", function(){
-      if(typeof renderTransactions === "function"){
-        renderTransactions();
-      }
-    });
-  }
-});
 </script>
 
 </body>
