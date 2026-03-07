@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_5.html</title>
+  <title>index_12.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -2111,8 +2111,15 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
   function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
     if (tx === "Validé") return "Validé";
+
+    const qty = Number(offer.quantity ?? offer.qty ?? 0);
+    const used = countValidForOffer ? countValidForOffer(offer.id) : 0;
+    const remaining = isNaN(qty) ? Infinity : Math.max(0, qty - used);
+
+    if(remaining === 0) return "Epuisé";
+
     const emp = state[buyerId]?.buyerPrefs?.emplacement ?? null;
-    return statut_offre_acheteur(emp, offer.distance);
+    return statut_offre_acheteur(emp, offer.distance) || "En cours";
   }
 
 
