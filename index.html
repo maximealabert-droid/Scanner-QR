@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>index_50.html</title>
+  <title>index_52.html</title>
   <style>
     :root{
       /* Premium Light theme */
@@ -489,6 +489,25 @@ header{
   font-weight:700;
   font-size:18px;
   color:#1f8a8a;
+}
+
+
+/* Seller filter pills V47 */
+.sellerPill{
+padding:8px 16px;
+border-radius:999px;
+border:1px solid #0f766e;
+background:white;
+color:#0f766e;
+font-weight:500;
+cursor:pointer;
+transition:all .2s;
+}
+
+.sellerPill.active{
+background:#d1fae5;
+color:#065f46;
+border-color:#0f766e;
 }
 
 </style>
@@ -2349,19 +2368,6 @@ function getActiveBuyerId(){
 }
 
 function renderTransactions(){
-  alert("renderTransactions appelée");
-  try{
-    const buyerId = (typeof getCurrentBuyerId==='function') ? getCurrentBuyerId() : window.currentBuyerId;
-    alert("buyerId = " + buyerId);
-    const txRaw = localStorage.getItem("tx.byBuyer.v1");
-    alert("tx.byBuyer.v1 = " + txRaw);
-    const tx = JSON.parse(txRaw || "{}");
-    const buyerTx = tx[buyerId] || [];
-    alert("transactions pour buyer = " + buyerTx.length);
-  }catch(e){
-    alert("erreur debug: " + e);
-  }
-
   const userId = getActiveBuyerId();
 
   const txAll = JSON.parse(localStorage.getItem("tx.byBuyer.v1") || "{}");
@@ -2579,7 +2585,7 @@ function renderOffers(u, mode){
     return `
       <div class="offers">
         ${visible.map(o => `
-          <div class="offer" data-id="${escapeHtml(o.id)}" data-created="${escapeHtml(o.createdAt || "")}">
+          <div class="offer" data-id="${escapeHtml(o.id)}" data-created="${escapeHtml(o.createdAt || "")}" data-expire="${escapeHtml(o.date || "")}">
             <div class="top">
               ${u.context === "acheteur"
                 ? `
@@ -3213,9 +3219,58 @@ document.getElementById("pub").addEventListener("click", () => {
       if (u.context !== "acheteur") {
         content.innerHTML = `
           <div class="card">
-            ${renderOffers(u, "all")}
+
+            <div id="sellerFilterBar" style="display:flex;gap:8px;margin-bottom:12px">
+              <button class="sellerPill active" data-filter="active">En cours</button>
+              <button class="sellerPill" data-filter="expired">Expirées</button>
+            </div>
+
+            <div id="sellerOffersList">
+              ${renderOffers(u, "all")}
+            </div>
+
           </div>
         `;
+
+        setTimeout(()=>{
+          
+// seller filter state per seller
+window.__sellerFilters = window.__sellerFilters || {};
+window.__sellerFilters[u.id] = "active"; // reset each time we enter Offres for this seller
+let sellerFilter = window.__sellerFilters[u.id];
+
+          const pills = document.querySelectorAll(".sellerPill");
+          
+          function applySellerFilter(){
+            const cards = document.querySelectorAll("#sellerOffersList .offer");
+            cards.forEach(c=>{
+              const exp = c.dataset.expire;
+              if(!exp) return;
+              const isExpired = new Date(exp).getTime() < Date.now();
+              if(sellerFilter === "active"){
+                c.style.display = isExpired ? "none" : "";
+              }else{
+                c.style.display = isExpired ? "" : "none";
+              }
+            });
+          }
+    
+
+          applySellerFilter();
+          pills.forEach(p=>{
+            p.onclick = ()=>{
+              pills.forEach(b=>b.classList.remove("active"));
+              p.classList.add("active");
+              
+sellerFilter = p.dataset.filter;
+window.__sellerFilters[u.id] = sellerFilter;
+
+
+              applySellerFilter();
+            };
+          });
+        },50);
+
         return;
       }
 
@@ -4147,56 +4202,9 @@ function renderFavShops(){
 
 
 
-function renderTransactions(){
-  const userId = getActiveBuyerId();
 
-  const validatedAll = JSON.parse(localStorage.getItem("validated.byBuyer.v1") || "{}");
-  const buyerTx = validatedAll[userId] || {};
 
-  let rows = "";
-  Object.keys(buyerTx).forEach(offerId=>{
-    const offer = allOffers.find(o=>o.id===offerId);
-    if(!offer) return;
 
-    const seller = USERS.find(u=>u.id===offer.sellerId);
-    const sellerName = seller?.profile?.nom || seller?.label || offer.sellerId;
-
-    rows += `
-    <div class="card" style="padding:14px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:56px;height:56px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:24px">🏬</div>
-        <div>
-          <div style="font-weight:700">${escapeHtml(sellerName)}</div>
-          <div style="font-size:14px;color:#555">${escapeHtml(offer.type || "Offre")}</div>
-        </div>
-      </div>
-    </div>
-    `;
-  });
-
-  if(!rows){
-    rows = `<div class="card" style="padding:20px">Aucune transaction</div>`;
-  }
-
-  const content = document.getElementById("content") || document.body;
-
-  content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span id="backHomeTx" style="font-size:33px;cursor:pointer;">‹</span>
-    </div>
-
-    <div class="card" style="padding:12px;margin-bottom:10px">
-      <b>Transactions</b>
-    </div>
-
-    ${rows}
-  `;
-
-  const backBtn = document.getElementById("backHomeTx");
-  if(backBtn) backBtn.onclick = ()=>{
-    renderHome(getUser(userSelect.value));
-  };
-}
 
 
 function getOfferStatus(offer, buyerId){
