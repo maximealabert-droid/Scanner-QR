@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_V73_6_publish_categories_stable.html</title>
+<title>index_V100.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -674,7 +674,8 @@ select option{
  border:1px solid #d6dee8;
  background:#fff;
  cursor:pointer;
-}
+
+  color:#333 !important;}
 
 .discountGrid{
  display:grid;
@@ -738,6 +739,137 @@ select option{
 
 #catGrid{
   display:none;
+}
+
+
+/* ===== V74 Publish active green style ===== */
+
+.publishSegBtn.active{
+  background:#BFE3D2 !important;
+  color:#1F6B57 !important;
+  border-color:#1F6B57 !important;
+}
+
+.discountGrid button.active{
+  background:#BFE3D2 !important;
+  color:#1F6B57 !important;
+  border-color:#1F6B57 !important;
+}
+
+.chip.active{
+  background:#BFE3D2 !important;
+  color:#1F6B57 !important;
+  border-color:#1F6B57 !important;
+}
+
+.switch input:checked + .slider{
+  background:#1F6B57 !important;
+}
+
+.publishSegBtn.active,
+.discountGrid button.active,
+.chip.active{
+  transition: all .15s ease;
+}
+
+
+/* ===== V75 Mosaic + trigger font size ===== */
+
+.discountGrid button,
+#catTrigger,
+#qtyTrigger,
+#valueTrigger{
+  
+  color:#333 !important;
+}
+
+.discountGrid button{
+  font-weight:600;
+}
+
+
+
+/* ===== V76 Mosaic + trigger font color only ===== */
+
+.discountGrid button,
+#catTrigger,
+#qtyTrigger,
+#valueTrigger{
+  color:#333 !important;
+}
+
+
+/* ===== V77 trigger font size ===== */
+.discountTrigger{
+  font-size:18px !important;
+}
+
+
+/* ===== V79 publish toggle style ===== */
+.publishSeg{
+  display:flex;
+  border:1px solid #d6dee8;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.publishSegBtn{
+  flex:1;
+  height:44px;
+  border:none;
+  background:#fff;
+  font-size:18px;
+  color:#333 !important;
+}
+
+.publishSegBtn.active{
+  background:#BCEBD4;
+  color:#333 !important;
+}
+
+
+/* ===== V80 discount tap fix ===== */
+.discountGrid button:active{
+  background:#BCEBD4 !important;
+  color:#333 !important;
+}
+
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
+}
+
+
+/* ===== V84 remove outer seller card ===== */
+.offerCard{
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
+}
+
+
+/* ===== V85 card content layout ===== */
+.offerContent{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.offerLeft{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.offerRight{
+  text-align:right;
+  font-size:14px;
+  color:#64748b;
 }
 
 </style>
@@ -990,7 +1122,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -1389,6 +1521,16 @@ select option{
   display:none;
 }
 
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
+}
+
 </style>
 <style>
   
@@ -1629,6 +1771,16 @@ select option{
 
 #catGrid{
   display:none;
+}
+
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
 }
 
 </style>
@@ -1883,6 +2035,16 @@ select option{
 
 #catGrid{
   display:none;
+}
+
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
 }
 
 </style>
@@ -2140,6 +2302,16 @@ select option{
   display:none;
 }
 
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
+}
+
 </style>
 <style>
   /* Statut Validé en vert (offres acheteur) */
@@ -2388,6 +2560,16 @@ select option{
   display:none;
 }
 
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
+}
+
 </style>
 <style>
   /* Statut Réservé en bleu clair (offres acheteur) */
@@ -2634,6 +2816,16 @@ select option{
 
 #catGrid{
   display:none;
+}
+
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
 }
 
 </style>
@@ -2912,6 +3104,16 @@ select option{
   display:none;
 }
 
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
+}
+
 </style>
 <style>
 /* SAFE MASK Spot & Emplacement */
@@ -3165,6 +3367,16 @@ select option{
   display:none;
 }
 
+
+.discountInput{
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:8px;
+  padding:0 12px;
+  font-size:16px;
+}
+
 </style>
 <script src="https://unpkg.com/@zxing/library@latest">
 function toggleDiscountGrid(){
@@ -3195,7 +3407,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -3349,15 +3561,9 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner" style="
-background:#f1f5f9;
-color:#475569;
-font-size:12px;
-padding:6px 12px;
-border-bottom:1px solid #e2e8f0;
-">
-</div>
+<div id="fileTitleBanner">index_V100.html</div>
 <script>
+function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
 const CATEGORIES = ["Mode","Concert","Alimentation","Sport","Tech","Gaming","Culture","Voyage","Bien‑être","Maison","Animaux","Auto"];
 document.addEventListener("DOMContentLoaded", function(){
@@ -3395,7 +3601,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -3549,7 +3755,6 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 <div style="font-size:11px;color:#888;padding:6px 10px;"></div>
 <header><div id="topPanel">
-<div id="htmlNameBar" style="background:#e5e7eb;color:#374151;font-size:13px;padding:6px 10px;border-radius:10px;display:inline-block;width:fit-content;"></div>
 <div class="row">
 <label for="userSelect">Utilisateur</label>
 <select id="userSelect"></select>
@@ -4029,14 +4234,30 @@ ${o.type === "Offre"
   ? `${escapeHtml(o.value)}` 
   : `${escapeHtml(o.type)} : ${escapeHtml(o.value)}`}
 </div>`
-                  : `<span class="pill">${escapeHtml(o.type)}</span>
-                     <span class="pill">${escapeHtml(o.value)}</span>`
+                  : `<div>
+                       <div class="offerContent">
+                         <div class="offerLeft">
+                           <div class="sellerOfferValue">${o.type === "Offre" ? `${escapeHtml(o.value)}` : `${escapeHtml(o.type)} : ${escapeHtml(o.value)}`}</div>
+                           <div class="sellerOfferMeta">
+                             <span class="pill">${escapeHtml(o.category)}</span>
+                             ${o.quantity === "Illimité"
+                               ? `<span class="pill">Quantité : Illimité</span>`
+                               : `<span class="pill">Restant : ${escapeHtml(Math.max(0, (Number(o.quantity) || 0) - countValidForOffer(o.id)))}/${escapeHtml(o.quantity ?? "-")}</span>`}
+                           </div>
+                         </div>
+                         <div class="offerRight">
+                           <div>Publiée : ${o.publishDate ? formatDateOnlyFR(o.publishDate) : (o.createdAt ? formatDateOnlyFR(o.createdAt) : "-")}</div>
+                           <div>Expire : ${o.date ? formatDateFR(o.date) : "-"}</div>
+                         </div>
+                       </div>
+                       <div class="sellerOfferStats">
+                         <div>Favoris : <b>${countFavsForOffer(o.id)}</b></div>
+                         <div>Validées : <b>${countValidForOffer(o.id)}</b></div>
+                       </div>
+                     </div>`
                 }
                 ${u.context === "vendeur"
-                  ? (o.quantity === "Illimité"
-                      ? ``
-                      : `
-                         <span class="pill">Restant: ${escapeHtml(Math.max(0, (Number(o.quantity) || 0) - countValidForOffer(o.id)))}/${escapeHtml(o.quantity ?? "-")}</span>`)
+                  ? ``
                   : `<span class="pill">Restant: ${escapeHtml(Math.max(0, (Number(o.quantity) || 0) - countValidForOffer(o.id)))}/${escapeHtml(o.quantity ?? "-")}</span>`
                 }
                 ${u.context === "acheteur"
@@ -4050,18 +4271,17 @@ ${o.type === "Offre"
                 ${u.context === "acheteur"
                   ? ``
                   : ``}
-                <span class="pill">${escapeHtml(o.category)}</span>
                 ${u.context === "acheteur" ? `
-                  
+                  <span class="pill">${escapeHtml(o.category)}</span>
                 ` : ``}
               </div>
 
               ${u.context === "acheteur" ? `
                 <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px">
-                  
+
                 ${(() => { const s = getOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}
                 ${(() => { const s = getOfferStatus(o, u.id); return s ? `<div class="statusBox"><span class="pill" data-status="${s}">${s}</span></div>` : ``; })()}
-                
+
                   <div class="countdown" data-exp="${escapeHtml(o.date || "")}">${remainingText(o.date)}</div>
                   ${(() => {
                     const d = computeDistanceForBuyer(o, u.id);
@@ -4070,15 +4290,13 @@ ${o.type === "Offre"
                             </div>`;
                   })()}
                 </div>
-              ` : `
-                <div class="date">Expire : ${o.date ? formatDateFR(o.date) : "-"}</div>
-              `}
+              ` : ``}
             </div>
 
             <div class="meta">
               <div>
                 ${u.context === "vendeur"
-                  ? `⭐ Favori : <b>${countFavsForOffer(o.id)}</b> · ✅ Validé : <b>${countValidForOffer(o.id)}</b>`
+                  ? ``
                   : `${o.description ? `<div><button class="descBtn" data-id="${escapeHtml(o.id)}">Description</button></div>` : ``}`
                 }
               </div>
@@ -4089,13 +4307,13 @@ ${o.type === "Offre"
   ${isFav(u.id, o.id) ? "💖" : "🤍"}
 </button>
 
-                  
-                  
-                  
+
+
+
                 </div>
               ` : ""}
             </div>
-          
+
               ${u.context === "acheteur" ? `
                 <div class="offerDesc" id="desc-${escapeHtml(o.id)}">
                   ${escapeHtml(o.description || "Aucune description")}
@@ -4231,6 +4449,19 @@ ${u.context === "vendeur" ? `
 <div id="geoVendorCoords" style="font-size:12px;margin-top:6px;">
   Lat: ${latDisplay} | Lng: ${lngDisplay}
 </div>
+
+<button id="sellerHistoryBtn" style="width:100%;margin-top:10px;padding:14px;border-radius:10px;border:1px solid #d1d5db;background:#f3f4f6;font-size:16px;">
+📜 Historique
+</button>
+
+<div class="settingsRow" onclick="alert('Catégories vendeur')">
+  <div class="settingsLeft">
+    <span>🏷️</span>
+    <span>Catégories</span>
+  </div>
+  <div class="settingsRight">›</div>
+</div>
+
 ` : ``}
 
 ${u.context === "acheteur" ? `
@@ -4634,6 +4865,7 @@ ${u.context === "acheteur" ? `
           category: cat,
           date,
           createdAt: Date.now(),
+          publishDate: Date.now(),
           description,
           minBuy,
           limit
@@ -5236,7 +5468,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -5464,7 +5696,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -5717,7 +5949,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -5971,7 +6203,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -6266,7 +6498,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -6469,7 +6701,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -6664,7 +6896,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -6948,7 +7180,7 @@ function selectDiscountOther(){
  if(grid) grid.style.display = "none";
 
  if(trigger){
-   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" style="width:100%;height:40px;border:1px solid #d6dee8;border-radius:8px;padding:0 8px;">';
+   trigger.innerHTML = '<input id="customDiscount" type="number" placeholder="Remise %" inputmode="numeric" pattern="[0-9]*" class="discountInput">';
    const input = document.getElementById("customDiscount");
    input.focus();
 
@@ -7100,5 +7332,14 @@ function buildCategoryGrid(){
 document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 
 </script>
+
+<script>
+document.addEventListener("click",function(e){
+  if(e.target && e.target.id==="sellerHistoryBtn"){
+    alert("Historique vendeur");
+  }
+});
+</script>
+
 </body>
 </html>
