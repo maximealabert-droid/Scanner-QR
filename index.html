@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_V100.html</title>
+<title>index_V104.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -3561,7 +3561,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_V100.html</div>
+<div id="fileTitleBanner">index_V104.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4425,26 +4425,10 @@ function renderHome(u){
 
     const p = state[u.id].profile;
     const isVendeur = (u.context === "vendeur");
-    const sellerImgData = isVendeur && typeof getVendorImage === "function" ? getVendorImage(u.id) : null;
 
     content.innerHTML = `
       <div class="card">
-        ${isVendeur ? `
-        <div id="vendorImageBlock" style="display:flex;justify-content:center;margin-bottom:16px;">
-          ${sellerImgData ? `
-          <div style="position:relative;width:140px;height:140px">
-            <img src="${sellerImgData}" style="width:140px;height:140px;object-fit:cover;border-radius:14px;border:1px solid #e2e8f0">
-            <button id="vendorImageEditBtn" style="position:absolute;bottom:6px;right:6px;border:none;border-radius:50%;width:30px;height:30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer">✏️</button>
-            <input id="vendorImageInput" type="file" accept="image/*" style="display:none">
-          </div>
-          ` : `
-          <label style="width:140px;height:140px;border:2px dashed #cbd5e1;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-align:center;font-size:13px;color:#64748b">
-            📷 Ajouter image<br>du commerce
-            <input id="vendorImageInput" type="file" accept="image/*" style="display:none">
-          </label>
-          `}
-        </div>
-        ` : ``}
+        
 
         <div class="fields">
           <div>
@@ -4466,7 +4450,7 @@ ${u.context === "vendeur" ? `
   Lat: ${latDisplay} | Lng: ${lngDisplay}
 </div>
 
-<div class="settingsRow" onclick="alert('Historique vendeur')">
+<div class="settingsRow" onclick="renderSellerHistory()">
   <div class="settingsLeft">
     <span>📜</span>
     <span>Historique</span>
@@ -4474,7 +4458,7 @@ ${u.context === "vendeur" ? `
   <div class="settingsRight">›</div>
 </div>
 
-<div class="settingsRow" onclick="alert('Catégories vendeur')">
+<div class="settingsRow" onclick="renderCategories(window.currentUser)">
   <div class="settingsLeft">
     <span>🏷️</span>
     <span>Catégories</span>
@@ -4550,18 +4534,6 @@ ${u.context === "acheteur" ? `
         
       </div>
     `;
-
-    if (isVendeur) {
-      const input = document.getElementById("vendorImageInput");
-      const btn = document.getElementById("vendorImageEditBtn");
-      if (btn && input) btn.onclick = () => input.click();
-      if (input) {
-        input.onchange = (e) => {
-          const file = e.target.files && e.target.files[0];
-          if (file) handleVendorImageUpload(file);
-        };
-      }
-    }
 
     // Profil (inchangé)
     document.getElementById("nom").addEventListener("input", e => {
@@ -6437,9 +6409,7 @@ function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padS
         const cropped = canvas.toDataURL("image/jpeg", 0.85);
         setVendorImage(userSelect.value, cropped);
 
-        if(window.currentUser && window.renderHome){
-          renderHome(window.currentUser);
-        }
+        injectVendorImageBlock();
       };
       img.src = e.target.result;
     };
@@ -6447,7 +6417,53 @@ function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padS
   }
 
   function injectVendorImageBlock(){
-    return;
+
+    const u = USERS.find(x => x.id === userSelect.value);
+    if(!u || u.context !== "vendeur") return;
+    if(state[u.id]?.tab !== "Home") return;
+
+    const card = document.querySelector("#content .card");
+    if(!card) return;
+
+    if(document.getElementById("vendorImageBlock")) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.id = "vendorImageBlock";
+    wrapper.style.display = "flex";
+    wrapper.style.justifyContent = "center";
+    wrapper.style.marginBottom = "16px";
+
+    const imgData = getVendorImage(u.id);
+
+    if(imgData){
+      wrapper.innerHTML = `
+        <div style="position:relative;width:140px;height:140px">
+          <img src="${imgData}"
+               style="width:100%;height:100%;object-fit:cover;border-radius:14px;border:1px solid #e2e8f0">
+          <button style="position:absolute;bottom:6px;right:6px;border:none;border-radius:50%;
+                         width:30px;height:30px;background:#2563eb;color:white;cursor:pointer">✏️</button>
+          <input type="file" accept="image/*" style="display:none">
+        </div>
+      `;
+      const btn = wrapper.querySelector("button");
+      const input = wrapper.querySelector("input");
+      btn.onclick = () => input.click();
+      input.onchange = (e) => handleVendorImageUpload(e.target.files[0]);
+    } else {
+      wrapper.innerHTML = `
+        <label style="width:140px;height:140px;border:2px dashed #cbd5e1;
+                      border-radius:14px;display:flex;align-items:center;
+                      justify-content:center;cursor:pointer;
+                      text-align:center;font-size:13px;color:#64748b">
+          📷 Ajouter image<br>du commerce
+          <input type="file" accept="image/*" style="display:none">
+        </label>
+      `;
+      const input = wrapper.querySelector("input");
+      input.onchange = (e) => handleVendorImageUpload(e.target.files[0]);
+    }
+
+    card.insertBefore(wrapper, card.firstChild);
   }
 
   const observer = new MutationObserver(() => {
@@ -7318,6 +7334,78 @@ function buildCategoryGrid(){
 }
 
 document.addEventListener("DOMContentLoaded", buildCategoryGrid);
+
+
+function renderSellerHistory(){
+
+  window.__currentSubPage = "sellerHistory";
+
+  const validated = Object.values(state.offers || {})
+    .filter(o => o.status === "validated");
+
+  document.getElementById("content").innerHTML = `
+<div style="padding:12px 16px;">
+  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
+</div>
+
+<div class="card">
+<h3>Historique des offres</h3>
+
+${validated.length === 0 ? `
+<div class="muted">Aucune offre validée</div>
+` : validated.map(o => `
+<div class="offerCard">
+<div><b>${o.title || "Offre"}</b></div>
+<div class="muted">Acheteur : ${o.buyerName || "-"}</div>
+<div class="muted">Remise : ${o.discount || "-"} %</div>
+<div class="muted">Validée le : ${new Date(o.validatedAt || Date.now()).toLocaleDateString()}</div>
+</div>
+`).join("")}
+
+</div>
+`;
+
+setTimeout(()=>{
+  const b=document.getElementById("backHome");
+  if(b && window.renderHome){
+    b.onclick=()=>renderHome(window.currentUser);
+  }
+});
+}
+
+
+function renderCategories(window.currentUser){
+
+  const user = window.currentUser;
+  const prefs = (state[user.id] && state[user.id].sellerPrefs) || {};
+  const selected = prefs.categories || [];
+
+  document.getElementById("content").innerHTML = `
+<div style="padding:12px 16px;">
+  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
+</div>
+
+<div class="card">
+<h3>Vos catégories</h3>
+
+<div class="catPills">
+${CATEGORIES.map(cat => `
+<div class="pill-cat ${selected.includes(cat) ? 'active' : ''}" data-cat="${cat}">
+${cat}
+</div>
+`).join("")}
+</div>
+
+</div>
+`;
+
+setTimeout(()=>{
+  const b=document.getElementById("backHome");
+  if(b && window.renderHome){
+    b.onclick=()=>renderHome(window.currentUser);
+  }
+});
+}
 
 </script>
 </body>
