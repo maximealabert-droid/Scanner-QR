@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_V96.html</title>
+<title>index_V97.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -3561,7 +3561,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_V96.html</div>
+<div id="fileTitleBanner">index_V97.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4450,7 +4450,7 @@ ${u.context === "vendeur" ? `
   Lat: ${latDisplay} | Lng: ${lngDisplay}
 </div>
 
-<div class="settingsRow" onclick="alert('Historique vendeur')">
+<div class="settingsRow" onclick="renderSellerHistory()">
   <div class="settingsLeft">
     <span>📜</span>
     <span>Historique</span>
@@ -4458,7 +4458,7 @@ ${u.context === "vendeur" ? `
   <div class="settingsRight">›</div>
 </div>
 
-<div class="settingsRow" onclick="alert('Catégories vendeur')">
+<div class="settingsRow" onclick="renderSellerCategories()">
   <div class="settingsLeft">
     <span>🏷️</span>
     <span>Catégories</span>
@@ -7334,6 +7334,64 @@ function buildCategoryGrid(){
 }
 
 document.addEventListener("DOMContentLoaded", buildCategoryGrid);
+
+
+function renderSellerHistory(){
+
+  window.__currentSubPage = "sellerHistory";
+
+  const validated = Object.values(state.offers || {})
+    .filter(o => o.status === "validated");
+
+  content.innerHTML = `
+<div style="padding:12px 16px;">
+  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
+</div>
+
+<div class="card">
+<h3>Historique des offres</h3>
+
+${validated.length === 0 ? `
+<div class="muted">Aucune offre validée</div>
+` : validated.map(o => `
+<div class="offerCard">
+<div><b>${o.title || "Offre"}</b></div>
+<div class="muted">Acheteur : ${o.buyerName || "-"}</div>
+<div class="muted">Remise : ${o.discount || "-"} %</div>
+<div class="muted">Validée le : ${new Date(o.validatedAt || Date.now()).toLocaleDateString()}</div>
+</div>
+`).join("")}
+
+</div>
+`;
+}
+
+
+function renderSellerCategories(){
+
+  const user = window.currentUser;
+  const prefs = (state[user.id] && state[user.id].sellerPrefs) || {};
+  const selected = prefs.categories || [];
+
+  content.innerHTML = `
+<div style="padding:12px 16px;">
+  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
+</div>
+
+<div class="card">
+<h3>Vos catégories</h3>
+
+<div class="catPills">
+${CATEGORIES.map(cat => `
+<div class="pill-cat ${selected.includes(cat) ? 'active' : ''}" data-cat="${cat}">
+${cat}
+</div>
+`).join("")}
+</div>
+
+</div>
+`;
+}
 
 </script>
 </body>
