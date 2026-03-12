@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_V100.html</title>
+<title>index_V96.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -3561,7 +3561,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_V100.html</div>
+<div id="fileTitleBanner">index_V96.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4450,9 +4450,13 @@ ${u.context === "vendeur" ? `
   Lat: ${latDisplay} | Lng: ${lngDisplay}
 </div>
 
-<button id="sellerHistoryBtn" style="width:100%;margin-top:10px;padding:14px;border-radius:10px;border:1px solid #d1d5db;background:#f3f4f6;font-size:16px;">
-📜 Historique
-</button>
+<div class="settingsRow" onclick="alert('Historique vendeur')">
+  <div class="settingsLeft">
+    <span>📜</span>
+    <span>Historique</span>
+  </div>
+  <div class="settingsRight">›</div>
+</div>
 
 <div class="settingsRow" onclick="alert('Catégories vendeur')">
   <div class="settingsLeft">
@@ -7332,14 +7336,5 @@ function buildCategoryGrid(){
 document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 
 </script>
-
-<script>
-document.addEventListener("click",function(e){
-  if(e.target && e.target.id==="sellerHistoryBtn"){
-    alert("Historique vendeur");
-  }
-});
-</script>
-
 </body>
 </html>
