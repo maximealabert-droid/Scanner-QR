@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_V104.html</title>
+<title>index_V98.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -3561,7 +3561,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_V104.html</div>
+<div id="fileTitleBanner">index_V98.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4458,7 +4458,7 @@ ${u.context === "vendeur" ? `
   <div class="settingsRight">›</div>
 </div>
 
-<div class="settingsRow" onclick="renderCategories(window.currentUser)">
+<div class="settingsRow" onclick="renderSellerCategories()">
   <div class="settingsLeft">
     <span>🏷️</span>
     <span>Catégories</span>
@@ -7374,7 +7374,7 @@ setTimeout(()=>{
 }
 
 
-function renderCategories(window.currentUser){
+function renderSellerCategories(){
 
   const user = window.currentUser;
   const prefs = (state[user.id] && state[user.id].sellerPrefs) || {};
