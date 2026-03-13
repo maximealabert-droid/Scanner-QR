@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v99.html</title>
+<title>index_v100.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -3561,7 +3561,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_v99.html</div>
+<div id="fileTitleBanner">index_v100.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -3983,7 +3983,7 @@ function getActiveBuyerId(){
 
 function renderTransactions(){
   const txAll = JSON.parse(localStorage.getItem("tx.byBuyer.v1") || "{}");
-// V99 DEBUG: show all transactions regardless of buyerId
+// V100 DEBUG: show all transactions regardless of buyerId
 const buyerTx = Object.values(txAll).flat();
 
   let rows = "";
