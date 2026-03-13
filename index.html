@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v100.html</title>
+<title>index_v101.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -3561,7 +3561,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_v100.html</div>
+<div id="fileTitleBanner">index_v101.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -3931,6 +3931,15 @@ function loadFavsAll(){ return loadJSON(FAVS_KEY, {}); }
     all[offerId] ??= {};
     if (status) all[offerId][buyerId] = status;
     else delete all[offerId][buyerId];
+    
+    // V101: save transaction record
+    if(status === "Validé"){
+      const txAll = JSON.parse(localStorage.getItem("tx.byBuyer.v1") || "{}");
+      if(!txAll[buyerId]) txAll[buyerId] = [];
+      txAll[buyerId].push({offerId:offerId, validatedAt:Date.now()});
+      localStorage.setItem("tx.byBuyer.v1", JSON.stringify(txAll));
+    }
+    
     saveTxAll(all);
   }
 
@@ -3982,9 +3991,10 @@ function getActiveBuyerId(){
 }
 
 function renderTransactions(){
+  const userId = getActiveBuyerId();
+
   const txAll = JSON.parse(localStorage.getItem("tx.byBuyer.v1") || "{}");
-// V100 DEBUG: show all transactions regardless of buyerId
-const buyerTx = Object.values(txAll).flat();
+  const buyerTx = txAll[userId] || [];
 
   let rows = "";
 
