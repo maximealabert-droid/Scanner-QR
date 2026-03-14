@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v114.html</title>
+<title>index_v119.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -4210,7 +4210,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_v114.html</div>
+<div id="fileTitleBanner">index_v119.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4811,8 +4811,13 @@ function getOfferStatus(offer, buyerId){
 
       let out = [...offers];
 
-      if(ui.category && ui.category !== "all")
+      if(ui.category==="__prefs__"){
+        const prefs = state[u.id]?.buyerPrefs?.categories || [];
+        out = out.filter(o => prefs.includes(o.category));
+      }
+      else if(ui.category && ui.category !== "all"){
         out = out.filter(o => o.category === ui.category);
+      };
 
       if(ui.shop && ui.shop !== "all")
         out = out.filter(o => o.sellerId === ui.shop);
@@ -5632,9 +5637,9 @@ window.__sellerFilters[u.id] = sellerFilter;
               <span style="font-size:12px;color:var(--muted)">Catégorie</span>
               
 <div class="flash-pills">
-<button id="pillCategories" class="flash-pill">Catégories</button>
-<button id="pillFavorites" class="flash-pill">Favoris</button>
-<button id="pillMap" class="flash-pill">Vue Maps</button>
+<button id="pillCategories" class="flash-pill">${ui.category==="__prefs__" ? "Mes favorites" : (ui.category && ui.category !== "all" ? escapeHtml(ui.category) : "Catégories")}</button>
+<button id="pillFavorites" class="flash-pill ${ui.favoritesOnly ? "flash-pill-active" : ""}">Favoris</button>
+<button id="pillMap" class="flash-pill ${ui.view==="map" ? "flash-pill-active" : ""}">${ui.view==="list" ? "Vue Maps" : "Vue Liste"}</button>
 </div>
 <select class="filterPill" id="filterCategory" style="display:none">
                 ${categories.map(c =>
@@ -8096,6 +8101,95 @@ if(mapPill && mapBtn){
 mapPill.onclick=()=>mapBtn.click();
 }
 
+});
+</script>
+
+
+<script>
+function renderBuyerOfferFilterPage(u){
+  ensureOffersUI(u);
+  const ui = state[u.id].offersUI;
+  const rows = [
+    `<div class="menuItem" data-filter-action="favorites">
+      <div class="menuLeft"><span>Mes favorites</span></div>
+      <div class="menuChevron">${ui.favoritesOnly ? "✓" : ""}</div>
+    </div>`,
+    `<div class="menuItem" data-filter-action="all">
+      <div class="menuLeft"><span>Toutes</span></div>
+      <div class="menuChevron">${ui.category==="all" && !ui.favoritesOnly ? "✓" : ""}</div>
+    </div>`,
+    ...CATEGORIES.map(cat => `
+      <div class="menuItem" data-filter-category="${cat}">
+        <div class="menuLeft"><span>${escapeHtml(cat)}</span></div>
+        <div class="menuChevron">${ui.category===cat ? "✓" : ""}</div>
+      </div>
+    `)
+  ].join("");
+
+  const content = document.getElementById("content");
+  content.innerHTML = `
+    <div class="pageHeader">
+      <span class="backButton" id="backBuyerFilters">‹</span>
+      <span class="pageTitle">Catégories</span>
+    </div>
+    <div class="menuList">${rows}</div>
+  `;
+
+  const back = document.getElementById("backBuyerFilters");
+  if(back) back.onclick = ()=> render(u);
+
+  document.querySelectorAll("[data-filter-action]").forEach(el=>{
+    el.onclick = ()=>{
+      const action = el.getAttribute("data-filter-action");
+      if(action === "favorites"){ ui.category="__prefs__";
+      }else if(action === "all"){
+        ui.category = "all";
+        ui.favoritesOnly = false;
+      }
+      saveState();
+      renderBuyerOfferFilterPage(u);
+    };
+  });
+
+  document.querySelectorAll("[data-filter-category]").forEach(el=>{
+    el.onclick = ()=>{
+      ui.category = el.getAttribute("data-filter-category");
+      saveState();
+      render(u);
+    };
+  });
+}
+
+document.addEventListener("click", function(e){
+  const fav = e.target.closest("#pillFavorites");
+  if(fav){
+    const u = getUser(userSelect.value);
+    if(!u || u.context !== "acheteur") return;
+    ensureOffersUI(u);
+    state[u.id].offersUI.favoritesOnly = !state[u.id].offersUI.favoritesOnly;
+    saveState();
+    render(u);
+    return;
+  }
+
+  const cat = e.target.closest("#pillCategories");
+  if(cat){
+    const u = getUser(userSelect.value);
+    if(!u || u.context !== "acheteur") return;
+    renderBuyerOfferFilterPage(u);
+    return;
+  }
+
+  const map = e.target.closest("#pillMap");
+  if(map){
+    const u = getUser(userSelect.value);
+    if(!u || u.context !== "acheteur") return;
+    ensureOffersUI(u);
+    state[u.id].offersUI.view = state[u.id].offersUI.view === "list" ? "map" : "list";
+    saveState();
+    render(u);
+    return;
+  }
 });
 </script>
 
