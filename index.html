@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v103.html</title>
+<title>index_v112.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -313,6 +313,10 @@ header{
   cursor:pointer;
 }
 .settingsLeft{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
   display:flex;
   gap:10px;
   align-items:center;
@@ -872,6 +876,43 @@ select option{
   color:#64748b;
 }
 
+
+.pageHeader{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:56px;
+  background:#ffffff;
+  border-bottom:1px solid #e5e7eb;
+  margin:0 0 12px 0;
+}
+.pageTitle{
+  width:100%;
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+  color:#0f172a;
+  pointer-events:none;
+}
+.backButton{
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  line-height:1;
+  color:#0f172a;
+  cursor:pointer;
+  z-index:2;
+  user-select:none;
+}
+
 </style>
 <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -915,7 +956,7 @@ const favBtn = document.getElementById("sellerFavBtn");
 const activeBuyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
 const storageKey = "favoriteSellers_" + activeBuyerId;
 const favsInit = JSON.parse(localStorage.getItem(storageKey) || "[]");
-favBtn.textContent = favsInit.includes(sellerId) ? "❤️" : "🤍";
+favBtn.textContent = favsInit.includes(sellerId) ? "" : "🤍";
 
 favBtn.onclick = () => {
   let favs = JSON.parse(localStorage.getItem(storageKey) || "[]");
@@ -927,7 +968,7 @@ favBtn.onclick = () => {
   }
 
   localStorage.setItem(storageKey, JSON.stringify(favs));
-  favBtn.textContent = favs.includes(sellerId) ? "❤️" : "🤍";
+  favBtn.textContent = favs.includes(sellerId) ? "" : "🤍";
 
   if (window.__currentSubPage === "favShops") {
     renderFavShops();
@@ -1292,6 +1333,10 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 }
 .settingsLeft{
   display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
+  display:flex;
   gap:10px;
   align-items:center;
 }
@@ -1543,6 +1588,10 @@ select option{
   cursor:pointer;
 }
 .settingsLeft{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
   display:flex;
   gap:10px;
   align-items:center;
@@ -1807,6 +1856,10 @@ select option{
   cursor:pointer;
 }
 .settingsLeft{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
   display:flex;
   gap:10px;
   align-items:center;
@@ -2073,6 +2126,10 @@ select option{
 }
 .settingsLeft{
   display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
+  display:flex;
   gap:10px;
   align-items:center;
 }
@@ -2331,6 +2388,10 @@ select option{
 }
 .settingsLeft{
   display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
+  display:flex;
   gap:10px;
   align-items:center;
 }
@@ -2588,6 +2649,10 @@ select option{
   cursor:pointer;
 }
 .settingsLeft{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
   display:flex;
   gap:10px;
   align-items:center;
@@ -2875,6 +2940,10 @@ main{
 }
 .settingsLeft{
   display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
+  display:flex;
   gap:10px;
   align-items:center;
 }
@@ -3137,6 +3206,10 @@ label[for="emplacement"] {
   cursor:pointer;
 }
 .settingsLeft{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
   display:flex;
   gap:10px;
   align-items:center;
@@ -3561,7 +3634,7 @@ document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 </script>
 </head>
 <body>
-<div id="fileTitleBanner">index_v103.html</div>
+<div id="fileTitleBanner">index_v112.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4048,21 +4121,16 @@ function renderTransactions(){
   }
 
   const content = document.getElementById("content");
-
   content.innerHTML = `
-    <div style="padding:12px;margin-bottom:10px">
-      <b>Transactions</b>
+    <div class="pageHeader">
+      <span class="backButton" id="backHomeTransactions">‹</span>
+      <span class="pageTitle">Transactions</span>
     </div>
     ${rows}
   `;
 
-  const backBtn = document.createElement("div");
-  backBtn.innerHTML = "‹ Retour";
-  backBtn.style.margin="12px";
-  backBtn.style.cursor="pointer";
-  backBtn.onclick = ()=>renderHomeAcheteur();
-
-  content.prepend(backBtn);
+  const backBtn = document.getElementById("backHomeTransactions");
+  if(backBtn) backBtn.onclick = ()=>renderHome(getUser(userSelect.value));
 }
 function getOfferStatus(offer, buyerId){
     const tx = getTxStatus(offer.id, buyerId);
@@ -4399,11 +4467,9 @@ function renderCategories(u){
   });
 
   content.innerHTML = `
-    
-<div style="padding:12px 16px;">
-  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
-</div>
-
+    <div class="pageHeader">
+      <span class="backButton" id="backHome">‹</span>
+      <span class="pageTitle">Catégories</span>
     </div>
 
     <div class="card" style="padding:0;">
@@ -4478,18 +4544,18 @@ ${u.context === "vendeur" ? `
 
 <div class="settingsRow" onclick="renderSellerHistory()">
   <div class="settingsLeft">
-    <span>📜</span>
+    <span></span>
     <span>Historique</span>
   </div>
-  <div class="settingsRight">›</div>
+  <div class="settingsRight"></div>
 </div>
 
 <div class="settingsRow" onclick="renderSellerCategories()">
   <div class="settingsLeft">
-    <span>🏷️</span>
-    <span>Catégories</span>
+    <span></span>
+    <span style="font-weight:700">Catégories</span>
   </div>
-  <div class="settingsRight">›</div>
+  <div class="settingsRight"></div>
 </div>
 
 ` : ``}
@@ -4513,23 +4579,22 @@ ${u.context === "acheteur" ? `
 
 <div class="settingsRow" id="openCategories" onclick="if(window.currentUser){renderCategories(window.currentUser);}">
   <div class="settingsLeft">
-    <span>🏷️</span>
-    <span>Catégories</span>
+    <span></span>
+    <span style="font-weight:700">Catégories</span>
   </div>
-  <div class="chevron">›</div>
+  <div class="chevron"></div>
 </div>
 <div class="settingsRow" id="openFavShops" onclick="renderFavShops()">
   <div class="settingsLeft">
-    <span>🏬</span>
-    <span>Commerces Favoris</span>
+    <span style="font-weight:700">Commerces Favoris</span>
   </div>
-  <div class="chevron">›</div>
+  <div class="chevron"></div>
 </div>
 
 <div class="settingsRow" id="openTransactions" onclick="renderTransactions()">
   <div class="settingsLeft">
-    <span>💳</span>
-    <span>Transactions</span>
+    <span></span>
+    <span style="font-weight:700">Transactions</span>
   </div>
 </div>
 </div>
@@ -5333,7 +5398,7 @@ overlay.style.display = "flex";
 
 const favBtn = document.getElementById("sellerFavBtn");
 const favsInit = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
-favBtn.textContent = favsInit.includes(sellerId) ? "❤️" : "🤍";
+favBtn.textContent = favsInit.includes(sellerId) ? "" : "🤍";
 
 favBtn.onclick = () => {
   let favs = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
@@ -5343,7 +5408,7 @@ favBtn.onclick = () => {
     favs.push(sellerId);
   }
   localStorage.setItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default"), JSON.stringify(favs));
-  favBtn.textContent = favs.includes(sellerId) ? "❤️" : "🤍";
+  favBtn.textContent = favs.includes(sellerId) ? "" : "🤍";
 };
 
   }
@@ -7132,14 +7197,10 @@ function renderFavShops(){
   window.__currentSubPage = "favShops";
 
   content.innerHTML = `
-    <div style="padding:12px 16px;">
-      <span id="backHomeFav" style="font-size:33px;cursor:pointer;">‹</span>
+    <div class="pageHeader">
+      <span class="backButton" id="backHomeFav">‹</span>
+      <span class="pageTitle">Commerces Favoris</span>
     </div>
-
-    <div class="card" style="padding:12px;margin-bottom:10px">
-      <b>Commerces Favoris</b>
-    </div>
-
     ${list}
   `;
 
@@ -7370,35 +7431,34 @@ function renderSellerHistory(){
     .filter(o => o.status === "validated");
 
   document.getElementById("content").innerHTML = `
-<div style="padding:12px 16px;">
-  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
-</div>
+    <div class="pageHeader">
+      <span class="backButton" id="backHome">‹</span>
+      <span class="pageTitle">Historique</span>
+    </div>
 
-<div class="card">
-<h3>Historique des offres</h3>
+    <div class="card">
+      <h3>Historique des offres</h3>
 
-${validated.length === 0 ? `
-<div class="muted">Aucune offre validée</div>
-` : validated.map(o => `
-<div class="offerCard">
-<div><b>${o.title || "Offre"}</b></div>
-<div class="muted">Acheteur : ${o.buyerName || "-"}</div>
-<div class="muted">Remise : ${o.discount || "-"} %</div>
-<div class="muted">Validée le : ${new Date(o.validatedAt || Date.now()).toLocaleDateString()}</div>
-</div>
-`).join("")}
+      ${validated.length === 0 ? `
+      <div class="muted">Aucune offre validée</div>
+      ` : validated.map(o => `
+      <div class="offerCard">
+        <div><b>${o.title || "Offre"}</b></div>
+        <div class="muted">Acheteur : ${o.buyerName || "-"}</div>
+        <div class="muted">Remise : ${o.discount || "-"} %</div>
+        <div class="muted">Validée le : ${new Date(o.validatedAt || Date.now()).toLocaleDateString()}</div>
+      </div>
+      `).join("")}
+    </div>
+  `;
 
-</div>
-`;
-
-setTimeout(()=>{
-  const b=document.getElementById("backHome");
-  if(b && window.renderHome){
-    b.onclick=()=>renderHome(window.currentUser);
-  }
-});
+  setTimeout(()=>{
+    const b=document.getElementById("backHome");
+    if(b && window.renderHome){
+      b.onclick=()=>renderHome(window.currentUser);
+    }
+  });
 }
-
 
 function renderSellerCategories(){
 
@@ -7407,30 +7467,30 @@ function renderSellerCategories(){
   const selected = prefs.categories || [];
 
   document.getElementById("content").innerHTML = `
-<div style="padding:12px 16px;">
-  <span id="backHome" style="font-size:33px;cursor:pointer;">‹</span>
-</div>
+    <div class="pageHeader">
+      <span class="backButton" id="backHome">‹</span>
+      <span class="pageTitle">Catégories</span>
+    </div>
 
-<div class="card">
-<h3>Vos catégories</h3>
+    <div class="card">
+      <h3>Vos catégories</h3>
 
-<div class="catPills">
-${CATEGORIES.map(cat => `
-<div class="pill-cat ${selected.includes(cat) ? 'active' : ''}" data-cat="${cat}">
-${cat}
-</div>
-`).join("")}
-</div>
+      <div class="catPills">
+        ${CATEGORIES.map(cat => `
+        <div class="pill-cat ${selected.includes(cat) ? 'active' : ''}" data-cat="${cat}">
+          ${cat}
+        </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
 
-</div>
-`;
-
-setTimeout(()=>{
-  const b=document.getElementById("backHome");
-  if(b && window.renderHome){
-    b.onclick=()=>renderHome(window.currentUser);
-  }
-});
+  setTimeout(()=>{
+    const b=document.getElementById("backHome");
+    if(b && window.renderHome){
+      b.onclick=()=>renderHome(window.currentUser);
+    }
+  });
 }
 
 </script>
