@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v127.html</title>
+<title>index_v136.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -4151,9 +4151,45 @@ function buildCategoryGrid(){
 document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 
 </script>
+
+<style>
+.catHeader{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+#catApplyBtn{
+position:static!important;
+width:auto!important;
+margin:0!important;
+padding:8px 14px!important;
+background:#16a34a!important;
+border-radius:10px!important;
+font-weight:600!important;
+}
+</style>
+
+
+<style>
+.pageHeader{position:relative;display:flex;align-items:center;justify-content:center;}
+.pageHeader .backButton{position:absolute;left:12px;}
+#catApplyBtn{
+position:absolute;
+right:12px;
+top:50%;
+transform:translateY(-50%);
+padding:6px 12px;
+background:#16a34a;
+color:#fff;
+border-radius:10px;
+font-weight:600;
+border:none;
+}
+</style>
+
 </head>
 <body>
-<div id="fileTitleBanner">index_v127.html</div>
+<div id="fileTitleBanner">index_v144.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4451,10 +4487,12 @@ function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padS
   function ensureOffersUI(u){
     state[u.id].offersUI ??= {
       category: "all",
+      categories: [],
       shop: "all",
       favoritesOnly: false,
       view: "list" // list | map
     };
+    if(!Array.isArray(state[u.id].offersUI.categories)) state[u.id].offersUI.categories = [];
     saveState();
   }
 
@@ -4757,6 +4795,9 @@ function getOfferStatus(offer, buyerId){
       if(ui.category==="__prefs__"){
         const prefs = state[u.id]?.buyerPrefs?.categories || [];
         out = out.filter(o => prefs.includes(o.category));
+      }
+      else if(Array.isArray(ui.categories) && ui.categories.length){
+        out = out.filter(o => ui.categories.includes(o.category));
       }
       else if(ui.category && ui.category !== "all"){
         out = out.filter(o => o.category === ui.category);
@@ -5572,10 +5613,8 @@ window.__sellerFilters[u.id] = sellerFilter;
           <div class="filterBar" style="margin;position:sticky;top:0;background:white;z-index:5;-bottom:14px;align-items:center">
 
             <label style="display:flex;flex-direction:column;gap:6px">
-              <span style="font-size:12px;color:var(--muted)">Catégorie</span>
-              
-<div class="flash-pills">
-<button id="pillCategories" class="flash-pill">${ui.category==="__prefs__" ? "Mes favorites" : (ui.category && ui.category !== "all" ? escapeHtml(ui.category) : "Catégories")}</button>
+              <div class="flash-pills">
+<button id="pillCategories" class="flash-pill ${ui.category !== 'all' ? 'flash-pill-active' : ''}">Catégories</button>
 <button id="pillFavorites" class="flash-pill ${ui.favoritesOnly ? "flash-pill-active" : ""}">Favoris</button>
 <button id="pillMap" class="flash-pill ${ui.view==="map" ? "flash-pill-active" : ""}">${ui.view==="list" ? "Vue Maps" : "Vue Liste"}</button>
 </div>
@@ -8045,7 +8084,7 @@ function renderBuyerOfferFilterPage(u){
   const rows = [
     `<div class="menuItem" data-filter-action="favorites">
       <div class="menuLeft"><span>Mes favorites</span></div>
-      <div class="menuChevron">${ui.favoritesOnly ? "✓" : ""}</div>
+      <div class="menuChevron">${ui.category==="__prefs__" ? "✓" : ""}</div>
     </div>`,
     `<div class="menuItem" data-filter-action="all">
       <div class="menuLeft"><span>Toutes</span></div>
@@ -8054,7 +8093,7 @@ function renderBuyerOfferFilterPage(u){
     ...CATEGORIES.map(cat => `
       <div class="menuItem" data-filter-category="${cat}">
         <div class="menuLeft"><span>${escapeHtml(cat)}</span></div>
-        <div class="menuChevron">${ui.category===cat ? "✓" : ""}</div>
+        <div class="menuChevron">${(Array.isArray(ui.categories) && ui.categories.includes(cat)) ? "✓" : (ui.category===cat ? "✓" : "")}</div>
       </div>
     `)
   ].join("");
@@ -8074,23 +8113,20 @@ function renderBuyerOfferFilterPage(u){
   document.querySelectorAll("[data-filter-action]").forEach(el=>{
     el.onclick = ()=>{
       const action = el.getAttribute("data-filter-action");
-      if(action === "favorites"){ ui.category="__prefs__";
+      if(action === "favorites"){
+        ui.category="__prefs__";
+        saveState();
+        render(u); // close menu
       }else if(action === "all"){
         ui.category = "all";
         ui.favoritesOnly = false;
+        saveState();
+        render(u); // close menu
       }
-      saveState();
-      renderBuyerOfferFilterPage(u);
     };
   });
 
-  document.querySelectorAll("[data-filter-category]").forEach(el=>{
-    el.onclick = ()=>{
-      ui.category = el.getAttribute("data-filter-category");
-      saveState();
-      render(u);
-    };
-  });
+  
 }
 
 document.addEventListener("click", function(e){
@@ -8123,6 +8159,172 @@ document.addEventListener("click", function(e){
     render(u);
     return;
   }
+});
+</script>
+
+
+<script>
+(function(){
+
+if(!window.ui) window.ui={};
+if(!ui.categories) ui.categories=[];
+
+document.addEventListener("click",function(e){
+
+const pref=e.target.closest('[data-filter-action="favorites"]');
+const all=e.target.closest('[data-filter-action="all"]');
+
+if(pref){
+ui.categories=[...buyerPrefs.categories];
+ui.category="__prefs__";
+render();
+}
+
+if(all){
+ui.categories=[];
+ui.category="all";
+render();
+}
+
+const cat=e.target.closest("[data-cat]");
+if(cat && !pref && !all){
+const c=cat.getAttribute("data-cat");
+if(c==="__all") return;
+
+if(!ui.categories.includes(c)){
+ui.categories.push(c);
+cat.classList.add("active");
+}else{
+ui.categories=ui.categories.filter(x=>x!==c);
+cat.classList.remove("active");
+}
+
+let ok=document.getElementById("catApplyBtn");
+if(!ok){
+ok=document.createElement("button");
+ok.id="catApplyBtn";
+ok.innerText="Appliquer";
+document.querySelector(".pageHeader")?.appendChild(ok);
+
+
+
+
+
+ok.style.border="none";
+
+ok.style.marginTop="12px";
+cat.parentElement.appendChild(ok);
+
+ok.onclick=function(){
+ui.category="multi";
+render();
+};
+}
+
+}
+
+});
+
+})();
+</script>
+
+
+
+<script>
+(function(){
+  function getCurrentBuyer(){
+    try{ return getUser(userSelect.value); }catch(e){ return null; }
+  }
+
+  document.addEventListener("click", function(e){
+    const catItem = e.target.closest("[data-filter-category]");
+    if(catItem){
+      const buyer = getCurrentBuyer();
+      if(!buyer || !state[buyer.id] || !state[buyer.id].offersUI) return;
+      const ui = state[buyer.id].offersUI;
+      ui.categories = Array.isArray(ui.categories) ? ui.categories : [];
+      const cat = catItem.getAttribute("data-filter-category");
+
+      // retire états spéciaux
+      ui.category = "multi";
+
+      const fav = document.querySelector('[data-filter-action="favorites"] .menuChevron');
+      if(fav) fav.innerText = "";
+      const all = document.querySelector('[data-filter-action="all"] .menuChevron');
+      if(all) all.innerText = "";
+
+      const idx = ui.categories.indexOf(cat);
+      const chev = catItem.querySelector(".menuChevron");
+      if(idx >= 0){
+        ui.categories.splice(idx, 1);
+        if(chev) chev.innerText = "";
+      }else{
+        ui.categories.push(cat);
+        if(chev) chev.innerText = "✓";
+      }
+
+      let ok = document.getElementById("catApplyBtn");
+      if(!ok){
+        ok = document.createElement("button");
+        ok.id = "catApplyBtn";
+        ok.textContent = "Appliquer";
+        
+        
+        
+        
+        
+        ok.style.border = "none";
+        
+        ok.style.fontWeight = "600";
+        const list = catItem.parentElement;
+        list.appendChild(ok);
+
+        ok.onclick = function(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+          saveState();
+          render(buyer);
+        };
+      }
+      return;
+    }
+
+    const prefItem = e.target.closest('[data-filter-action="favorites"]');
+    if(prefItem){
+      const buyer = getCurrentBuyer();
+      if(!buyer || !state[buyer.id] || !state[buyer.id].offersUI) return;
+      const ui = state[buyer.id].offersUI;
+      ui.categories = [];
+      saveState();
+      return;
+    }
+
+    const allItem = e.target.closest('[data-filter-action="all"]');
+    if(allItem){
+      const buyer = getCurrentBuyer();
+      if(!buyer || !state[buyer.id] || !state[buyer.id].offersUI) return;
+      const ui = state[buyer.id].offersUI;
+      ui.categories = [];
+      saveState();
+      return;
+    }
+  });
+})();
+</script>
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const btn=document.getElementById("catApplyBtn");
+const title=document.querySelector(".menuTitle,.listTitle,.catTitle");
+if(btn && title){
+const header=title.parentElement;
+header.classList.add("catHeader");
+header.appendChild(btn);
+}
 });
 </script>
 
