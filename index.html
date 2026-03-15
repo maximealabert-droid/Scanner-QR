@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v136.html</title>
+<title>index_v154.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -864,14 +864,14 @@ select option{
 
 
 .pageHeader{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:56px;
-  background:#ffffff;
-  border-bottom:1px solid #e5e7eb;
-  margin:0 0 12px 0;
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
 }
 .pageTitle{
   width:100%;
@@ -998,6 +998,26 @@ font-weight:700;
   background:#D0FAE4;
   border-color:#1f7a6b;
   color:#1f7a6b;
+}
+
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
 }
 
 </style>
@@ -1717,6 +1737,26 @@ font-weight:700;
   color:#1f7a6b;
 }
 
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
+}
+
 </style>
 <style>
   
@@ -2025,6 +2065,26 @@ font-weight:700;
   background:#D0FAE4;
   border-color:#1f7a6b;
   color:#1f7a6b;
+}
+
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
 }
 
 </style>
@@ -2347,6 +2407,26 @@ font-weight:700;
   background:#D0FAE4;
   border-color:#1f7a6b;
   color:#1f7a6b;
+}
+
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
 }
 
 </style>
@@ -2672,6 +2752,26 @@ font-weight:700;
   color:#1f7a6b;
 }
 
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
+}
+
 </style>
 <style>
   /* Statut Validé en vert (offres acheteur) */
@@ -2988,6 +3088,26 @@ font-weight:700;
   color:#1f7a6b;
 }
 
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
+}
+
 </style>
 <style>
   /* Statut Réservé en bleu clair (offres acheteur) */
@@ -3302,6 +3422,26 @@ font-weight:700;
   background:#D0FAE4;
   border-color:#1f7a6b;
   color:#1f7a6b;
+}
+
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
 }
 
 </style>
@@ -3648,6 +3788,26 @@ font-weight:700;
   color:#1f7a6b;
 }
 
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
+}
+
 </style>
 <style>
 /* SAFE MASK Spot & Emplacement */
@@ -3969,6 +4129,26 @@ font-weight:700;
   color:#1f7a6b;
 }
 
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
+}
+
 </style>
 <script src="https://unpkg.com/@zxing/library@latest">
 function toggleDiscountGrid(){
@@ -4158,38 +4338,68 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 }
-#catApplyBtn{
-position:static!important;
-width:auto!important;
-margin:0!important;
-padding:8px 14px!important;
-background:#16a34a!important;
-border-radius:10px!important;
-font-weight:600!important;
+
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
 }
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
+}
+
 </style>
 
 
 <style>
-.pageHeader{position:relative;display:flex;align-items:center;justify-content:center;}
-.pageHeader .backButton{position:absolute;left:12px;}
-#catApplyBtn{
-position:absolute;
-right:12px;
-top:50%;
-transform:translateY(-50%);
-padding:6px 12px;
-background:#16a34a;
-color:#fff;
-border-radius:10px;
-font-weight:600;
-border:none;
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
 }
+.pageHeader .backButton{position:absolute;left:12px;}
+
+
+/* Sticky header for category list */
+.pageHeader{
+position:sticky;
+top:0;
+z-index:2000;
+background:#ffffff;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:48px;
+}
+
+
+/* Selected category row highlight */
+.settingsRow.selected{
+  background-color:#D0FAE4;
+  border-radius:8px;
+}
+
 </style>
 
 </head>
 <body>
-<div id="fileTitleBanner">index_v144.html</div>
+<div id="fileTitleBanner">index_v154.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -5030,6 +5240,7 @@ function renderCategories(u){
     <div class="pageHeader">
       <span class="backButton" id="backHome">‹</span>
       <span class="pageTitle">Catégories</span>
+      <span id="catApplySlot"></span>
     </div>
 
     <div class="card" style="padding:0;">
@@ -8032,6 +8243,7 @@ function renderSellerCategories(){
     <div class="pageHeader">
       <span class="backButton" id="backHome">‹</span>
       <span class="pageTitle">Catégories</span>
+      <span id="catApplySlot"></span>
     </div>
 
     <div class="card">
@@ -8103,6 +8315,7 @@ function renderBuyerOfferFilterPage(u){
     <div class="pageHeader">
       <span class="backButton" id="backBuyerFilters">‹</span>
       <span class="pageTitle">Catégories</span>
+      <span id="catApplySlot"></span>
     </div>
     <div class="menuList">${rows}</div>
   `;
@@ -8204,7 +8417,7 @@ if(!ok){
 ok=document.createElement("button");
 ok.id="catApplyBtn";
 ok.innerText="Appliquer";
-document.querySelector(".pageHeader")?.appendChild(ok);
+document.getElementById("catApplySlot")?.appendChild(ok);
 
 
 
@@ -8213,7 +8426,7 @@ document.querySelector(".pageHeader")?.appendChild(ok);
 ok.style.border="none";
 
 ok.style.marginTop="12px";
-cat.parentElement.appendChild(ok);
+
 
 ok.onclick=function(){
 ui.category="multi";
@@ -8277,7 +8490,7 @@ render();
         
         ok.style.fontWeight = "600";
         const list = catItem.parentElement;
-        list.appendChild(ok);
+        ;
 
         ok.onclick = function(ev){
           ev.preventDefault();
@@ -8325,6 +8538,28 @@ const header=title.parentElement;
 header.classList.add("catHeader");
 header.appendChild(btn);
 }
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const applyBtn = document.getElementById("catApplyBtn");
+  if(applyBtn){
+    applyBtn.onclick = function(){ const back = document.getElementById("backBuyerFilters") || document.querySelector(".pageHeader .backButton"); if(back){ back.click(); } };
+  }
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const btn = document.getElementById("catApplyBtn");
+  if(btn){
+    btn.addEventListener("click", function(e){
+      alert("Appliquer clicked");
+    });
+  }
 });
 </script>
 
