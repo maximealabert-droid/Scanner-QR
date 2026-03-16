@@ -5460,7 +5460,7 @@ ${u.context === "acheteur" ? `
       window._leafletMap.remove();
       window._leafletMap = null;
     }
-    const map = L.map("map").setView([u.location.lat, u.location.lng], 13);
+    window.map = L.map("map").setView([u.location.lat, u.location.lng], 13);
     window._leafletMap = map;
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -5885,7 +5885,7 @@ window.__sellerFilters[u.id] = sellerFilter;
         const offers = getFilteredOffers();
 
         // Initialisation neutre
-        const map = L.map("mapView").setView([0,0], 2);
+        window.map = L.map("mapView").setView([0,0], 2);
 
         // === POSITION DU DEVICE ===
         let deviceMarker = null;
@@ -8593,7 +8593,7 @@ function refreshDevicePosition(){
         }
 
         if(typeof map !== "undefined"){
-            map.panTo(latlng);
+            map.setView(latlng, map.getZoom());
         }
 
     },
