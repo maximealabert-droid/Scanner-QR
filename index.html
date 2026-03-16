@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v163.html</title>
+<title>index_v172.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -1415,7 +1415,7 @@ function buildCategoryGrid(){
   if(typeof CATEGORIES === "undefined") return;
 
   grid.innerHTML = CATEGORIES.map(c =>
-    `<button onclick="selectCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
+    `<button onclick="selectCat('${c.replace(/'/g,"\\'")}')">${c}</button></span>`
   ).join("");
 }
 
@@ -4399,7 +4399,7 @@ min-height:48px;
 
 </head>
 <body>
-<div id="fileTitleBanner">index_v163.html</div>
+<div id="fileTitleBanner">index_v172.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -5141,9 +5141,9 @@ ${o.type === "Offre"
               </div>
 
               ${u.context === "acheteur" ? `
-                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px">
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px"><div style="display:flex;align-items:center;gap:6px">
 
-                ${(() => { const s = getOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}
+                ${(() => { const s = getOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}<span style="width:22px;display:inline-flex;justify-content:flex-end"><button class="heartToggle" data-id="${escapeHtml(o.id)}" style="border:none;background:transparent;font-size:20px;cursor:pointer">${isFav(u.id, o.id) ? "💖" : "🤍"}</button></div>
                 ${(() => { const s = getOfferStatus(o, u.id); return s ? `` : ``; })()}
 
                   <div class="countdown" data-exp="${escapeHtml(o.date || "")}">${remainingText(o.date)}</div>
@@ -5166,15 +5166,7 @@ ${o.type === "Offre"
               </div>
 
               ${u.context === "acheteur" ? `
-                <div style="display:flex; gap:8px; flex-wrap:wrap">
-<button class="heartToggle" data-id="${escapeHtml(o.id)}" style="border:none;background:transparent;font-size:20px;cursor:pointer">
-  ${isFav(u.id, o.id) ? "💖" : "🤍"}
-</button>
-
-
-
-
-                </div>
+                
               ` : ""}
             </div>
 
@@ -5228,13 +5220,7 @@ function renderCategories(u){
   const prefs = state[u.id].buyerPrefs;
   const selected = prefs.categories || [];
 
-  const sortedCats = [...CATEGORIES].sort((a,b)=>{
-    const aSel = selected.includes(a);
-    const bSel = selected.includes(b);
-    if(aSel && !bSel) return -1;
-    if(!aSel && bSel) return 1;
-    return a.localeCompare(b);
-  });
+  const sortedCats = [...CATEGORIES];
 
   content.innerHTML = `
     <div class="pageHeader">
@@ -5247,9 +5233,9 @@ function renderCategories(u){
       <div class="muted" style="padding:14px 16px 0 16px;">Choisissez vos centres d’intérêt</div>
 
       <div class="catPills">
-        <div class="pill-cat ${(selected.length===CATEGORIES.length)?'active':''}" data-cat="__all">Voir tout</div>
+        <div class="pill-cat ${(selected.length===CATEGORIES.length)?'active':''}" data-cat="__all">Toutes</div>
         ${sortedCats.map(c=>`
-          <div class="pill-cat ${(selected.includes(c) || selected.length===CATEGORIES.length)?'active':''}" data-cat="${c}">${c}</div>
+          <div class="pill-cat ${(selected.includes(c))?'active':''}" data-cat="${c}">${c}</div>
         `).join("")}
       </div>
     </div>
@@ -5262,7 +5248,8 @@ function renderCategories(u){
       const c = p.dataset.cat;
 
       if(c==="__all"){
-        prefs.categories = [...CATEGORIES];
+        if((prefs.categories||[]).length===CATEGORIES.length){ prefs.categories = []; }
+        else{ prefs.categories = [...CATEGORIES]; }
       }else{
         const set = new Set(prefs.categories || []);
         if(set.has(c)) set.delete(c); else set.add(c);
@@ -8223,7 +8210,11 @@ function renderSellerHistory(){
 function renderSellerCategories(){
 
   const user = window.currentUser;
-  const prefs = (state[user.id] && state[user.id].sellerPrefs) || {};
+  state[user.id] ??= {};
+  state[user.id].sellerPrefs ??= {};
+  if(!Array.isArray(state[user.id].sellerPrefs.categories)) state[user.id].sellerPrefs.categories = [];
+
+  const prefs = state[user.id].sellerPrefs;
   const selected = prefs.categories || [];
 
   document.getElementById("content").innerHTML = `
@@ -8233,25 +8224,40 @@ function renderSellerCategories(){
       <span id="catApplySlot"></span>
     </div>
 
-    <div class="card">
-      <h3>Vos catégories</h3>
+    <div class="card" style="padding:0;">
+      <div class="muted" style="padding:14px 16px 0 16px;">Choisissez vos centres d’intérêt</div>
 
       <div class="catPills">
+        <div class="pill-cat ${(selected.length===CATEGORIES.length)?'active':''}" data-cat="__all">Toutes</div>
         ${CATEGORIES.map(cat => `
-        <div class="pill-cat ${selected.includes(cat) ? 'active' : ''}" data-cat="${cat}">
-          ${cat}
-        </div>
+        <div class="pill-cat ${selected.includes(cat) ? 'active' : ''}" data-cat="${cat}">${cat}</div>
         `).join("")}
       </div>
     </div>
   `;
 
-  setTimeout(()=>{
-    const b=document.getElementById("backHome");
-    if(b && window.renderHome){
-      b.onclick=()=>renderHome(window.currentUser);
-    }
+  document.querySelectorAll(".pill-cat").forEach(p=>{
+    p.addEventListener("click", ()=>{
+      const c = p.dataset.cat;
+
+      if(c === "__all"){
+        if((prefs.categories || []).length === CATEGORIES.length) prefs.categories = [];
+        else prefs.categories = [...CATEGORIES];
+      } else {
+        const set = new Set(prefs.categories || []);
+        if(set.has(c)) set.delete(c); else set.add(c);
+        prefs.categories = Array.from(set);
+      }
+
+      saveState();
+      renderSellerCategories();
+    });
   });
+
+  const b=document.getElementById("backHome");
+  if(b && window.renderHome){
+    b.onclick=()=>renderHome(window.currentUser);
+  }
 }
 
 </script>
