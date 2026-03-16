@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v154.html</title>
+<title>index_v160.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -1420,6 +1420,49 @@ function buildCategoryGrid(){
 }
 
 document.addEventListener("DOMContentLoaded", buildCategoryGrid);
+
+
+/* ===== V160 : device live geolocation ===== */
+(function(){
+
+let deviceMarker = null;
+let deviceWatchId = null;
+
+function startDeviceWatch(){
+  if(!window._leafletMap) return;
+  const map = window._leafletMap;
+
+  if(!navigator.geolocation) return;
+
+  deviceWatchId = navigator.geolocation.watchPosition(function(pos){
+
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      if(!deviceMarker){
+          deviceMarker = L.marker([lat,lng]).addTo(map);
+      }else{
+          deviceMarker.setLatLng([lat,lng]);
+      }
+
+  }, function(err){
+      console.log("geo error",err);
+  },{
+      enableHighAccuracy:true,
+      maximumAge:0,
+      timeout:1000
+  });
+}
+
+/* wait until leaflet map exists */
+const geoInterval = setInterval(function(){
+  if(window._leafletMap){
+      clearInterval(geoInterval);
+      startDeviceWatch();
+  }
+},500);
+
+})();
 
 </script>
 <style>
@@ -4399,7 +4442,7 @@ min-height:48px;
 
 </head>
 <body>
-<div id="fileTitleBanner">index_v154.html</div>
+<div id="fileTitleBanner">index_v160.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
