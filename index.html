@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v162.html</title>
+<title>index_v163.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -4399,7 +4399,7 @@ min-height:48px;
 
 </head>
 <body>
-<div id="fileTitleBanner">index_v162.html</div>
+<div id="fileTitleBanner">index_v163.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -5895,21 +5895,8 @@ window.__sellerFilters[u.id] = sellerFilter;
               const lat = pos.coords.latitude;
               const lng = pos.coords.longitude;
 
-              const deviceIcon = L.icon({
-        iconUrl: "data:image/svg+xml;base64," + btoa(`
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="48">
-            <path d="M16 0C7 0 0 7 0 16c0 12 16 32 16 32s16-20 16-32C32 7 25 0 16 0z"
-                  fill="#00C853"/>
-            <circle cx="16" cy="16" r="6" fill="white"/>
-          </svg>
-        `),
-        iconSize: [32,48],
-        iconAnchor: [16,48],
-        popupAnchor: [0,-40]
-      });
-
-      if(!deviceMarker){
-        deviceMarker = L.marker([lat, lng], { icon: deviceIcon })
+              if(!deviceMarker){
+        deviceMarker = L.marker([lat, lng])
           .addTo(map)
           .bindPopup("📍 Ma position");
         map.setView([lat, lng], 14);
