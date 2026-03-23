@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>index_v172.html</title>
+<title>v174</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -191,7 +191,7 @@ header{
     }
 
   
-    /* Publish layout: fields stacked, labels above inputs */
+    /* Publier layout: fields stacked, labels above inputs */
     #content .fields{
       display: grid;
       grid-template-columns: 1fr !important;
@@ -208,7 +208,7 @@ header{
     }
 
   
-    /* Publish: Minimum / Maximum d’achat always visible */
+    /* Publier: Minimum / Maximum d’achat always visible */
     .valueBlock{
       display: flex;
       flex-direction: column;
@@ -233,7 +233,7 @@ header{
   }
 
 
-  /* Publish - Valeur select 10% less wide */
+  /* Publier - Valeur select 10% less wide */
   #valueContainer select,
   #valueContainer input,
   #minBuy,
@@ -242,7 +242,7 @@ header{
   }
 
 
-  /* Publish - Description styling */
+  /* Publier - Description styling */
   #description{
     width: 90%;
     border: 1px solid var(--border);
@@ -250,7 +250,7 @@ header{
   }
 
 
-  /* Publish - Description textarea corrected */
+  /* Publier - Description textarea corrected */
   #description{
     width: 90% !important;
     margin: 0 auto;
@@ -386,6 +386,21 @@ header{
 
 input:checked + .heartIcon{
   color:#ff4d8d;
+}
+
+.heartToggle{
+  border:none !important;
+  background:transparent !important;
+  cursor:pointer;
+  padding:0;
+  margin:0;
+  font-size:24px;
+  line-height:1;
+  color:#111827;
+}
+
+.heartToggle.active{
+  color:#ec4899;
 }
 
 
@@ -732,7 +747,7 @@ select option{
 }
 
 
-/* ===== V74 Publish active green style ===== */
+/* ===== V74 Publier active green style ===== */
 
 .publishSegBtn.active{
   background:#BFE3D2 !important;
@@ -4331,7 +4346,6 @@ function buildCategoryGrid(){
 document.addEventListener("DOMContentLoaded", buildCategoryGrid);
 
 </script>
-
 <style>
 .catHeader{
 display:flex;
@@ -4360,8 +4374,6 @@ min-height:48px;
 }
 
 </style>
-
-
 <style>
 .pageHeader{
 position:sticky;
@@ -4396,10 +4408,9 @@ min-height:48px;
 }
 
 </style>
-
 </head>
 <body>
-<div id="fileTitleBanner">index_v172.html</div>
+<div id="fileTitleBanner">v174</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -4607,7 +4618,7 @@ function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padS
   // Données / contextes
   // =========================
   const CONTEXTS = {
-    vendeur: ["Home","Offres","Publish","Scan"],
+    vendeur: ["Home","Offres","Publier","Scan"],
     acheteur: ["Home","Offres","QR"]
   };
 
@@ -5143,7 +5154,7 @@ ${o.type === "Offre"
               ${u.context === "acheteur" ? `
                 <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px"><div style="display:flex;align-items:center;gap:6px">
 
-                ${(() => { const s = getOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}<span style="width:22px;display:inline-flex;justify-content:flex-end"><button class="heartToggle" data-id="${escapeHtml(o.id)}" style="border:none;background:transparent;font-size:20px;cursor:pointer">${isFav(u.id, o.id) ? "💖" : "🤍"}</button></div>
+                ${(() => { const s = getOfferStatus(o, u.id); return s ? `<span class="pill" data-status="${s}">${s}</span>` : ``; })()}<span style="display:inline-flex;justify-content:flex-end"><button class="heartToggle ${isFav(u.id, o.id) ? "active" : ""}" data-id="${escapeHtml(o.id)}" aria-label="Favori">♡</button></span></div>
                 ${(() => { const s = getOfferStatus(o, u.id); return s ? `` : ``; })()}
 
                   <div class="countdown" data-exp="${escapeHtml(o.date || "")}">${remainingText(o.date)}</div>
@@ -5190,7 +5201,7 @@ ${o.type === "Offre"
         const id = btn.getAttribute("data-id");
         const current = isFav(u.id, id);
         setFav(u.id, id, !current);
-        btn.textContent = !current ? "💖" : "🤍";
+        btn.classList.toggle("active", !current);
         showToast(!current ? "Ajouté aux favoris 💖" : "Retiré des favoris");
       });
     });
@@ -5476,7 +5487,7 @@ ${u.context === "acheteur" ? `
       return;
     }
 
-    if (tab === "Publish") {
+    if (tab === "Publier") {
       if (u.context !== "vendeur") {
         content.innerHTML = `<div class="card"></div>`;
         return;
@@ -8261,7 +8272,6 @@ function renderSellerCategories(){
 }
 
 </script>
-
 <script>
 document.addEventListener("DOMContentLoaded",function(){
 
@@ -8280,8 +8290,6 @@ const mapPill=document.getElementById("pillMap");
 
 });
 </script>
-
-
 <script>
 function renderBuyerOfferFilterPage(u){
   ensureOffersUI(u);
@@ -8367,8 +8375,6 @@ document.addEventListener("click", function(e){
   }
 });
 </script>
-
-
 <script>
 (function(){
 
@@ -8433,9 +8439,6 @@ render();
 
 })();
 </script>
-
-
-
 <script>
 (function(){
   function getCurrentBuyer(){
@@ -8517,11 +8520,6 @@ render();
   });
 })();
 </script>
-
-
-
-
-
 <script>
 document.addEventListener("DOMContentLoaded",()=>{
 const btn=document.getElementById("catApplyBtn");
@@ -8533,8 +8531,6 @@ header.appendChild(btn);
 }
 });
 </script>
-
-
 <script>
 document.addEventListener("DOMContentLoaded", function(){
   const applyBtn = document.getElementById("catApplyBtn");
@@ -8543,8 +8539,6 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 });
 </script>
-
-
 <script>
 document.addEventListener("DOMContentLoaded", function(){
   const btn = document.getElementById("catApplyBtn");
@@ -8555,8 +8549,6 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 });
 </script>
-
-
 <script>
 const UPDATE_EVERY_MS = 1000;
 
@@ -8604,6 +8596,5 @@ function refreshDevicePosition(){
 refreshDevicePosition();
 setInterval(refreshDevicePosition, UPDATE_EVERY_MS);
 </script>
-
 </body>
 </html>
