@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>v185</title>
+<title>v188.html</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -1035,6 +1035,7 @@ min-height:48px;
   border-radius:8px;
 }
 
+ .pill[data-status]{display:none !important;} 
 </style>
 <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -4410,7 +4411,7 @@ min-height:48px;
 </style>
 </head>
 <body>
-<div id="fileTitleBanner">v185</div>
+<div id="fileTitleBanner">v188.html</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -5051,7 +5052,7 @@ function renderOffers(u, mode){
       if (mode === "favorites") visible = allOffers.filter(o => favs.has(o.id));
       else visible = [...allOffers]; // Offres acheteur = toutes (favoris inclus via toggle)
 
-      
+      visible = visible.filter(o => getOfferStatus(o, u.id) !== "Expirée");
     }
 
     if (!visible.length) return ``;
