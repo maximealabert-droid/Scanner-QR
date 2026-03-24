@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>v174</title>
+<title>v185</title>
 <style>
     :root{
       /* Premium Light theme */
@@ -1056,7 +1056,7 @@ min-height:48px;
     body.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div>Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
-        <span id="sellerFavBtn" style="font-size:22px;cursor:pointer;">🤍</span>
+        <button id="sellerFavBtn" class="heartToggle sellerHeart" style="font-size:22px;cursor:pointer;">❤</button>
       </div>
       
     
@@ -1078,7 +1078,7 @@ const favBtn = document.getElementById("sellerFavBtn");
 const activeBuyerId = (window.userSelect && userSelect.value) ? userSelect.value : "default";
 const storageKey = "favoriteSellers_" + activeBuyerId;
 const favsInit = JSON.parse(localStorage.getItem(storageKey) || "[]");
-favBtn.textContent = favsInit.includes(sellerId) ? "" : "🤍";
+if(favsInit.includes(sellerId)){ favBtn.classList.add("active"); } else { favBtn.classList.remove("active"); }
 
 favBtn.onclick = () => {
   let favs = JSON.parse(localStorage.getItem(storageKey) || "[]");
@@ -1090,7 +1090,7 @@ favBtn.onclick = () => {
   }
 
   localStorage.setItem(storageKey, JSON.stringify(favs));
-  favBtn.textContent = favs.includes(sellerId) ? "" : "🤍";
+  if(favs.includes(sellerId)){ favBtn.classList.add("active"); } else { favBtn.classList.remove("active"); }
 
   if (window.__currentSubPage === "favShops") {
     renderFavShops();
@@ -4410,7 +4410,7 @@ min-height:48px;
 </style>
 </head>
 <body>
-<div id="fileTitleBanner">v174</div>
+<div id="fileTitleBanner">v185</div>
 <script>
 function formatDateOnlyFR(ts){const d=new Date(ts);if(isNaN(d.getTime())) return "-";const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();return `${jj}/${mm}/${aa}`;}
 function formatDateFR(ts){const d=new Date(ts);const jj=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${jj}/${mm}/${aa} ${hh}:${mi}`;}
@@ -5202,7 +5202,7 @@ ${o.type === "Offre"
         const current = isFav(u.id, id);
         setFav(u.id, id, !current);
         btn.classList.toggle("active", !current);
-        showToast(!current ? "Ajouté aux favoris 💖" : "Retiré des favoris");
+        showToast(!current ? "Ajouté aux favoris " : "Retiré des favoris");
       });
     });
 
@@ -5847,7 +5847,7 @@ window.__sellerFilters[u.id] = sellerFilter;
 
             <label style="display:flex;align-items:center;gap:8px;margin-top:18px">
               <input type="checkbox" id="filterFav" style="display:none" ${ui.favoritesOnly?"checked":""}>
-              <span style="display:none">❤ Favoris</span>
+              <span style="display:none"> Favoris</span>
             </label>
 
             
@@ -6136,7 +6136,7 @@ window.__sellerFilters[u.id] = sellerFilter;
     body.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div>Nom : <b>${escapeHtml(sellerDisplayName(sellerId))}</b></div>
-        <span id="sellerFavBtn" style="font-size:22px;cursor:pointer;">🤍</span>
+        <button id="sellerFavBtn" class="heartToggle sellerHeart" style="font-size:22px;cursor:pointer;">❤</button>
       </div>
       
     
@@ -6156,7 +6156,7 @@ overlay.style.display = "flex";
 
 const favBtn = document.getElementById("sellerFavBtn");
 const favsInit = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
-favBtn.textContent = favsInit.includes(sellerId) ? "" : "🤍";
+if(favsInit.includes(sellerId)){ favBtn.classList.add("active"); } else { favBtn.classList.remove("active"); }
 
 favBtn.onclick = () => {
   let favs = JSON.parse(localStorage.getItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default")) || "[]");
@@ -6166,7 +6166,7 @@ favBtn.onclick = () => {
     favs.push(sellerId);
   }
   localStorage.setItem("favoriteSellers_"+(window.userSelect?userSelect.value:"default"), JSON.stringify(favs));
-  favBtn.textContent = favs.includes(sellerId) ? "" : "🤍";
+  if(favs.includes(sellerId)){ favBtn.classList.add("active"); } else { favBtn.classList.remove("active"); }
 };
 
   }
@@ -7941,7 +7941,7 @@ function renderFavShops(){
           <div style="width:56px;height:45px;border-radius:12px;overflow:hidden;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex:0 0 56px">
             ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover">` : `<span style="font-size:24px">🏬</span>`}
           </div>
-          <div style="font-weight:700;font-size:20px">${escapeHtml(sellerName)}</div>
+          <div class="sellerLink" data-seller-id="${escapeHtml(s.id)}" style="font-weight:700;font-size:20px;cursor:pointer">${escapeHtml(sellerName)}</div>
         </div>
       </div>
     `;
